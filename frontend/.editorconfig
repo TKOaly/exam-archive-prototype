@@ -1,9 +1,8 @@
 root = true
 
 [*]
-end_of_line = lf
 insert_final_newline = true
 
-[src/*.{js,scss,json}]
+[src/**/*.{js,scss,json}]
 indent_size = 2
 indent_style = space
