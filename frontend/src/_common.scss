@@ -1,0 +1,7 @@
+$header-height: 52px;
+$header-height-full: 82px;
+
+/* Curves from https://material.io/guidelines/motion/duration-easing.html#duration-easing-natural-easing-curves*/
+$ease-standard-curve: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-deceleration-curve: cubic-bezier(0, 0, 0.2, 1);
+$ease-acceleration-curve: cubic-bezier(0.4, 0, 1, 1);
