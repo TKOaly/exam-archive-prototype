@@ -30,6 +30,13 @@ const CourseListItem = ({ name, lastModified }) => {
   )
 }
 
+const CourseListHeader = () => (
+  <div className="course-list-header">
+    <p className="course-list-header__name">Course</p>
+    <p className="course-list-header__last-modified">Last modified</p>
+  </div>
+)
+
 const isNotNil = R.complement(R.isNil)
 
 const findLatestModifiedDate = documents => {
@@ -50,7 +57,12 @@ const CourseList = ({ courses, className }) => {
     />
   ))
 
-  return <ul className={classnames('course-list', className)}>{items}</ul>
+  return (
+    <div className={classnames('course-list', className)}>
+      <CourseListHeader />
+      <ul className="course-list__list">{items}</ul>
+    </div>
+  )
 }
 
 export default CourseList

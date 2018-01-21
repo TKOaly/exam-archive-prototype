@@ -1,7 +1,33 @@
 .course-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  &__list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+}
+
+.course-list-header {
+  height: 48px;
+  padding-top: 12px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9b9b9d;
+
+  &__name {
+    margin: 0 0 0 54px;
+  }
+
+  &__last-modified {
+    margin: 0 15px 0 auto;
+    width: 120px;
+    padding-left: 10px;
+    box-sizing: border-box;
+  }
 }
 
 .course-list-item {
@@ -15,7 +41,7 @@
   &__icon {
     flex: 0 0 auto;
     fill: #dadada;
-    margin: 0 15px;
+    width: 54px;
   }
 
   &__link {
@@ -30,13 +56,15 @@
   }
 
   &__name {
-    color: #2980b9;
-    border-bottom: 1px solid #a9cce3;
+    color: #121212;
+    border-bottom: 1px solid #c7c7c7;
   }
 
   &__last-modified {
     flex: 0 0 auto;
-    color: #666669;
+    box-sizing: border-box;
+    width: 120px;
+    color: #9b9b9d;
     margin: 0 15px 0 auto;
     padding-left: 10px; /* add some space in case the name is extra long */
   }
