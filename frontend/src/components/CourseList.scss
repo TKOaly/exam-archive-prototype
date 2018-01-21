@@ -1,0 +1,49 @@
+.course-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.course-list-item {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  border-bottom: 1px solid #dadada;
+
+  &__icon {
+    flex: 0 0 auto;
+    fill: #dadada;
+    margin: 0 15px;
+  }
+
+  &__link {
+    flex: 0 1 auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0; /*  */
+    /* add some padding to the top and bottom to expand the click area */
+    padding: 10px 0;
+    text-decoration: none;
+  }
+
+  &__name {
+    color: #2980b9;
+    border-bottom: 1px solid #a9cce3;
+  }
+
+  &__last-modified {
+    flex: 0 0 auto;
+    color: #666669;
+    margin: 0 30px 0 auto;
+    padding-left: 10px; /* add some space in case the name is extra long */
+  }
+  
+  &__size {
+    flex: 0 0 auto;
+    color: #666669;
+    margin: 0 30px 0 0;
+  }
+}
