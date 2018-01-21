@@ -13,12 +13,14 @@ const momentifyLastModified = document => {
 }
 
 const apiToAppModel = courses => {
-  return courses.map(course => ({
+  const appModelCourses = courses.map(course => ({
     ...course,
     documents: course.documents
       ? course.documents.map(momentifyLastModified)
       : undefined
   }))
+  appModelCourses.sort((a, b) => a.name.localeCompare(b.name))
+  return appModelCourses
 }
 
 const App = () => (

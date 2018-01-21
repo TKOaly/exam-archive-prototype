@@ -16,7 +16,11 @@ const FolderIcon = ({ className }) => (
   </svg>
 )
 
-const CourseListItem = ({ name, lastModified }) => {
+const ListingAlphabet = ({ letter }) => (
+  <p className="listing-alphabet">{letter}</p>
+)
+
+const CourseListItem = ({ name, lastModified, children }) => {
   return (
     <li className="course-list-item">
       <FolderIcon className="course-list-item__icon" />
@@ -26,6 +30,7 @@ const CourseListItem = ({ name, lastModified }) => {
       <p className="course-list-item__last-modified">
         {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
       </p>
+      {children}
     </li>
   )
 }
@@ -47,14 +52,38 @@ const findLatestModifiedDate = documents => {
   return moment.max(documentsTimestamps)
 }
 
+function findFirstNamesOfStartingLetter(courseNames) {
+  const firstNames = new Set()
+  let previous = courseNames[0].charAt(0)
+  firstNames.add(courseNames[0])
+
+  for (const courseName of courseNames) {
+    const startingLetter = courseName.charAt(0)
+    if (startingLetter === previous) continue
+    previous = startingLetter
+    firstNames.add(courseName)
+  }
+
+  return firstNames
+}
+
 const CourseList = ({ courses, className }) => {
+  const firstNamesOfStartingLetter = findFirstNamesOfStartingLetter(
+    R.pluck('name')(courses)
+  )
+
   const items = courses.map(course => (
     <CourseListItem
       className="course-list__course-list-item"
       key={course.name}
       name={course.name}
       lastModified={findLatestModifiedDate(course.documents)}
-    />
+    >
+      {/* Show alphabets to the left of the listing */
+      firstNamesOfStartingLetter.has(course.name) ? (
+        <ListingAlphabet letter={course.name.charAt(0).toLocaleUpperCase()} />
+      ) : null}
+    </CourseListItem>
   ))
 
   return (

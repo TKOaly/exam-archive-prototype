@@ -30,9 +30,18 @@
   }
 }
 
+.listing-alphabet {
+  margin: 0;
+  position: absolute;
+  left: -30px;
+  color: #9b9b9d;
+  text-align: right;
+}
+
 .course-list-item {
   height: 48px;
   width: 100%;
+  position: relative;
   display: flex;
   align-items: center;
   font-size: 14px;
