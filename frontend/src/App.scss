@@ -1,9 +1,18 @@
 .app {
   width: 100%;
-  max-width: 650px;
-  margin: 0 auto;
+  margin: 0;
+
+  &__header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
 
   &__course-list {
+    width: 100%;
+    max-width: 650px;
+    margin: 53px auto 0 auto;
     margin-bottom: 48px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   }

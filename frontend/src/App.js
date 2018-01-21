@@ -1,6 +1,7 @@
 import React from 'react'
 import * as moment from 'moment'
 import CourseList from './components/CourseList'
+import Header from './components/Header'
 import * as courses from './data/courses.json'
 import './App.css'
 
@@ -20,6 +21,7 @@ const apiToAppModel = courses => {
 
 const App = () => (
   <div className="app">
+    <Header className="app__header" />
     <CourseList className="app__course-list" courses={apiToAppModel(courses)} />
   </div>
 )
