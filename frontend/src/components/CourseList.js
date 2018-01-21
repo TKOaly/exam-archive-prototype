@@ -26,9 +26,6 @@ const CourseListItem = ({ name, lastModified }) => {
       <p className="course-list-item__last-modified">
         {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
       </p>
-      <p className="course-list-item__size">
-        –
-      </p>
     </li>
   )
 }
