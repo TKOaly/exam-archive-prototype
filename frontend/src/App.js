@@ -15,7 +15,9 @@ const momentifyLastModified = document => {
 const apiToAppModel = courses => {
   return courses.map(course => ({
     ...course,
-    documents: course.documents ? course.documents.map(momentifyLastModified) : undefined
+    documents: course.documents
+      ? course.documents.map(momentifyLastModified)
+      : undefined
   }))
 }
 

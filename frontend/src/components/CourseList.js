@@ -34,29 +34,23 @@ const isNotNil = R.complement(R.isNil)
 
 const findLatestModifiedDate = documents => {
   if (!documents) return null
-  const documentsTimestamps = R.pluck('lastModified')(documents).filter(isNotNil)
+  const documentsTimestamps = R.pluck('lastModified')(documents).filter(
+    isNotNil
+  )
   return moment.max(documentsTimestamps)
 }
 
 const CourseList = ({ courses, className }) => {
-  const items = courses.map(course => {
-    const lastModified = findLatestModifiedDate(course.documents)
+  const items = courses.map(course => (
+    <CourseListItem
+      className="course-list__course-list-item"
+      key={course.name}
+      name={course.name}
+      lastModified={findLatestModifiedDate(course.documents)}
+    />
+  ))
 
-    return (
-      <CourseListItem
-        className="course-list__course-list-item"
-        key={course.name}
-        name={course.name}
-        lastModified={lastModified}
-      />
-    )
-  })
-
-  return (
-    <ul className={classnames('course-list', className)}>
-      {items}
-    </ul>
-  )
+  return <ul className={classnames('course-list', className)}>{items}</ul>
 }
 
 export default CourseList
