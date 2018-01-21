@@ -20,7 +20,7 @@ const CourseListItem = ({ name, lastModified }) => {
   return (
     <li className="course-list-item">
       <FolderIcon className="course-list-item__icon" />
-      <a href="/file/asd" className="course-list-item__link">
+      <a href="/file/asd" className="course-list-item__link" title={name}>
         <span className="course-list-item__name">{name}</span>
       </a>
       <p className="course-list-item__last-modified">
