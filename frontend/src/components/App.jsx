@@ -1,8 +1,8 @@
 import React from 'react'
 import * as moment from 'moment'
-import CourseList from './components/CourseList'
-import Header from './components/Header'
-import * as courses from './data/courses.json'
+import CourseList from './CourseList'
+import Header from './Header'
+import * as courses from '../data/courses.json'
 import './App.css'
 
 const momentifyLastModified = document => {
