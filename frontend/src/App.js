@@ -29,4 +29,5 @@ const App = () => (
     <CourseList className="app__course-list" courses={apiToAppModel(courses)} />
   </div>
 )
+
 export default App
