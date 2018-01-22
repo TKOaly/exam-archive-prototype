@@ -71,6 +71,8 @@ const CourseList = ({ courses, className }) => {
   const firstNamesOfStartingLetter = findFirstNamesOfStartingLetter(
     R.pluck('name')(courses)
   )
+  const shouldShowAlphabet = courseName =>
+    firstNamesOfStartingLetter.has(courseName)
 
   const items = courses.map(course => (
     <CourseListItem
@@ -80,7 +82,7 @@ const CourseList = ({ courses, className }) => {
       lastModified={findLatestModifiedDate(course.documents)}
     >
       {/* Show alphabets to the left of the listing */
-      firstNamesOfStartingLetter.has(course.name) ? (
+      shouldShowAlphabet(course.name) ? (
         <ListingAlphabet letter={course.name.charAt(0).toLocaleUpperCase()} />
       ) : null}
     </CourseListItem>
