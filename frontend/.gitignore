@@ -1,8 +1,5 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-# don't add SASS' output to repo
-src/**/*.css
-
 # dependencies
 /node_modules
 

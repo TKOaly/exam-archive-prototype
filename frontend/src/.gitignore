@@ -1,0 +1,2 @@
+# don't add SASS' output to repo
+*.css
