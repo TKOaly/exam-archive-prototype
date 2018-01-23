@@ -30,7 +30,14 @@
     ]
   },
   {
-    "name": "Advanced course in programming"
+    "name": "Advanced course in programming",
+    "documents": [
+      {
+        "filename": "140131_Luukkainen_EK.pdf",
+        "lastModified": "2014-02-18 16:04",
+        "size": "110.8 KB"
+      }
+    ]
   },
   {
     "name": "Algebra I"
