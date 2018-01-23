@@ -23,9 +23,7 @@
   }
 
   &__last-modified {
-    margin: 0 15px 0 auto;
-    width: 120px;
-    padding-left: 10px;
+    margin: 0 54px 0 auto;
     box-sizing: border-box;
   }
 }
@@ -75,7 +73,7 @@
   &__last-modified {
     flex: 0 0 auto;
     box-sizing: border-box;
-    width: 120px;
+    min-width: 110px;
     color: #9b9b9d;
     margin: 0 15px 0 auto;
     padding-left: 10px; /* add some space in case the name is extra long */
