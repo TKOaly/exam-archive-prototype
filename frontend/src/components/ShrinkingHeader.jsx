@@ -1,4 +1,5 @@
 import React from 'react'
+import * as R from 'ramda'
 import { headerHeight, headerHeightShrunk } from '../common'
 import Header from './Header'
 
@@ -32,7 +33,12 @@ class ShrinkingHeader extends React.Component {
   }
 
   render() {
-    return <Header isShrunk={this.state.isShrunk} {...this.props} />
+    return (
+      <Header
+        isShrunk={this.state.isShrunk}
+        {...R.omit('isShrunk')(this.props)}
+      />
+    )
   }
 }
 
