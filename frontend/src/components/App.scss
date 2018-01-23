@@ -12,11 +12,11 @@
     right: 0;
   }
 
-  &__course-list {
+  &__content {
     width: 100%;
     max-width: 650px;
     margin: 0 auto;
-    margin-bottom: 48px;
     padding-top: $header-height + 5px;
+    margin-bottom: 48px;
   }
 }

@@ -26,7 +26,12 @@ const apiToAppModel = courses => {
 const App = () => (
   <div className="app">
     <ShrinkingHeader className="app__header" />
-    <CourseList className="app__course-list" courses={apiToAppModel(courses)} />
+    <main className="app__content">
+      <CourseList
+        className="app__course-list"
+        courses={apiToAppModel(courses)}
+      />
+    </main>
   </div>
 )
 
