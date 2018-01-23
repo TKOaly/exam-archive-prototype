@@ -2,6 +2,7 @@ import React from 'react'
 import * as moment from 'moment'
 import CourseList from './CourseList'
 import ShrinkingHeader from './ShrinkingHeader'
+import ListingNavigation from './ListingNavigation'
 import * as courses from '../data/courses.json'
 import './App.css'
 
@@ -26,6 +27,11 @@ const apiToAppModel = courses => {
 const App = () => (
   <div className="app">
     <ShrinkingHeader className="app__header" />
+    <ListingNavigation
+      className="app__listing-navigation"
+      title="Courses"
+      showBackButton={false}
+    />
     <main className="app__content">
       <CourseList
         className="app__course-list"
