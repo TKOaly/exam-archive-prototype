@@ -24,6 +24,7 @@ MVP defined as: _"can do what the old archive can do"_
 
 ### ui
 
+* [ ] wire up react-router
 * [x] course listing
 * [x] breadcrumbs
   * went with a navigation bar instead
