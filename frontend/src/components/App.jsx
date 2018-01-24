@@ -1,45 +1,53 @@
 import React from 'react'
-import * as moment from 'moment'
-import CourseList from './CourseList'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+import DummyCourseList from '../containers/DummyCourseList'
 import ShrinkingHeader from './ShrinkingHeader'
 import ListingNavigation from './ListingNavigation'
-import * as courses from '../data/courses.json'
+import NotFound from './NotFound'
 import './App.css'
 
-const momentifyLastModified = document => {
-  return {
-    ...document,
-    lastModified: moment(document.lastModified)
-  }
-}
-
-const apiToAppModel = courses => {
-  const appModelCourses = courses.map(course => ({
-    ...course,
-    documents: course.documents
-      ? course.documents.map(momentifyLastModified)
-      : undefined
-  }))
-  appModelCourses.sort((a, b) => a.name.localeCompare(b.name))
-  return appModelCourses
+const CourseListingNavigation = () => {
+  return (
+    <Switch>
+      <Route exact path="/courses">
+        <ListingNavigation
+          className="app__listing-navigation"
+          title="Courses"
+        />
+      </Route>
+      <Route exact path="/courses/:courseName">
+        {({ match }) => (
+          <ListingNavigation
+            className="app__listing-navigation"
+            title={match.params.courseName}
+            backButtonHref="/courses"
+          />
+        )}
+      </Route>
+    </Switch>
+  )
 }
 
 const App = () => (
-  <div className="app">
-    <div className="app__header-spacing" />
-    <ShrinkingHeader className="app__header" />
-    <ListingNavigation
-      className="app__listing-navigation"
-      title="Courses"
-      showBackButton={false}
-    />
-    <main className="app__content">
-      <CourseList
-        className="app__course-list"
-        courses={apiToAppModel(courses)}
-      />
-    </main>
-  </div>
+  <Router>
+    <div className="app">
+      <div className="app__header-spacing" />
+      <ShrinkingHeader className="app__header" />
+      <CourseListingNavigation />
+      <main className="app__content">
+        <Switch>
+          <Route exact path="/" render={() => <Redirect to="/courses" />} />
+          <Route path="/courses" component={DummyCourseList} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+    </div>
+  </Router>
 )
 
 export default App

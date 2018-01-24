@@ -1,5 +1,6 @@
 import React from 'react'
 import * as classnames from 'classnames'
+import { Link } from 'react-router-dom'
 import './ListingNavigation.css'
 
 const ArrowBack = ({ className }) => (
@@ -15,18 +16,21 @@ const ArrowBack = ({ className }) => (
   </svg>
 )
 
-const BackButton = ({ className }) => (
-  <button className={classnames('back-button', className)}>
+const BackButton = ({ to, className }) => (
+  <Link to={to} className={classnames('back-button', className)}>
     <ArrowBack className="back-button__icon" />
-  </button>
+  </Link>
 )
 
-const ListingNavigation = ({ title, showBackButton, className }) => (
+const ListingNavigation = ({ title, backButtonHref, className }) => (
   <div className={classnames('listing-navigation', className)}>
     <div className="listing-navigation__content">
-      {showBackButton && (
+      {backButtonHref && (
         <div className="listing-navigation__button-container">
-          <BackButton className="listing-navigation__back-button" />
+          <BackButton
+            className="listing-navigation__back-button"
+            to={backButtonHref}
+          />
         </div>
       )}
       <div className="listing-navigation__title">

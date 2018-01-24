@@ -2,6 +2,7 @@ import React from 'react'
 import * as R from 'ramda'
 import * as moment from 'moment'
 import * as classnames from 'classnames'
+import { Link } from 'react-router-dom'
 import './CourseList.css'
 
 const FolderIcon = ({ className }) => (
@@ -24,9 +25,13 @@ const CourseListItem = ({ name, lastModified, children }) => {
   return (
     <li className="course-list-item">
       <FolderIcon className="course-list-item__icon" />
-      <a href="/file/asd" className="course-list-item__link" title={name}>
+      <Link
+        to={`/courses/${encodeURI(name)}`}
+        className="course-list-item__link"
+        title={name}
+      >
         <span className="course-list-item__name">{name}</span>
-      </a>
+      </Link>
       <p className="course-list-item__last-modified">
         {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
       </p>
