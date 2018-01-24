@@ -6,6 +6,7 @@ import {
   Redirect
 } from 'react-router-dom'
 import DummyCourseList from '../containers/DummyCourseList'
+import DummyDocumentList from '../containers/DummyDocumentList'
 import ShrinkingHeader from './ShrinkingHeader'
 import ListingNavigation from './ListingNavigation'
 import NotFound from './NotFound'
@@ -42,7 +43,8 @@ const App = () => (
       <main className="app__content">
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/courses" />} />
-          <Route path="/courses" component={DummyCourseList} />
+          <Route exact path="/courses" component={DummyCourseList} />
+          <Route path="/courses/:courseName" component={DummyDocumentList} />
           <Route component={NotFound} />
         </Switch>
       </main>
