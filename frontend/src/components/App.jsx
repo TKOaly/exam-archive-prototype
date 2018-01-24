@@ -26,6 +26,7 @@ const apiToAppModel = courses => {
 
 const App = () => (
   <div className="app">
+    <div className="app__header-spacing" />
     <ShrinkingHeader className="app__header" />
     <ListingNavigation
       className="app__listing-navigation"
