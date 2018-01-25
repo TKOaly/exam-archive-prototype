@@ -24,12 +24,12 @@ MVP defined as: _"can do what the old archive can do"_
 
 ### ui
 
-* [ ] wire up react-router
+* [x] wire up react-router
 * [x] course listing
 * [x] breadcrumbs
   * went with a navigation bar instead
     * holy shit it's responsive and it works **_BEAUTIFULLY_**
-* [ ] document listing
+* [x] document listing
   * can refit much of the course listing
 * [ ] login screen
 * [ ] logout button & current user's name
