@@ -17,3 +17,58 @@
     box-sizing: border-box;
   }
 }
+
+.document-list {
+  &__list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+}
+
+.document-list-item {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #fff;
+
+  &__icon {
+    flex: 0 0 auto;
+    fill: #e74c3c;
+    width: 54px;
+  }
+
+  &__link {
+    flex: 0 1 auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    /* add some padding to the top and bottom to expand the click area */
+    padding: 5px 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &__link {
+    margin: 0;
+  }
+
+  &__filename {
+    color: #121212;
+    border-bottom: 1px solid #c7c7c7;
+  }
+
+  &__last-modified {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-width: 110px;
+    color: #9b9b9d;
+    margin: 0 15px 0 auto;
+    padding-left: 10px; /* add some space in case the name is extra long */
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react'
 import * as moment from 'moment'
 import * as dummyCourses from '../data/courses.json'
+import DocumentList from '../components/DocumentList'
 
 const momentifyLastModified = document => {
   return {
@@ -29,17 +30,7 @@ const DummyDocumentList = ({ match }) => {
   if (!matchingCourse.documents || matchingCourse.documents.length === 0)
     return <p>No documents found</p>
 
-  return (
-    <ul>
-      {matchingCourse.documents.map(d => (
-        <ul key={d.filename}>
-          {d.filename} -{' '}
-          {d.lastModified && d.lastModified.format('YYYY-MM-DD hh:mm')} -{' '}
-          {d.size}
-        </ul>
-      ))}
-    </ul>
-  )
+  return <DocumentList documents={matchingCourse.documents} />
 }
 
 export default DummyDocumentList
