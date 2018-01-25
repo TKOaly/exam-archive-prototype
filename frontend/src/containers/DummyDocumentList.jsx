@@ -2,6 +2,7 @@ import React from 'react'
 import * as moment from 'moment'
 import * as dummyCourses from '../data/courses.json'
 import DocumentList from '../components/DocumentList'
+import NotFound from '../components/NotFound'
 
 const momentifyLastModified = document => {
   return {
@@ -25,10 +26,7 @@ const DummyDocumentList = ({ match }) => {
   const courses = apiToAppModel(dummyCourses)
   const requestedCourse = match.params.courseName
   const matchingCourse = courses.find(course => course.name === requestedCourse)
-  if (!matchingCourse) return <p>Course '{requestedCourse}' does not exist.</p>
-
-  if (!matchingCourse.documents || matchingCourse.documents.length === 0)
-    return <p>No documents found</p>
+  if (!matchingCourse) return <NotFound />
 
   return <DocumentList documents={matchingCourse.documents} />
 }

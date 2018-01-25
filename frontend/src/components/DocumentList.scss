@@ -26,6 +26,16 @@
     padding: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   }
+
+  &__not-found {
+    margin: 0 0 0 54px;
+    padding-top: 48px;
+  }
+}
+
+.no-documents-found {
+  font-weight: 500;
+  color: #9b9b9d;
 }
 
 .document-list-item {

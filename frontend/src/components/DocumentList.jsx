@@ -1,5 +1,5 @@
 import React from 'react'
-import classnames from 'classnames'
+import * as classnames from 'classnames'
 import './DocumentList.css'
 
 const DocumentListHeader = () => (
@@ -46,7 +46,7 @@ const DocumentList = ({ documents, className }) => {
   if (!documents || documents.length === 0) {
     return (
       <div className={classnames('document-list', className)}>
-        <NoDocumentsFound className="document-list__notfound" />
+        <NoDocumentsFound className="document-list__not-found" />
       </div>
     )
   }
