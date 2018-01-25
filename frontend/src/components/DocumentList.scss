@@ -52,6 +52,18 @@
     width: 54px;
   }
 
+  &__icon--is-photo {
+    fill: #27ae60;
+  }
+
+  &__icon--is-generic {
+    fill: #95a5a6;
+  }
+
+  &__icon--is-pdf {
+    fill: #e74c3c;
+  }
+
   &__link {
     flex: 0 1 auto;
     overflow-x: hidden;

@@ -15,7 +15,33 @@ const NoDocumentsFound = ({ className }) => (
   </p>
 )
 
-const PictureAsPdfIcon = ({ className }) => (
+const DocumentIcon = ({ className }) => (
+  <svg
+    className={className}
+    height="24"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+  </svg>
+)
+
+const PhotoIcon = ({ className }) => (
+  <svg
+    className={className}
+    height="24"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" />
+  </svg>
+)
+
+const PdfIcon = ({ className }) => (
   <svg
     className={className}
     height="24"
@@ -28,19 +54,45 @@ const PictureAsPdfIcon = ({ className }) => (
   </svg>
 )
 
-const DocumentListItem = ({ filename, lastModified }) => (
-  <li className="document-list-item">
-    <PictureAsPdfIcon className="document-list-item__icon" />
-    <div className="document-list-item__text-content">
-      <p className="document-list-item__link">
-        <span className="document-list-item__filename">{filename}</span>
+// todo: just return BEM modifier and set the background image with CSS
+const iconForFile = filename => {
+  const ext = filename.split('.').pop()
+
+  switch (ext) {
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+      return (
+        <PhotoIcon className="document-list-item__icon document-list-item__icon--is-photo" />
+      )
+    case 'pdf':
+      return (
+        <PdfIcon className="document-list-item__icon document-list-item__icon--is-pdf" />
+      )
+    default:
+      return (
+        <DocumentIcon className="document-list-item__icon document-list-item__icon--is-generic" />
+      )
+  }
+}
+
+const DocumentListItem = ({ filename, lastModified }) => {
+  const icon = iconForFile(filename)
+
+  return (
+    <li className="document-list-item">
+      {icon}
+      <div className="document-list-item__text-content">
+        <p className="document-list-item__link">
+          <span className="document-list-item__filename">{filename}</span>
+        </p>
+      </div>
+      <p className="document-list-item__last-modified">
+        {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
       </p>
-    </div>
-    <p className="document-list-item__last-modified">
-      {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
-    </p>
-  </li>
-)
+    </li>
+  )
+}
 
 const DocumentList = ({ documents, className }) => {
   if (!documents || documents.length === 0) {
