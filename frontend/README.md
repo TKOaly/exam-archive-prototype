@@ -2,6 +2,8 @@
 
 TKO-äly ry exam archive, modernized.
 
+![](https://i.imgur.com/1SUPXNu.png)
+
 ## Development
 
 #### Steps
