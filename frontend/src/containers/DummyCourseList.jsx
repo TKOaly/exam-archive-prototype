@@ -1,7 +1,7 @@
 import React from 'react'
-import * as moment from 'moment'
+import moment from 'moment'
 import CourseList from '../components/CourseList'
-import * as courses from '../data/courses.json'
+import courses from '../data/courses.json'
 
 const momentifyLastModified = document => {
   return {

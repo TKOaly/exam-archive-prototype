@@ -1,5 +1,5 @@
 import React from 'react'
-import * as classnames from 'classnames'
+import classnames from 'classnames'
 import './DocumentList.css'
 
 const DocumentListHeader = () => (
@@ -107,7 +107,9 @@ const DocumentList = ({ documents, className }) => {
     <div className={classnames('document-list', className)}>
       <DocumentListHeader />
       <ul className="document-list__list">
-        {documents.map(d => <DocumentListItem key={d.filename} {...d} />)}
+        {documents.map(d => (
+          <DocumentListItem key={d.filename} {...d} />
+        ))}
       </ul>
     </div>
   )
