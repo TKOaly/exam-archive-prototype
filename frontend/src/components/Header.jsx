@@ -1,7 +1,7 @@
 import React from 'react'
-import * as classnames from 'classnames'
+import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import * as tkoalyLogo from '../resources/tkoaly-logo-outline-black-fill-transparent.svg'
+import tkoalyLogo from '../resources/tkoaly-logo-outline-black-fill-transparent.svg'
 import './Header.css'
 
 const Header = ({ isShrunk, className }) => {

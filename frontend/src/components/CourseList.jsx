@@ -1,7 +1,7 @@
 import React from 'react'
 import * as R from 'ramda'
-import * as moment from 'moment'
-import * as classnames from 'classnames'
+import moment from 'moment'
+import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import './CourseList.css'
 

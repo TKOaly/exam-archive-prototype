@@ -1,6 +1,6 @@
 import React from 'react'
-import * as moment from 'moment'
-import * as dummyCourses from '../data/courses.json'
+import moment from 'moment'
+import dummyCourses from '../data/courses.json'
 import DocumentList from '../components/DocumentList'
 import NotFound from '../components/NotFound'
 

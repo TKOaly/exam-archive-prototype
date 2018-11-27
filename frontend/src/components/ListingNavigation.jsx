@@ -1,5 +1,5 @@
 import React from 'react'
-import * as classnames from 'classnames'
+import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import './ListingNavigation.css'
 
