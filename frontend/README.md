@@ -6,6 +6,13 @@ UI prototype for the new exam archive of TKO-äly ry.
 
 ## Running with Docker
 
+### With the latest build on DockerHub
+
+1. Install [Docker](https://www.docker.com/get-started)
+2. Run `docker run -it -p 1234:5000 cxcorp/exam-archive-prototype`
+
+### Locally
+
 1. Install [Docker](https://www.docker.com/get-started)
 2. Build the image with `docker build -t exam-archive-prototype .` (notice the `.`)
 3. Start a container with the image: `docker run -it -p 1234:5000 exam-archive-prototype`
