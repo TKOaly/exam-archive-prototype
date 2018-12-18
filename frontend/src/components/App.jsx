@@ -10,7 +10,7 @@ import DummyDocumentList from '../containers/DummyDocumentList'
 import ShrinkingHeader from './ShrinkingHeader'
 import ListingNavigation from './ListingNavigation'
 import NotFound from './NotFound'
-import './App.css'
+import './App.scss'
 
 const CourseListingNavigation = () => {
   return (

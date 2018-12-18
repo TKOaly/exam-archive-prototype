@@ -3,7 +3,7 @@ import * as R from 'ramda'
 import moment from 'moment'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import './CourseList.css'
+import './CourseList.scss'
 
 const FolderIcon = ({ className }) => (
   <svg

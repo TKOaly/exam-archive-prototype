@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import './DocumentList.css'
+import './DocumentList.scss'
 
 const DocumentListHeader = () => (
   <div className="document-list-header">

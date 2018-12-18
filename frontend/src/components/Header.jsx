@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import tkoalyLogo from '../resources/tkoaly-logo-outline-black-fill-transparent.svg'
-import './Header.css'
+import './Header.scss'
 
 const Header = ({ isShrunk, className }) => {
   const classname = classnames('header', className, {
