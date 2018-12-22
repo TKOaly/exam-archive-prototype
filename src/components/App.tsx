@@ -12,7 +12,7 @@ import ListingNavigation from './ListingNavigation'
 import NotFound from './NotFound'
 import './App.scss'
 
-const CourseListingNavigation = () => {
+const CourseListingNavigation: React.SFC = () => {
   return (
     <Switch>
       <Route exact path="/courses">
@@ -25,7 +25,7 @@ const CourseListingNavigation = () => {
         {({ match }) => (
           <ListingNavigation
             className="app__listing-navigation"
-            title={match.params.courseName}
+            title={match!.params.courseName}
             backButtonHref="/courses"
           />
         )}
@@ -34,7 +34,7 @@ const CourseListingNavigation = () => {
   )
 }
 
-const App = () => (
+const App: React.SFC = () => (
   <Router>
     <div className="app">
       <div className="app__header-spacing" />
