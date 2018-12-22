@@ -1,21 +1,25 @@
 import React from 'react'
 import classnames from 'classnames'
 import './DocumentList.scss'
+import { WithClassName } from './WithClassName'
+import { Moment } from 'moment'
+import { Icon } from './Icon'
+import { Document } from '../domain'
 
-const DocumentListHeader = () => (
+const DocumentListHeader: React.SFC = () => (
   <div className="document-list-header">
     <p className="document-list-header__document">Document</p>
     <p className="document-list-header__upload-date">Upload date</p>
   </div>
 )
 
-const NoDocumentsFound = ({ className }) => (
+const NoDocumentsFound: React.SFC<WithClassName> = ({ className }) => (
   <p className={classnames('no-documents-found', className)}>
     No documents found
   </p>
 )
 
-const DocumentIcon = ({ className }) => (
+const DocumentIcon: Icon = ({ className }) => (
   <svg
     className={className}
     height="24"
@@ -28,7 +32,7 @@ const DocumentIcon = ({ className }) => (
   </svg>
 )
 
-const PhotoIcon = ({ className }) => (
+const PhotoIcon: Icon = ({ className }) => (
   <svg
     className={className}
     height="24"
@@ -41,7 +45,7 @@ const PhotoIcon = ({ className }) => (
   </svg>
 )
 
-const PdfIcon = ({ className }) => (
+const PdfIcon: Icon = ({ className }) => (
   <svg
     className={className}
     height="24"
@@ -55,7 +59,7 @@ const PdfIcon = ({ className }) => (
 )
 
 // todo: just return BEM modifier and set the background image with CSS
-const iconForFile = filename => {
+const iconForFile = (filename: string) => {
   const ext = filename.split('.').pop()
 
   switch (ext) {
@@ -76,7 +80,15 @@ const iconForFile = filename => {
   }
 }
 
-const DocumentListItem = ({ filename, lastModified }) => {
+interface DocumentListItemProps {
+  filename: string
+  lastModified?: Moment
+}
+
+const DocumentListItem: React.SFC<DocumentListItemProps> = ({
+  filename,
+  lastModified
+}) => {
   const icon = iconForFile(filename)
 
   return (
@@ -94,7 +106,14 @@ const DocumentListItem = ({ filename, lastModified }) => {
   )
 }
 
-const DocumentList = ({ documents, className }) => {
+interface DocumentListProps extends WithClassName {
+  documents: Array<Document>
+}
+
+const DocumentList: React.SFC<DocumentListProps> = ({
+  documents,
+  className
+}) => {
   if (!documents || documents.length === 0) {
     return (
       <div className={classnames('document-list', className)}>

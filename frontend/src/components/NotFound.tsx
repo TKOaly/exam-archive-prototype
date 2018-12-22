@@ -1,5 +1,5 @@
 import React from 'react'
 
-const NotFound = () => <p>'404'</p>
+const NotFound: React.SFC = () => <p>'404'</p>
 
 export default NotFound
