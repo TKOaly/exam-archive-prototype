@@ -107,7 +107,7 @@ const DocumentListItem: React.SFC<DocumentListItemProps> = ({
 }
 
 interface DocumentListProps extends WithClassName {
-  documents: Array<Document>
+  documents?: Array<Document>
 }
 
 const DocumentList: React.SFC<DocumentListProps> = ({
