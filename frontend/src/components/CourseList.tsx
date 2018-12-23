@@ -1,11 +1,13 @@
 import React from 'react'
-import * as R from 'ramda'
-import moment from 'moment'
+import moment, { Moment } from 'moment'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import './CourseList.scss'
+import { Icon } from './Icon'
+import { Document, Course } from '../domain'
+import { WithClassName } from './WithClassName'
 
-const FolderIcon = ({ className }) => (
+const FolderIcon: Icon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -17,11 +19,23 @@ const FolderIcon = ({ className }) => (
   </svg>
 )
 
-const ListingAlphabet = ({ letter }) => (
+interface ListingAlphabetProps {
+  letter: string
+}
+
+const ListingAlphabet: React.SFC<ListingAlphabetProps> = ({ letter }) => (
   <p className="listing-alphabet">{letter}</p>
 )
 
-const CourseListItem = ({ name, lastModified, children }) => {
+interface CourseListItemProps extends WithClassName {
+  name: string
+  lastModified: Moment | null
+}
+const CourseListItem: React.SFC<CourseListItemProps> = ({
+  name,
+  lastModified,
+  children
+}) => {
   return (
     <li className="course-list-item">
       <FolderIcon className="course-list-item__icon" />
@@ -47,18 +61,20 @@ const CourseListHeader = () => (
   </div>
 )
 
-const isNotNil = R.complement(R.isNil)
+function isNotNil<A>(a: A | undefined): a is A {
+  return !Object.is(a, undefined)
+}
 
-const findLatestModifiedDate = documents => {
+const findLatestModifiedDate = (documents: Array<Document> | undefined) => {
   if (!documents) return null
-  const documentsTimestamps = R.pluck('lastModified')(documents).filter(
-    isNotNil
-  )
+  const documentsTimestamps = documents
+    .map(_ => _.lastModified)
+    .filter(isNotNil)
   return moment.max(documentsTimestamps)
 }
 
-function findFirstNamesOfStartingLetter(courseNames) {
-  const firstNames = new Set()
+function findFirstNamesOfStartingLetter(courseNames: Array<string>) {
+  const firstNames = new Set<string>()
   let previous = courseNames[0].charAt(0)
   firstNames.add(courseNames[0])
 
@@ -72,11 +88,15 @@ function findFirstNamesOfStartingLetter(courseNames) {
   return firstNames
 }
 
-const CourseList = ({ courses, className }) => {
+interface CourseListProps extends WithClassName {
+  courses: Array<Course>
+}
+
+const CourseList: React.SFC<CourseListProps> = ({ courses, className }) => {
   const firstNamesOfStartingLetter = findFirstNamesOfStartingLetter(
-    R.pluck('name')(courses)
+    courses.map(_ => _.name)
   )
-  const shouldShowAlphabet = courseName =>
+  const shouldShowAlphabet = (courseName: string) =>
     firstNamesOfStartingLetter.has(courseName)
 
   const items = courses.map(course => (
