@@ -5,8 +5,9 @@ import './index.scss'
 import 'normalize.css'
 import App from './components/App'
 
-// @ts-ignore Allow registerServiceWorker.js to be javascript for now
-import registerServiceWorker from './registerServiceWorker'
+import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(<App />, document.getElementById('root'))
-registerServiceWorker()
+
+// As default behavior, unregister SW
+serviceWorker.unregister();
