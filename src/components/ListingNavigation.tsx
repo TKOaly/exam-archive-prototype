@@ -2,8 +2,9 @@ import React from 'react'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import './ListingNavigation.scss'
+import { WithClassName } from './WithClassName'
 
-const ArrowBack = ({ className }) => (
+const ArrowBack: React.SFC<WithClassName> = ({ className }) => (
   <svg
     className={className}
     width="24"
@@ -16,13 +17,26 @@ const ArrowBack = ({ className }) => (
   </svg>
 )
 
-const BackButton = ({ to, className }) => (
+interface BackButtonProps extends WithClassName {
+  to: string
+}
+
+const BackButton: React.SFC<BackButtonProps> = ({ to, className }) => (
   <Link to={to} className={classnames('back-button', className)}>
     <ArrowBack className="back-button__icon" />
   </Link>
 )
 
-const ListingNavigation = ({ title, backButtonHref, className }) => (
+interface ListingNavigationProps extends WithClassName {
+  title: string
+  backButtonHref?: string
+}
+
+const ListingNavigation: React.SFC<ListingNavigationProps> = ({
+  title,
+  backButtonHref,
+  className
+}) => (
   <div className={classnames('listing-navigation', className)}>
     <div className="listing-navigation__content">
       {backButtonHref && (

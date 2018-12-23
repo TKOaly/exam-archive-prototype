@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom'
 import tkoalyLogo from '../resources/tkoaly-logo-outline-black-fill-transparent.svg'
 import './Header.scss'
 
-const Header = ({ isShrunk, className }) => {
+export interface Props {
+  isShrunk: boolean
+  className?: string
+}
+
+const Header: React.SFC<Props> = ({ isShrunk, className }) => {
   const classname = classnames('header', className, {
     'header--shrunk': isShrunk
   })

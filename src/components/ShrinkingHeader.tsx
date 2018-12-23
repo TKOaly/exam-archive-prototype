@@ -1,10 +1,15 @@
 import React from 'react'
-import * as R from 'ramda'
 import { headerHeight, headerHeightShrunk } from '../common'
-import Header from './Header'
+import Header, { Props as HeaderProps } from './Header'
 
-class ShrinkingHeader extends React.Component {
-  constructor(props) {
+export type Props = Pick<HeaderProps, Exclude<keyof HeaderProps, 'isShrunk'>>
+
+interface State {
+  isShrunk: boolean
+}
+
+class ShrinkingHeader extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = { isShrunk: false }
     this.handleScroll = this.handleScroll.bind(this)
@@ -33,12 +38,7 @@ class ShrinkingHeader extends React.Component {
   }
 
   render() {
-    return (
-      <Header
-        isShrunk={this.state.isShrunk}
-        {...R.omit('isShrunk')(this.props)}
-      />
-    )
+    return <Header {...this.props} isShrunk={this.state.isShrunk} />
   }
 }
 
