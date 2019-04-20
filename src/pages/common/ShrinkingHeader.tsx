@@ -1,5 +1,5 @@
 import React from 'react'
-import { headerHeight, headerHeightShrunk } from '../common'
+import { headerHeight, headerHeightShrunk } from '../../common'
 import Header, { Props as HeaderProps } from './Header'
 
 export type Props = Pick<HeaderProps, Exclude<keyof HeaderProps, 'isShrunk'>>

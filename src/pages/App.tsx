@@ -5,11 +5,11 @@ import {
   Switch,
   Redirect
 } from 'react-router-dom'
-import DummyCourseList from '../containers/DummyCourseList'
-import DummyDocumentList from '../containers/DummyDocumentList'
-import ShrinkingHeader from './ShrinkingHeader'
-import ListingNavigation from './ListingNavigation'
-import NotFound from './NotFound'
+import CourseListPage from './courses'
+import DocumentListPage from './exams'
+import ShrinkingHeader from './common/ShrinkingHeader'
+import ListingNavigation from './common/ListingNavigation'
+import NotFound from './common/NotFound'
 import './App.scss'
 
 const CourseListingNavigation: React.SFC = () => {
@@ -21,11 +21,11 @@ const CourseListingNavigation: React.SFC = () => {
           title="Courses"
         />
       </Route>
-      <Route exact path="/courses/:courseName">
+      <Route exact path="/courses/:id([0-9]+)-:courseSlug">
         {({ match }) => (
           <ListingNavigation
             className="app__listing-navigation"
-            title={match!.params.courseName}
+            title={match!.params.courseSlug}
             backButtonHref="/courses"
           />
         )}
@@ -43,8 +43,18 @@ const App: React.SFC = () => (
       <main className="app__content">
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/courses" />} />
-          <Route exact path="/courses" component={DummyCourseList} />
-          <Route path="/courses/:courseName" component={DummyDocumentList} />
+          <Route exact path="/courses" component={CourseListPage} />
+          <Route
+            exact
+            path="/courses/:id([0-9]+)-:courseSlug"
+            render={({ match, history }) => (
+              <DocumentListPage
+                courseId={match!.params.id}
+                courseSlug={match!.params.courseSlug}
+                history={history}
+              />
+            )}
+          />
           <Route component={NotFound} />
         </Switch>
       </main>
