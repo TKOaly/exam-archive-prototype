@@ -12,7 +12,7 @@ import ListingNavigation from './common/ListingNavigation'
 import NotFound from './common/NotFound'
 import './App.scss'
 
-const CourseListingNavigation: React.SFC = () => {
+const CourseListingNavigation = () => {
   return (
     <Switch>
       <Route exact path="/courses">
@@ -34,7 +34,7 @@ const CourseListingNavigation: React.SFC = () => {
   )
 }
 
-const App: React.SFC = () => (
+const App = () => (
   <Router>
     <div className="app">
       <div className="app__header-spacing" />
