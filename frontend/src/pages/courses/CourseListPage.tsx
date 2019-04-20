@@ -1,12 +1,18 @@
 import React from 'react'
 import CourseList from './CourseList'
-import { Course } from '../../domain'
+import ListingNavigation from '../common/ListingNavigation'
+import { WithClassName } from '../common/WithClassName'
+import { CourseListingItem } from '../../domain'
+import './CourseListPage.scss'
 
-type CourseListPageState = {
-  courses: Array<Course>
+interface CourseListPageState {
+  courses: Array<CourseListingItem>
 }
 
-class CourseListPage extends React.Component<{}, CourseListPageState> {
+class CourseListPage extends React.Component<
+  WithClassName,
+  CourseListPageState
+> {
   state = {
     courses: []
   }
@@ -18,7 +24,14 @@ class CourseListPage extends React.Component<{}, CourseListPageState> {
   }
 
   render() {
-    return <CourseList courses={this.state.courses} />
+    return (
+      <>
+        <ListingNavigation title="Courses" />
+        <main className="course-list-page">
+          <CourseList courses={this.state.courses} />
+        </main>
+      </>
+    )
   }
 }
 

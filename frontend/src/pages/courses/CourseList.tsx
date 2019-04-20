@@ -6,15 +6,8 @@ import slugify from 'slugify'
 import './CourseList.scss'
 import FolderIcon from './FolderIcon'
 import { WithClassName } from '../common/WithClassName'
-import { Course } from '../../domain'
-
-const generateCourseSlug = (courseName: string) => {
-  return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
-    lower: true,
-    replacement: '-',
-    remove: /[^\w\d \-]/g
-  })
-}
+import { generateCourseSlug } from '../common/slug'
+import { CourseListingItem } from '../../domain'
 
 const hrefToCourse = (courseId: number | string, courseName: string) =>
   `/courses/${courseId}-${encodeURI(generateCourseSlug(courseName))}`
@@ -80,7 +73,7 @@ function findFirstNamesOfStartingLetter(courseNames: Array<string>) {
 }
 
 interface CourseListProps extends WithClassName {
-  courses: Array<Course>
+  courses: Array<CourseListingItem>
 }
 
 const CourseList: FunctionComponent<CourseListProps> = ({

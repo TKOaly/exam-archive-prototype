@@ -8,45 +8,22 @@ import {
 import CourseListPage from './courses'
 import DocumentListPage from './exams'
 import ShrinkingHeader from './common/ShrinkingHeader'
-import ListingNavigation from './common/ListingNavigation'
 import NotFound from './common/NotFound'
 import './App.scss'
 
-const CourseListingNavigation = () => {
+const App = () => {
   return (
-    <Switch>
-      <Route exact path="/courses">
-        <ListingNavigation
-          className="app__listing-navigation"
-          title="Courses"
-        />
-      </Route>
-      <Route exact path="/courses/:id([0-9]+)-:courseSlug">
-        {({ match }) => (
-          <ListingNavigation
-            className="app__listing-navigation"
-            title={match!.params.courseSlug}
-            backButtonHref="/courses"
-          />
-        )}
-      </Route>
-    </Switch>
-  )
-}
+    <Router>
+      <div className="app">
+        <div className="app__header-spacing" />
+        <ShrinkingHeader className="app__header" />
 
-const App = () => (
-  <Router>
-    <div className="app">
-      <div className="app__header-spacing" />
-      <ShrinkingHeader className="app__header" />
-      <CourseListingNavigation />
-      <main className="app__content">
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/courses" />} />
           <Route exact path="/courses" component={CourseListPage} />
           <Route
             exact
-            path="/courses/:id([0-9]+)-:courseSlug"
+            path="/courses/:id([0-9]+):ignore(-?):courseSlug(.*)"
             render={({ match, history }) => (
               <DocumentListPage
                 courseId={match!.params.id}
@@ -57,9 +34,9 @@ const App = () => (
           />
           <Route component={NotFound} />
         </Switch>
-      </main>
-    </div>
-  </Router>
-)
+      </div>
+    </Router>
+  )
+}
 
 export default App
