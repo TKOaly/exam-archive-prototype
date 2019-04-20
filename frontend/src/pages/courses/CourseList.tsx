@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import formatDate from 'date-fns/format'
@@ -23,9 +23,9 @@ interface ListingAlphabetProps {
   letter: string
 }
 
-const ListingAlphabet: React.SFC<ListingAlphabetProps> = ({ letter }) => (
-  <p className="listing-alphabet">{letter}</p>
-)
+const ListingAlphabet: FunctionComponent<ListingAlphabetProps> = ({
+  letter
+}) => <p className="listing-alphabet">{letter}</p>
 
 interface CourseListItemProps {
   id: number
@@ -33,7 +33,7 @@ interface CourseListItemProps {
   lastModified: Date | null
 }
 
-const CourseListItem: React.SFC<CourseListItemProps> = ({
+const CourseListItem: FunctionComponent<CourseListItemProps> = ({
   id,
   name,
   lastModified,
@@ -83,7 +83,10 @@ interface CourseListProps extends WithClassName {
   courses: Array<Course>
 }
 
-const CourseList: React.SFC<CourseListProps> = ({ courses, className }) => {
+const CourseList: FunctionComponent<CourseListProps> = ({
+  courses,
+  className
+}) => {
   const sortedCourses = [...courses].sort((a, b) =>
     a.name.localeCompare(b.name)
   )

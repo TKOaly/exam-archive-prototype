@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import classnames from 'classnames'
 import formatDate from 'date-fns/format'
 import './DocumentList.scss'
@@ -6,14 +6,14 @@ import { WithClassName } from '../common/WithClassName'
 import { DocumentIcon, PdfIcon, PhotoIcon } from './FileIcons'
 import { Document } from '../../domain'
 
-const DocumentListHeader: React.SFC = () => (
+const DocumentListHeader = () => (
   <div className="document-list-header">
     <p className="document-list-header__document">Document</p>
     <p className="document-list-header__upload-date">Upload date</p>
   </div>
 )
 
-const NoDocumentsFound: React.SFC<WithClassName> = ({ className }) => (
+const NoDocumentsFound: FunctionComponent<WithClassName> = ({ className }) => (
   <p className={classnames('no-documents-found', className)}>
     No documents found
   </p>
@@ -44,7 +44,7 @@ interface DocumentListItemProps {
   uploadDate: Date
 }
 
-const DocumentListItem: React.SFC<DocumentListItemProps> = ({
+const DocumentListItem: FunctionComponent<DocumentListItemProps> = ({
   fileName,
   mimeType,
   uploadDate
@@ -71,7 +71,7 @@ interface DocumentListProps extends WithClassName {
   isLoading: boolean
 }
 
-const DocumentList: React.SFC<DocumentListProps> = ({
+const DocumentList: FunctionComponent<DocumentListProps> = ({
   documents,
   isLoading,
   className

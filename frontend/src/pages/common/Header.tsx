@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import tkoalyLogo from '../../resources/tkoaly-logo-outline-black-fill-transparent.svg'
@@ -9,7 +9,7 @@ export interface Props {
   className?: string
 }
 
-const Header: React.SFC<Props> = ({ isShrunk, className }) => {
+const Header: FunctionComponent<Props> = ({ isShrunk, className }) => {
   const classname = classnames('header', className, {
     'header--shrunk': isShrunk
   })
