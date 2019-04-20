@@ -1,5 +1,6 @@
 # SCSS output
 src/**/*.css
+.env
 
 # vscode stuff
 

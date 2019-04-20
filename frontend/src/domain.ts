@@ -1,12 +1,20 @@
-import { Moment } from 'moment'
+export type DocumentId = number
+export type CourseId = number
 
 export interface Document {
-  filename: string
-  lastModified?: Moment
-  size?: string
+  id: DocumentId
+  courseId: CourseId
+  fileName: string
+  mimeType: string
+  uploadDate: Date
 }
 
 export interface Course {
+  id: CourseId
   name: string
-  documents?: Array<Document>
+  /**
+   * Timestamp representing the date when this course's latest exam document was
+   * uploaded, or `null` if the course has no documents.
+   */
+  lastModified: Date | null
 }

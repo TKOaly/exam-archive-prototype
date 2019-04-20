@@ -1,23 +1,23 @@
 import React from 'react'
-import moment, { Moment } from 'moment'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
+import formatDate from 'date-fns/format'
+import slugify from 'slugify'
 import './CourseList.scss'
-import { Icon } from './Icon'
-import { Document, Course } from '../domain'
-import { WithClassName } from './WithClassName'
+import FolderIcon from './FolderIcon'
+import { WithClassName } from '../common/WithClassName'
+import { Course } from '../../domain'
 
-const FolderIcon: Icon = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    className={classnames('folder-icon', className)}
-  >
-    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
-  </svg>
-)
+const generateCourseSlug = (courseName: string) => {
+  return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
+    lower: true,
+    replacement: '-',
+    remove: /[^\w\d \-]/g
+  })
+}
+
+const hrefToCourse = (courseId: number | string, courseName: string) =>
+  `/courses/${courseId}-${encodeURI(generateCourseSlug(courseName))}`
 
 interface ListingAlphabetProps {
   letter: string
@@ -27,11 +27,14 @@ const ListingAlphabet: React.SFC<ListingAlphabetProps> = ({ letter }) => (
   <p className="listing-alphabet">{letter}</p>
 )
 
-interface CourseListItemProps extends WithClassName {
+interface CourseListItemProps {
+  id: number
   name: string
-  lastModified: Moment | null
+  lastModified: Date | null
 }
+
 const CourseListItem: React.SFC<CourseListItemProps> = ({
+  id,
   name,
   lastModified,
   children
@@ -40,14 +43,14 @@ const CourseListItem: React.SFC<CourseListItemProps> = ({
     <li className="course-list-item">
       <FolderIcon className="course-list-item__icon" />
       <Link
-        to={`/courses/${encodeURI(name)}`}
+        to={hrefToCourse(id, name)}
         className="course-list-item__link"
         title={name}
       >
         <span className="course-list-item__name">{name}</span>
       </Link>
       <p className="course-list-item__last-modified">
-        {lastModified && lastModified.format('YYYY-MM-DD hh:mm')}
+        {lastModified && formatDate(lastModified, 'YYYY-MM-DD hh:mm')}
       </p>
       {children}
     </li>
@@ -60,18 +63,6 @@ const CourseListHeader = () => (
     <p className="course-list-header__last-modified">Last modified</p>
   </div>
 )
-
-function isNotNil<A>(a: A | undefined): a is A {
-  return !Object.is(a, undefined)
-}
-
-const findLatestModifiedDate = (documents: Array<Document> | undefined) => {
-  if (!documents) return null
-  const documentsTimestamps = documents
-    .map(_ => _.lastModified)
-    .filter(isNotNil)
-  return moment.max(documentsTimestamps)
-}
 
 function findFirstNamesOfStartingLetter(courseNames: Array<string>) {
   const firstNames = new Set<string>()
@@ -93,18 +84,24 @@ interface CourseListProps extends WithClassName {
 }
 
 const CourseList: React.SFC<CourseListProps> = ({ courses, className }) => {
-  const firstNamesOfStartingLetter = findFirstNamesOfStartingLetter(
-    courses.map(_ => _.name)
+  const sortedCourses = [...courses].sort((a, b) =>
+    a.name.localeCompare(b.name)
   )
+
+  const firstNamesOfStartingLetter =
+    sortedCourses.length > 0
+      ? findFirstNamesOfStartingLetter(sortedCourses.map(_ => _.name))
+      : new Set<string>()
+
   const shouldShowAlphabet = (courseName: string) =>
     firstNamesOfStartingLetter.has(courseName)
 
-  const items = courses.map(course => (
+  const items = sortedCourses.map(course => (
     <CourseListItem
-      className="course-list__course-list-item"
-      key={course.name}
+      key={course.id}
+      id={course.id}
       name={course.name}
-      lastModified={findLatestModifiedDate(course.documents)}
+      lastModified={course.lastModified}
     >
       {/* Show alphabets to the left of the listing */
       shouldShowAlphabet(course.name) ? (
