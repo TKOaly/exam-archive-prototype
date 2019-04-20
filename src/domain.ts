@@ -12,6 +12,13 @@ export interface Document {
 export interface Course {
   id: CourseId
   name: string
+}
+
+export interface DetailedCourse extends Course {
+  exams: Document[]
+}
+
+export interface CourseListingItem extends Course {
   /**
    * Timestamp representing the date when this course's latest exam document was
    * uploaded, or `null` if the course has no documents.

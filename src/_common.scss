@@ -5,3 +5,10 @@ $header-height-shrunk: 52px;
 $ease-standard-curve: cubic-bezier(0.4, 0, 0.2, 1);
 $ease-deceleration-curve: cubic-bezier(0, 0, 0.2, 1);
 $ease-acceleration-curve: cubic-bezier(0.4, 0, 1, 1);
+
+%listing-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  margin-bottom: 48px;
+}

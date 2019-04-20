@@ -1,25 +1,40 @@
 import React from 'react'
 import { History } from 'history'
 import DocumentList from './DocumentList'
+import ListingNavigation from '../common/ListingNavigation'
+import { generateCourseSlug } from '../common/slug'
+import { DetailedCourse } from '../../domain'
+import './DocumentListPage.scss'
 
-type DocumentListPageProps = {
+interface DocumentListPageProps {
   courseId: string | number
   courseSlug: string
   history: History
 }
 
-type DocumentListPageState = {
-  documents: Array<Document>
+interface DocumentListPageState {
   isLoading: boolean
+  course: DetailedCourse | null
+}
+
+const replaceSlugIfIncorrect = (
+  currentSlug: string,
+  course: DetailedCourse,
+  history: History
+) => {
+  const properSlug = generateCourseSlug(course.name)
+  if (currentSlug !== properSlug) {
+    history.replace(`/courses/${course.id}-${properSlug}`)
+  }
 }
 
 class DocumentListPage extends React.Component<
   DocumentListPageProps,
   DocumentListPageState
 > {
-  state = {
-    documents: [],
-    isLoading: true
+  state: DocumentListPageState = {
+    isLoading: true,
+    course: null
   }
 
   async componentDidMount() {
@@ -31,13 +46,26 @@ class DocumentListPage extends React.Component<
       return
     }
 
-    const course = await res.json()
-    this.setState({ documents: course.exams, isLoading: false })
+    const course: DetailedCourse = await res.json()
+    this.setState({ course, isLoading: false })
+    replaceSlugIfIncorrect(courseSlug, course, history)
   }
 
   render() {
-    const { documents, isLoading } = this.state
-    return <DocumentList isLoading={isLoading} documents={documents} />
+    const { course, isLoading } = this.state
+    const title = course ? course.name : 'Loading...'
+
+    return (
+      <>
+        <ListingNavigation title={title} backButtonHref="/courses" />
+        <main className="document-list-page">
+          <DocumentList
+            isLoading={isLoading}
+            documents={course ? course.exams : []}
+          />
+        </main>
+      </>
+    )
   }
 }
 

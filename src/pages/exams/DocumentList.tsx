@@ -78,7 +78,7 @@ const DocumentList: FunctionComponent<DocumentListProps> = ({
 }) => {
   const classes = classnames('document-list', className)
 
-  if (documents.length === 0) {
+  if (!isLoading && documents.length === 0) {
     return (
       <div className={classes}>
         <NoDocumentsFound className="document-list__not-found" />
