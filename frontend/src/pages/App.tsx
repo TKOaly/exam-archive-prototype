@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import CourseListPage from './courses'
 import DocumentListPage from './exams'
+import SubmitPage from './submit'
 import ShrinkingHeader from './common/ShrinkingHeader'
 import NotFound from './common/NotFound'
 import './App.scss'
@@ -32,6 +33,7 @@ const App = () => {
               />
             )}
           />
+          <Route exact path="/submit" component={SubmitPage} />
           <Route component={NotFound} />
         </Switch>
       </div>
