@@ -1,29 +1,9 @@
 import express from 'express'
 import config from './config'
-import { getCourseListing, getCourseInfo } from './service/archive'
 import * as db from './db'
+import api from './api'
 
 const app = express()
-
-const api = express.Router()
-
-api.get('/courses', async (req, res) => {
-  const courses = await getCourseListing()
-  res.json(courses)
-})
-
-api.get('/courses/:courseId', async (req, res, next) => {
-  const courseId = parseInt(req.params.courseId, 10)
-  if (isNaN(courseId)) {
-    return next()
-  }
-
-  const course = await getCourseInfo(courseId)
-  if (course === null) {
-    return next()
-  }
-  res.json(course)
-})
 
 app.use('/api', api)
 app.use('*', (req, res, next) => res.status(404).json({ error: 'not found' }))

@@ -1,5 +1,5 @@
 import { knex } from '../db'
-import { Course, CourseListItem, ExamListItem } from './common'
+import { Course, CourseListItem, ExamListItem, CourseId } from './common'
 import {
   deserializeCourseListItem,
   deserializeCourse,
@@ -54,4 +54,37 @@ export const getCourseInfo = async (
     ...course,
     exams
   }
+}
+
+export const findCourseById = async (
+  courseId: CourseId
+): Promise<Course | null> => {
+  const course = await knex('courses')
+    .where({ id: courseId })
+    .first(['courses.*'])
+
+  if (!course) {
+    return null
+  }
+
+  return deserializeCourse(course)
+}
+
+interface ExamSubmission {
+  course_id: number
+  file_name: string
+  mime_type: string
+  file_path: string
+}
+
+export const createExam = async (exam: ExamSubmission) => {
+  const createdExam = await knex('exams').insert(
+    {
+      ...exam,
+      upload_date: new Date()
+    },
+    ['exams.*']
+  )
+
+  return deserializeExamListItem(createdExam[0])
 }
