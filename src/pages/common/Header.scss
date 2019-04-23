@@ -67,4 +67,34 @@ $background-color: #fff;
     margin-top: -16px;
     opacity: 0;
   }
+
+  &__upload-link {
+    margin-left: auto;
+    display: block;
+  }
+}
+
+.upload-link {
+  font-size: 14px;
+  padding: 3px 5px;
+
+  &,
+  &:visited,
+  &:active {
+    color: #737373;
+    text-decoration: none;
+  }
+
+  &__icon {
+    fill: rgba(115, 115, 115, 0.8);
+    vertical-align: middle;
+    padding: 0 5px 0 10px;
+    height: 24px;
+  }
+
+  &__text {
+    vertical-align: middle;
+    text-transform: uppercase;
+    padding-right: 10px;
+  }
 }

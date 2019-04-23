@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import formatDate from 'date-fns/format'
 import './DocumentList.scss'
 import { WithClassName } from '../common/WithClassName'
-import { DocumentIcon, PdfIcon, PhotoIcon } from './FileIcons'
+import { DocumentIcon, PdfIcon, PhotoIcon } from '../common/FileIcons'
 import { Document } from '../../domain'
 
 const DocumentListHeader = () => (

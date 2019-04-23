@@ -1,0 +1,37 @@
+@import '../../_common';
+@import './_theme';
+
+.submit-page {
+  @extend %responsive-container;
+  margin-top: 12px;
+  box-shadow: $box-shadow-elevation-1;
+  background: #fff;
+}
+
+.submit-form {
+  padding: 16px 12px;
+  font-size: 14px;
+
+  &__file-name {
+    height: 38px;
+    min-width: 50%;
+  }
+
+  &__file-name-input {
+    font-size: inherit;
+  }
+
+  &__file-name &__file-name-ripple {
+    background-color: $primary-darker-color;
+  }
+
+  &__control-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  &__submit-controls {
+    margin-top: 12px;
+  }
+}
