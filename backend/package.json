@@ -1,0 +1,40 @@
+{
+  "name": "exam-archive-backend",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "cxcorp",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "npm-run-all -p watch-ts watch-dist",
+    "start-dev": "cross-env NODE_ENV=development npm run start",
+    "serve": "npm-run-all -s build serve-run",
+    "serve-run": "node dist/index.js",
+    "build": "tsc",
+    "watch-ts": "tsc -w",
+    "watch-dist": "nodemon dist/index.js",
+    "db:seed-dev": "cross-env NODE_ENV=development knex seed:run",
+    "db:migrate-dev": "cross-env NODE_ENV=development npm run db:migrate",
+    "db:migrate": "knex migrate:latest",
+    "seed-from-files": "node scripts/seed-db-from-files.js"
+  },
+  "dependencies": {
+    "@types/express": "^4.16.1",
+    "@types/knex": "^0.15.1",
+    "@types/node": "^10.12.18",
+    "cross-env": "^5.2.0",
+    "date-fns": "^1.30.1",
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "mime": "^2.4.0",
+    "npm-run-all": "^4.1.5",
+    "pg": "^7.8.0",
+    "typescript": "^3.3.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "dotenv": "^6.2.0",
+    "nodemon": "^1.18.9"
+  }
+}
