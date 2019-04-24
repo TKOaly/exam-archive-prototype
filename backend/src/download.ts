@@ -1,5 +1,7 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import fs from 'fs'
+import contentDisposition from 'content-disposition'
+import { transliterate } from 'transliteration'
 import { findExamById } from './service/archive'
 
 const router = express()
@@ -28,7 +30,13 @@ router.get('/:examId/:fileName', async (req, res) => {
   })
 
   stream.once('open', () => {
-    res.setHeader('Content-Disposition', `inline; filename=${exam.file_name}`)
+    res.setHeader(
+      'Content-Disposition',
+      contentDisposition(exam.file_name, {
+        type: 'inline',
+        fallback: transliterate(exam.file_name)
+      })
+    )
     res.setHeader('Content-Type', exam.mime_type)
     stream.pipe(res)
   })
