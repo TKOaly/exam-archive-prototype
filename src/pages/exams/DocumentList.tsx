@@ -4,7 +4,7 @@ import formatDate from 'date-fns/format'
 import './DocumentList.scss'
 import { WithClassName } from '../common/WithClassName'
 import { DocumentIcon, PdfIcon, PhotoIcon } from '../common/FileIcons'
-import { Document } from '../../domain'
+import { Document, DetailedCourse } from '../../domain'
 
 const DocumentListHeader = () => (
   <div className="document-list-header">
@@ -39,12 +39,14 @@ const iconForFile = (mimeType: string) => {
 }
 
 interface DocumentListItemProps {
+  href: string
   fileName: string
   mimeType: string
   uploadDate: Date
 }
 
 const DocumentListItem: FunctionComponent<DocumentListItemProps> = ({
+  href,
   fileName,
   mimeType,
   uploadDate
@@ -54,11 +56,9 @@ const DocumentListItem: FunctionComponent<DocumentListItemProps> = ({
   return (
     <li className="document-list-item">
       {icon}
-      <div className="document-list-item__text-content">
-        <p className="document-list-item__link">
-          <span className="document-list-item__filename">{fileName}</span>
-        </p>
-      </div>
+      <a href={href} target="_self" className="document-list-item__link">
+        <span className="document-list-item__filename">{fileName}</span>
+      </a>
       <p className="document-list-item__last-modified">
         {uploadDate && formatDate(uploadDate, 'YYYY-MM-DD hh:mm')}
       </p>
@@ -66,8 +66,14 @@ const DocumentListItem: FunctionComponent<DocumentListItemProps> = ({
   )
 }
 
+const downloadLink = (examId: number, fileName: string) => {
+  const encodedExamId = encodeURIComponent(`${examId}`)
+  const encodedFileName = encodeURIComponent(fileName)
+  return `/download/${encodedExamId}/${encodedFileName}`
+}
+
 interface DocumentListProps extends WithClassName {
-  documents: Array<Document>
+  documents: Document[]
   isLoading: boolean
 }
 
@@ -92,6 +98,7 @@ const DocumentList: FunctionComponent<DocumentListProps> = ({
     documents.map(({ id, fileName, mimeType, uploadDate }) => (
       <DocumentListItem
         key={id}
+        href={downloadLink(id, fileName)}
         fileName={fileName}
         mimeType={mimeType}
         uploadDate={uploadDate}
