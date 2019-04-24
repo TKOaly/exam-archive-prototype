@@ -8,8 +8,7 @@
   "scripts": {
     "start": "npm-run-all -p watch-ts watch-dist",
     "start-dev": "cross-env NODE_ENV=development npm run start",
-    "serve": "npm-run-all -s build serve-run",
-    "serve-run": "node dist/index.js",
+    "serve": "node dist/index.js",
     "build": "tsc",
     "watch-ts": "tsc -w",
     "watch-dist": "nodemon dist/index.js",
