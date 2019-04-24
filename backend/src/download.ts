@@ -41,7 +41,8 @@ router.get('/:examId/:fileName', async (req, res) => {
         fallback: transliterate(exam.file_name)
       }),
       'Content-Type': exam.mime_type,
-      'Last-Modified': mtime.toUTCString()
+      'Last-Modified': mtime.toUTCString(),
+      'Cache-Control': 'private, max-age=86400'
     })
     stream.pipe(res)
   })
