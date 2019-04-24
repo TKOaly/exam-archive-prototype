@@ -1,7 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import TextField, { Input as TextFieldInput } from '@material/react-text-field'
 import '@material/react-text-field/dist/text-field.css'
-import { CourseListingItem } from '../../domain'
+import { History } from 'history'
+
+import { CourseListingItem, Document } from '../../domain'
 import ListingNavigation from '../common/ListingNavigation'
 import CourseSelection from './CourseSelection'
 import FileSelection from './FileSelection'
@@ -127,7 +129,13 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
   )
 }
 
-const SubmitPage = () => {
+const HTTP_CREATED = 201
+
+interface SubmitPageProps {
+  history: History
+}
+
+const SubmitPage: FunctionComponent<SubmitPageProps> = ({ history }) => {
   const [areCoursesLoading, courses] = useFetchable(fetchCourses, [], [])
   const [file, setFile] = useState<File | undefined>()
   const [course, setCourse] = useState<CourseListingItem | undefined>()
@@ -138,10 +146,15 @@ const SubmitPage = () => {
     formData.append('fileName', fileName)
     formData.append('exam', file)
 
-    await fetch(`/api/courses/${course.id}/exams`, {
+    const res = await fetch(`/api/courses/${course.id}/exams`, {
       body: formData,
       method: 'POST'
     })
+
+    if (res.status === HTTP_CREATED) {
+      const exam: Document = await res.json()
+      history.push(`/courses/${exam.courseId}`)
+    }
   }
 
   return (
