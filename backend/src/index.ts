@@ -1,11 +1,13 @@
 import express from 'express'
 import config from './config'
 import * as db from './db'
-import api from './api'
+import apiRouter from './api'
+import downloadRouter from './download'
 
 const app = express()
 
-app.use('/api', api)
+app.use('/api', apiRouter)
+app.use('/download', downloadRouter)
 app.use('*', (req, res, next) => res.status(404).json({ error: 'not found' }))
 
 const start = async () => {

@@ -1,4 +1,4 @@
-import { knex } from '../db'
+import { knex, DbExam } from '../db'
 import { Course, CourseListItem, ExamListItem, CourseId } from './common'
 import {
   deserializeCourseListItem,
@@ -87,4 +87,10 @@ export const createExam = async (exam: ExamSubmission) => {
   )
 
   return deserializeExamListItem(createdExam[0])
+}
+
+export const findExamById = async (examId: number) => {
+  return (await knex('exams')
+    .where({ id: examId })
+    .first(['exams.*'])) as DbExam
 }
