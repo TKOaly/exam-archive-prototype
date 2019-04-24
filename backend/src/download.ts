@@ -1,8 +1,11 @@
 import express from 'express'
 import fs from 'fs'
 import util from 'util'
+import path from 'path'
 import contentDisposition from 'content-disposition'
 import { transliterate } from 'transliteration'
+
+import config from './config'
 import { findExamById } from './service/archive'
 
 const statAsync = util.promisify(fs.stat)
@@ -22,14 +25,15 @@ router.get('/:examId/:fileName', async (req, res) => {
     return res.status(404).send('404')
   }
 
-  const { mtime } = await statAsync(exam.file_path)
+  const filePath = path.join(config.ARCHIVE_FILE_DIR, exam.file_path)
+  const { mtime } = await statAsync(filePath)
 
-  const stream = fs.createReadStream(exam.file_path)
+  const stream = fs.createReadStream(filePath)
 
   stream.once('error', (err: any) => {
-    const errMsg = `Error occurred while opening exam ${exam.id}'s file "${
-      exam.file_path
-    }" for download!`
+    const errMsg = `Error occurred while opening exam ${
+      exam.id
+    }'s file "${filePath}" for download!`
     console.error(errMsg, err)
     res.status(500).send('Internal server error')
   })

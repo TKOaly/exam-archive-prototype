@@ -145,7 +145,8 @@ const start = async sourceDirectory => {
 
       return {
         ...sourceFile,
-        file_path: newFilePath
+        // store file_path relative to ARCHIVE_FILE_DIR
+        file_path: newFilename
       }
     })
   )

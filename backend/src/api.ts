@@ -72,7 +72,7 @@ api.post(
       course_id: course.id,
       file_name: req.body.fileName,
       mime_type: req.file.mimetype,
-      file_path: req.file.path
+      file_path: req.file.filename
     })
 
     return res.status(201).json(createdFile)
