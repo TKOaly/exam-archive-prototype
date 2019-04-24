@@ -35,15 +35,14 @@ router.get('/:examId/:fileName', async (req, res) => {
   })
 
   stream.once('open', () => {
-    res.setHeader(
-      'Content-Disposition',
-      contentDisposition(exam.file_name, {
+    res.set({
+      'Content-Disposition': contentDisposition(exam.file_name, {
         type: 'inline',
         fallback: transliterate(exam.file_name)
-      })
-    )
-    res.setHeader('Content-Type', exam.mime_type)
-    res.setHeader('Last-Modified', mtime.toUTCString())
+      }),
+      'Content-Type': exam.mime_type,
+      'Last-Modified': mtime.toUTCString()
+    })
     stream.pipe(res)
   })
 })
