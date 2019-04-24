@@ -43,60 +43,68 @@ interface Submission {
 interface SubmitFormProps {
   courses: CourseListingItem[]
   coursesLoading: boolean
+  selectedFile: File | undefined
+  onFileSelected: (file: File | undefined) => void
+  selectedCourse: CourseListingItem | undefined
+  onCourseSelected: (course: CourseListingItem | undefined) => void
+  fileName: string
+  onFileNameChange: (fileName: string) => void
   onSubmit: (submission: Submission) => void
 }
 
 const SubmitForm: FunctionComponent<SubmitFormProps> = ({
   courses,
   coursesLoading,
-  onSubmit
+  onSubmit,
+  selectedFile,
+  selectedCourse,
+  fileName,
+  onFileSelected,
+  onCourseSelected,
+  onFileNameChange
 }) => {
-  const [file, setFile] = useState<File | undefined>()
-  const [course, setCourse] = useState<CourseListingItem | undefined>()
-  const [fileName, setFileName] = useState<string>('')
-
   const handleFileSelected = (file: File | undefined) => {
-    console.log('file selected', file)
-    setFile(file)
+    onFileSelected(file)
 
     if (file && fileName === '') {
-      setFileName(file.name)
+      onFileNameChange(file.name)
     }
   }
 
   const handleCourseChange = (value: CourseListingItem | undefined) => {
-    console.log('handleCourseChange', { value })
-    setCourse(value)
+    onCourseSelected(value)
   }
 
   const handleFileNameChange = (e: any) => {
-    console.log('handleFileNameChange', { value: e.currentTarget.value })
-    setFileName(e.currentTarget.value)
+    onFileNameChange(e.currentTarget.value)
   }
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    if (!file || !course || !fileName) {
+    if (!selectedFile || !selectedCourse || !fileName) {
       return
     }
 
     onSubmit({
-      file,
-      course,
+      file: selectedFile,
+      course: selectedCourse,
       fileName
     })
   }
 
-  const submitDisabled = !file || !course || !fileName
+  const submitDisabled = !selectedFile || !selectedCourse || !fileName
 
   return (
     <div className="submit-form">
       <ControlTitle>File</ControlTitle>
-      <FileSelection selectedFile={file} onFileSelected={handleFileSelected} />
+      <FileSelection
+        selectedFile={selectedFile}
+        onFileSelected={handleFileSelected}
+      />
 
       <ControlTitle>Course</ControlTitle>
       <CourseSelection
-        selectedCourse={course}
+        selectedCourse={selectedCourse}
         isLoading={coursesLoading}
         courses={courses}
         onCourseSelected={handleCourseChange}
@@ -119,22 +127,22 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
   )
 }
 
-const submitExam = async ({ course, file, fileName }: Submission) => {
-  const formData = new FormData()
-  formData.append('fileName', fileName)
-  formData.append('exam', file)
-
-  const res = await fetch(`/api/courses/${course.id}/exams`, {
-    body: formData,
-    method: 'POST'
-  })
-  const text = await res.text()
-  console.log('fetch submit', res.status, text)
-}
-
 const SubmitPage = () => {
   const [areCoursesLoading, courses] = useFetchable(fetchCourses, [], [])
-  const handleSubmit = submitExam
+  const [file, setFile] = useState<File | undefined>()
+  const [course, setCourse] = useState<CourseListingItem | undefined>()
+  const [fileName, setFileName] = useState<string>('')
+
+  const handleSubmit = async ({ course, file, fileName }: Submission) => {
+    const formData = new FormData()
+    formData.append('fileName', fileName)
+    formData.append('exam', file)
+
+    await fetch(`/api/courses/${course.id}/exams`, {
+      body: formData,
+      method: 'POST'
+    })
+  }
 
   return (
     <>
@@ -144,9 +152,15 @@ const SubmitPage = () => {
       />
       <main className="submit-page">
         <SubmitForm
-          onSubmit={handleSubmit}
           courses={courses}
           coursesLoading={areCoursesLoading}
+          onSubmit={handleSubmit}
+          selectedFile={file}
+          onFileSelected={setFile}
+          selectedCourse={course}
+          onCourseSelected={setCourse}
+          fileName={fileName}
+          onFileNameChange={setFileName}
         />
       </main>
     </>
