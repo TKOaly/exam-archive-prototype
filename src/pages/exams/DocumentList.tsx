@@ -77,6 +77,9 @@ interface DocumentListProps extends WithClassName {
   isLoading: boolean
 }
 
+const byNameDesc = (a: Document, b: Document) =>
+  b.fileName.localeCompare(a.fileName)
+
 const DocumentList: FunctionComponent<DocumentListProps> = ({
   documents,
   isLoading,
@@ -92,10 +95,12 @@ const DocumentList: FunctionComponent<DocumentListProps> = ({
     )
   }
 
+  const sortedDocuments = [...documents].sort(byNameDesc)
+
   const content = isLoading ? (
     <li>Loading...</li>
   ) : (
-    documents.map(({ id, fileName, mimeType, uploadDate }) => (
+    sortedDocuments.map(({ id, fileName, mimeType, uploadDate }) => (
       <DocumentListItem
         key={id}
         href={downloadLink(id, fileName)}
