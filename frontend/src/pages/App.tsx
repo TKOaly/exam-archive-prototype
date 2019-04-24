@@ -24,7 +24,7 @@ const App = () => {
           <Route exact path="/courses" component={CourseListPage} />
           <Route
             exact
-            path="/courses/:id([0-9]+):ignore(-?):courseSlug(.*)"
+            path="/courses/:id([0-9]+)(-?):courseSlug(.*)"
             render={({ match, history }) => (
               <DocumentListPage
                 courseId={match!.params.id}
