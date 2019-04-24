@@ -1,8 +1,11 @@
 import express from 'express'
 import fs from 'fs'
+import util from 'util'
 import contentDisposition from 'content-disposition'
 import { transliterate } from 'transliteration'
 import { findExamById } from './service/archive'
+
+const statAsync = util.promisify(fs.stat)
 
 const router = express()
 
@@ -18,6 +21,8 @@ router.get('/:examId/:fileName', async (req, res) => {
   if (!exam) {
     return res.status(404).send('404')
   }
+
+  const { mtime } = await statAsync(exam.file_path)
 
   const stream = fs.createReadStream(exam.file_path)
 
@@ -38,6 +43,7 @@ router.get('/:examId/:fileName', async (req, res) => {
       })
     )
     res.setHeader('Content-Type', exam.mime_type)
+    res.setHeader('Last-Modified', mtime.toUTCString())
     stream.pipe(res)
   })
 })
