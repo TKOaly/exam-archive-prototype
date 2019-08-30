@@ -4,13 +4,14 @@
 .submit-page {
   @extend %responsive-container;
   margin-top: 12px;
-  box-shadow: $box-shadow-elevation-1;
-  background: #fff;
 }
 
 .submit-form {
   padding: 16px 12px;
   font-size: 14px;
+  background: #fff;
+  box-shadow: $box-shadow-elevation-1;
+  border-radius: 5px;
 
   &__file-name {
     height: 38px;
