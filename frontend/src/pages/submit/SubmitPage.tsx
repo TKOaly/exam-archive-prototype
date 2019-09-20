@@ -1,7 +1,13 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback
+} from 'react'
 import TextField, { Input as TextFieldInput } from '@material/react-text-field'
 import '@material/react-text-field/dist/text-field.css'
 import { History } from 'history'
+import cz from 'classnames'
 
 import { CourseListingItem, Document } from '../../domain'
 import ListingNavigation from '../common/ListingNavigation'
@@ -32,6 +38,25 @@ const fetchCourses = async (): Promise<CourseListingItem[]> => {
   return await res.json()
 }
 
+const Button: FunctionComponent<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > & { variant?: 'primary' | 'secondary' }
+> = ({ variant = 'primary', ...buttonProps }) => {
+  const { className, disabled } = buttonProps
+
+  return (
+    <button
+      className={cz('my-button', className, {
+        [`my-button--${variant}`]: variant,
+        'my-button--disabled': disabled
+      })}
+      {...buttonProps}
+    />
+  )
+}
+
 const ControlGroup: FunctionComponent = ({ children }) => (
   <div className="submit-form__control-group">{children}</div>
 )
@@ -56,12 +81,14 @@ interface SubmitFormProps {
   fileName: string
   onFileNameChange: (fileName: string) => void
   onSubmit: (submission: Submission) => void
+  onCancel: () => void
 }
 
 const SubmitForm: FunctionComponent<SubmitFormProps> = ({
   courses,
   coursesLoading,
   onSubmit,
+  onCancel,
   selectedFile,
   selectedCourse,
   fileName,
@@ -98,6 +125,14 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
     })
   }
 
+  const handleCancel = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault()
+      onCancel()
+    },
+    [onCancel]
+  )
+
   const submitDisabled = !selectedFile || !selectedCourse || !fileName
 
   return (
@@ -128,14 +163,20 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
             className="submit-form__file-name-input"
             onChange={handleFileNameChange}
             value={fileName}
-            placeholder="190131_Kurssi_KK.pdf"
           />
         </TextField>
       </ControlGroup>
       <div className="submit-form__submit-controls">
-        <button disabled={submitDisabled} onClick={handleSubmit}>
+        <Button variant="secondary" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button
+          disabled={submitDisabled}
+          variant="primary"
+          onClick={handleSubmit}
+        >
           Submit
-        </button>
+        </Button>
       </div>
     </div>
   )
@@ -169,6 +210,10 @@ const SubmitPage: FunctionComponent<SubmitPageProps> = ({ history }) => {
     }
   }
 
+  const handleCancel = useCallback(() => {
+    history.goBack()
+  }, [history])
+
   return (
     <>
       <ListingNavigation
@@ -180,6 +225,7 @@ const SubmitPage: FunctionComponent<SubmitPageProps> = ({ history }) => {
           courses={courses}
           coursesLoading={areCoursesLoading}
           onSubmit={handleSubmit}
+          onCancel={handleCancel}
           selectedFile={file}
           onFileSelected={setFile}
           selectedCourse={course}
