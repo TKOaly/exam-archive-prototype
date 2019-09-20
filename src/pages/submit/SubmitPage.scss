@@ -42,6 +42,54 @@
   &__submit-controls {
     margin-top: 24px;
     padding: 24px;
-    background: hsl(235, 10%, 95%);
+    background: hsl(45, 7%, 95%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.my-button {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 3px;
+  padding: 12px 16px;
+  cursor: pointer;
+  margin-left: 16px;
+
+  &--primary {
+    background-color: hsl(45, 95%, 70%);
+    color: hsla(45, 100%, 5%, 0.75);
+    transition: 250ms box-shadow cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: none;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  &--primary:hover {
+    box-shadow: $box-shadow-elevation-2;
+  }
+
+  @at-root #{&}--primary#{&}--disabled {
+    background: hsla(45, 10%, 80%, 0.75);
+    opacity: 0.5;
+    cursor: initial;
+  }
+
+  @at-root #{&}--primary#{&}--disabled:hover {
+    box-shadow: initial;
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: hsla(45, 100%, 5%, 0.75);
+    transition: 350ms background-color cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  &--secondary:hover {
+    background-color: hsla(45, 18%, 90%, 0.75);
   }
 }
