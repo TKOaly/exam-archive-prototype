@@ -32,6 +32,10 @@ const fetchCourses = async (): Promise<CourseListingItem[]> => {
   return await res.json()
 }
 
+const ControlGroup: FunctionComponent = ({ children }) => (
+  <div className="submit-form__control-group">{children}</div>
+)
+
 const ControlTitle: FunctionComponent = ({ children }) => (
   <p className="submit-form__control-title">{children}</p>
 )
@@ -98,28 +102,36 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
 
   return (
     <div className="submit-form">
-      <ControlTitle>File</ControlTitle>
-      <FileSelection
-        selectedFile={selectedFile}
-        onFileSelected={handleFileSelected}
-      />
-
-      <ControlTitle>Course</ControlTitle>
-      <CourseSelection
-        selectedCourse={selectedCourse}
-        isLoading={coursesLoading}
-        courses={courses}
-        onCourseSelected={handleCourseChange}
-      />
-      <ControlTitle>Document file name</ControlTitle>
-      <TextField dense outlined className="submit-form__file-name">
-        <TextFieldInput
-          style={{ paddingTop: '7px' }}
-          className="submit-form__file-name-input"
-          onChange={handleFileNameChange}
-          value={fileName}
+      <ControlGroup>
+        <ControlTitle>File</ControlTitle>
+        <FileSelection
+          selectedFile={selectedFile}
+          onFileSelected={handleFileSelected}
         />
-      </TextField>
+      </ControlGroup>
+
+      <ControlGroup>
+        <ControlTitle>Course</ControlTitle>
+        <CourseSelection
+          selectedCourse={selectedCourse}
+          isLoading={coursesLoading}
+          courses={courses}
+          onCourseSelected={handleCourseChange}
+        />
+      </ControlGroup>
+
+      <ControlGroup>
+        <ControlTitle>Document file name</ControlTitle>
+        <TextField dense outlined className="submit-form__file-name">
+          <TextFieldInput
+            style={{ paddingTop: '7px' }}
+            className="submit-form__file-name-input"
+            onChange={handleFileNameChange}
+            value={fileName}
+            placeholder="190131_Kurssi_KK.pdf"
+          />
+        </TextField>
+      </ControlGroup>
       <div className="submit-form__submit-controls">
         <button disabled={submitDisabled} onClick={handleSubmit}>
           Submit
