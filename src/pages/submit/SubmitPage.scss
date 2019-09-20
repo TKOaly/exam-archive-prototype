@@ -1,5 +1,5 @@
-@import '../../_common';
-@import './_theme';
+@import '../../common';
+@import './theme';
 
 .submit-page {
   @extend %responsive-container;
@@ -7,6 +7,8 @@
 }
 
 .submit-form {
+  --mdc-theme-primary: #{$primary-darker-color};
+
   padding-top: 1px;
   font-size: 14px;
   background: #fff;
@@ -18,12 +20,12 @@
     min-width: 50%;
   }
 
-  &__file-name-input {
-    font-size: inherit;
+  &__file-name &__file-name-input {
+    caret-color: initial;
   }
 
-  &__file-name &__file-name-ripple {
-    background-color: $primary-darker-color;
+  &__file-name-input {
+    font-size: inherit;
   }
 
   &__control-title {
