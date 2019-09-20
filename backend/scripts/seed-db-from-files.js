@@ -1,5 +1,6 @@
 // @ts-check
 /// <reference lib="es2017" />
+require('dotenv').config()
 
 const path = require('path')
 const util = require('util')
@@ -56,7 +57,7 @@ const readFiles = async dirPath => {
   return entries.filter(({ stats }) => stats.isFile())
 }
 
-const idGen = new class IdGen {
+const idGen = new (class IdGen {
   constructor() {
     this.nextCourseId = 0
     this.nextExamId = 0
@@ -69,7 +70,7 @@ const idGen = new class IdGen {
   getNextExamId() {
     return this.nextExamId++
   }
-}()
+})()
 
 /**
  * @param {DirEntry} dirEntry
@@ -106,7 +107,7 @@ const start = async sourceDirectory => {
   const courses = (await readSubdirs(sourceDirectory)).map(addDirId)
   const courseObjects = courses.map(({ id, name }) => ({ id, name }))
 
-  console.log('Inserting courses to db...')
+  console.log(`Inserting ${courseObjects} courses to db...`)
   await knex.batchInsert('courses', courseObjects, 30)
 
   console.log('Reading exam documents...')
@@ -127,8 +128,8 @@ const start = async sourceDirectory => {
     })
   )
   const sourceFileObjects = flatten(fileObjectLists)
-  console.log('sourceFileObjects', JSON.stringify(sourceFileObjects, null, 2))
 
+  console.log('Copying documents')
   // cp files to new dir
   const copiedFileObjects = await Promise.all(
     sourceFileObjects.map(async sourceFile => {
@@ -151,8 +152,12 @@ const start = async sourceDirectory => {
     })
   )
 
-  console.log('movedFileObjects', copiedFileObjects)
+  console.log('Copied!')
+  console.log(`Inserting ${copiedFileObjects.length} documents to database`)
   await knex.batchInsert('exams', copiedFileObjects, 30)
+
+  console.log('Done!')
+  process.exit(0)
 }
 
 const main = async () => {

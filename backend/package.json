@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "npm-run-all -p watch-ts watch-dist",
+    "start": "npm-run-all -s build -p watch-ts watch-dist",
     "start-dev": "cross-env NODE_ENV=development npm run start",
     "serve": "node dist/index.js",
     "build": "tsc",
@@ -15,7 +15,7 @@
     "db:seed-dev": "cross-env NODE_ENV=development knex seed:run",
     "db:migrate-dev": "cross-env NODE_ENV=development npm run db:migrate",
     "db:migrate": "knex migrate:latest",
-    "seed-from-files": "node scripts/seed-db-from-files.js"
+    "seed-from-files-dev": "cross-env NODE_ENV=development node scripts/seed-db-from-files.js"
   },
   "dependencies": {
     "@types/body-parser": "^1.17.1",
