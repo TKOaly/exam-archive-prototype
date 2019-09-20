@@ -3,8 +3,8 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "@material/react-chips": "0.11.0",
-    "@material/react-text-field": "0.11.0",
+    "@material/react-chips": "^0.15.0",
+    "@material/react-text-field": "^0.15.0",
     "babel-polyfill": "6.26.0",
     "classnames": "2.2.6",
     "date-fns": "1.30.1",
