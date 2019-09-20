@@ -1,38 +1,56 @@
-import React from 'react'
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback
+} from 'react'
 import CourseList from './CourseList'
 import ListingNavigation from '../common/ListingNavigation'
-import { WithClassName } from '../common/WithClassName'
 import { CourseListingItem } from '../../domain'
 import './CourseListPage.scss'
 
-interface CourseListPageState {
-  courses: Array<CourseListingItem>
-}
+const CourseListPage: FunctionComponent = () => {
+  const [courses, setCourses] = useState<Array<CourseListingItem>>([])
 
-class CourseListPage extends React.Component<
-  WithClassName,
-  CourseListPageState
-> {
-  state = {
-    courses: []
-  }
-
-  async componentDidMount() {
+  const fetchCourses = async () => {
     const res = await fetch('/api/courses')
     const courses = await res.json()
-    this.setState({ courses })
+    setCourses(courses)
   }
 
-  render() {
-    return (
-      <>
-        <ListingNavigation title="Courses" />
-        <main className="course-list-page">
-          <CourseList courses={this.state.courses} />
-        </main>
-      </>
-    )
-  }
+  useEffect(() => {
+    fetchCourses()
+  }, [])
+
+  const handleCourseRename = useCallback(
+    async (id: number, name: string) => {
+      const oldCourse = courses.find(course => course.id === id)
+      if (!oldCourse) {
+        return
+      }
+
+      await fetch(`/api/courses/${id}/rename`, {
+        method: 'POST',
+        body: JSON.stringify({ name }),
+        headers: {
+          Accept: 'application/json; charset=utf-8',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      })
+
+      fetchCourses()
+    },
+    [courses]
+  )
+
+  return (
+    <>
+      <ListingNavigation title="Courses" />
+      <main className="course-list-page">
+        <CourseList courses={courses} onCourseRename={handleCourseRename} />
+      </main>
+    </>
+  )
 }
 
 export default CourseListPage

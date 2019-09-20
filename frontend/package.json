@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@material/react-chips": "^0.15.0",
+    "@material/react-list": "^0.15.0",
+    "@material/react-menu": "^0.15.0",
     "@material/react-text-field": "^0.15.0",
     "babel-polyfill": "6.26.0",
     "classnames": "2.2.6",
