@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express'
 import multer from 'multer'
+import bodyParser from 'body-parser'
 import config from './config'
 import {
+  renameCourse,
   getCourseListing,
   getCourseInfo,
   findCourseById,
@@ -55,6 +57,20 @@ api.get(
       return next()
     }
     res.json(course)
+  }
+)
+
+api.post(
+  '/courses/:courseId/rename',
+  bodyParser.json(),
+  async (req: Request & CourseIdLocals, res, next) => {
+    const { name } = req.body
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ error: 'name missing' })
+    }
+
+    await renameCourse(req.locals!.courseId, name)
+    res.status(200).end()
   }
 )
 

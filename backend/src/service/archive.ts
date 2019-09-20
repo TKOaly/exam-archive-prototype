@@ -9,6 +9,14 @@ import {
 const isNull = (obj: any): obj is null => obj === null
 const isNotNull = (obj: any) => !isNull(obj)
 
+export const renameCourse = async (
+  id: CourseId,
+  newName: string
+): Promise<any> =>
+  await knex('courses as course')
+    .update({ name: newName })
+    .where({ id })
+
 export const getCourseListing = async (): Promise<CourseListItem[]> => {
   const results = await knex('courses as course')
     .leftJoin('exams as exam', function() {
