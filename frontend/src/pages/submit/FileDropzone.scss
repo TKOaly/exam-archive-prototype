@@ -11,6 +11,10 @@
 
   cursor: pointer;
 
+  &:hover {
+    border-color: rgb(18, 18, 18);
+  }
+
   &:focus {
     outline: $primary-color solid 3px;
   }

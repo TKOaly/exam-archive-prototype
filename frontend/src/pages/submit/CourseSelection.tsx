@@ -2,7 +2,7 @@ import React from 'react'
 import ReactSelect from 'react-select'
 import { ChipSet, Chip } from '@material/react-chips'
 import '@material/react-chips/dist/chips.css'
-import { ValueType, ActionMeta } from 'react-select/lib/types'
+import { ValueType, ActionMeta, Theme } from 'react-select/lib/types'
 import { CourseListingItem } from '../../domain'
 import CloseIcon from './CloseIcon'
 import './CourseSelection.scss'
@@ -32,6 +32,18 @@ interface CourseSelectProps {
   onCourseSelected: (course: CourseListingItem) => void
 }
 
+const themeDecorator = (theme: Theme) => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary: '#ffcc33',
+    primary25: '#D8D8D8',
+    // same border as mdc-react-textbox, this one is easier to style
+    // than that :)
+    neutral30: 'rgb(18, 18, 18)'
+  }
+})
+
 /**
  * Unidirectional wrapper over a ReactSelect. This wrapper forces the Select to
  * not preserve any value, so that it can be used as a "search and choose" after
@@ -57,14 +69,7 @@ const CourseSelect = ({
       placeholder="Choose a course..."
       value={undefined /* Force out-only data flow */}
       onChange={handleChange}
-      theme={theme => ({
-        ...theme,
-        colors: {
-          ...theme.colors,
-          primary: '#ffcc33',
-          primary25: '#D8D8D8'
-        }
-      })}
+      theme={themeDecorator}
       {...{ isLoading, options }}
     />
   )
