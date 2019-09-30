@@ -1,10 +1,13 @@
 import express from 'express'
+import morgan from 'morgan'
 import config from './config'
 import * as db from './db'
 import apiRouter from './api'
 import downloadRouter from './download'
 
 const app = express()
+
+app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
 app.use('/api', apiRouter)
 app.use('/download', downloadRouter)
