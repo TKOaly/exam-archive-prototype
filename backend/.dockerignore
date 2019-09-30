@@ -1,5 +1,7 @@
 *
 !migrations/
+!scripts/
+!seeds/
 !src/
 !knexfile.js
 !package.json

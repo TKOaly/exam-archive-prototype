@@ -36,7 +36,7 @@
     "typescript": "3.4.3"
   },
   "scripts": {
-    "serve": "npm run build && serve -s build",
+    "serve": "serve -s -l 9000 build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject"

@@ -2,33 +2,41 @@ version: '3'
 
 services:
   backend:
-    image: tko-aly/exam-archive-backend
-    build: './backend'
+    image: tkoaly/exam-archive-backend
     restart: unless-stopped
-    ports:
-      - '9001:9001'
     environment:
       - PG_CONNECTION_STRING=postgresql://tarpisto:Su5hgVvoqUCRw5vrWmrW@db:5432/tarpisto
       - NODE_ENV=production
       - PORT=9001
       - ARCHIVE_FILE_DIR=/data/tarpisto/files
+    command: ["sh", "-c", "yarn run db:migrate && yarn run serve"]
+    expose:
+      - "9001"
     volumes:
-      - ./files:/data/tarpisto/files
+      - exam-archive-files:/data/tarpisto/files
+      - ./tarpisto-dev-dump:/data/tarpisto/devseed
     depends_on:
       - db
+
+  frontend:
+    image: tkoaly/exam-archive-frontend
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
 
   db:
     image: postgres:11.1
     restart: unless-stopped
-    ports:
-      - '9876:5432'
     environment:
       - POSTGRES_PASSWORD=Su5hgVvoqUCRw5vrWmrW
       - POSTGRES_USER=tarpisto
       - POSTGRES_DB=tarpisto
       - PGDATA=/data/pgdata
     volumes:
-      - pg-data:/data/pgdata
+      - exam-archive-pg-data:/data/pgdata
 
 volumes:
-  pg-data:
+  exam-archive-pg-data:
+  exam-archive-files:

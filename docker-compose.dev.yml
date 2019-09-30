@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - '9001:9001'
+    environment:
+      - PG_CONNECTION_STRING=postgresql://tarpisto:Su5hgVvoqUCRw5vrWmrW@db:5432/tarpisto
+      - NODE_ENV=development
+      - PORT=9001
+      - ARCHIVE_FILE_DIR=/data/tarpisto/files
+    volumes:
+      - ./files:/data/tarpisto/files
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+
+  db:
+    ports:
+      - '9876:5432'
+    environment:
+      - POSTGRES_PASSWORD=Su5hgVvoqUCRw5vrWmrW
+      - POSTGRES_USER=tarpisto
+      - POSTGRES_DB=tarpisto

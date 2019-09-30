@@ -10,7 +10,8 @@ Actually new exam archive
 4. Install deps
    - `cd frontend && yarn && cd ../backend && yarn`
 5. Start the database
-   - `docker-compose up -d db`
+   - `./dfco up -d db`
+   - note: dfco is just a shell script that takes both docker-compose.*.yml files as input to docker-compose
 6. Set up backend .env, probably just rename .env-sample to .env
 7. Run db migrations: `backend/$ yarn db:migrate-dev`
 8. Seed your database with the _tarpisto data dump_:
