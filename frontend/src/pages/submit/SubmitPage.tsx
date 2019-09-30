@@ -13,6 +13,7 @@ import { CourseListingItem, Document } from '../../domain'
 import ListingNavigation from '../common/ListingNavigation'
 import CourseSelection from './CourseSelection'
 import FileSelection from './FileSelection'
+import { ControlGroup, ControlTitle } from './FormControls'
 import './SubmitPage.scss'
 
 type FetchableState<R> = [true, R] | [false, R]
@@ -56,14 +57,6 @@ const Button: FunctionComponent<
     />
   )
 }
-
-const ControlGroup: FunctionComponent = ({ children }) => (
-  <div className="submit-form__control-group">{children}</div>
-)
-
-const ControlTitle: FunctionComponent = ({ children }) => (
-  <p className="submit-form__control-title">{children}</p>
-)
 
 interface Submission {
   file: File
@@ -137,35 +130,44 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
 
   return (
     <div className="submit-form">
-      <ControlGroup>
-        <ControlTitle>File</ControlTitle>
-        <FileSelection
-          selectedFile={selectedFile}
-          onFileSelected={handleFileSelected}
-        />
-      </ControlGroup>
+      <div className="submit-form__form">
+        <ControlGroup>
+          <ControlGroup.Head title="File" />
+          <ControlGroup.Body>
+            <FileSelection
+              selectedFile={selectedFile}
+              onFileSelected={handleFileSelected}
+            />
+          </ControlGroup.Body>
+        </ControlGroup>
 
-      <ControlGroup>
-        <ControlTitle>Course</ControlTitle>
-        <CourseSelection
-          selectedCourse={selectedCourse}
-          isLoading={coursesLoading}
-          courses={courses}
-          onCourseSelected={handleCourseChange}
-        />
-      </ControlGroup>
+        <ControlGroup>
+          <ControlGroup.Head title="Course" />
+          <ControlGroup.Body>
+            <CourseSelection
+              selectedCourse={selectedCourse}
+              isLoading={coursesLoading}
+              courses={courses}
+              onCourseSelected={handleCourseChange}
+            />
+          </ControlGroup.Body>
+        </ControlGroup>
 
-      <ControlGroup>
-        <ControlTitle>Document file name</ControlTitle>
-        <TextField dense outlined className="submit-form__file-name">
-          <TextFieldInput
-            style={{ paddingTop: '7px' }}
-            className="submit-form__file-name-input"
-            onChange={handleFileNameChange}
-            value={fileName}
-          />
-        </TextField>
-      </ControlGroup>
+        <ControlGroup>
+          <ControlGroup.Head title="File name" />
+          <ControlGroup.Body>
+            <TextField dense outlined className="submit-form__file-name">
+              <TextFieldInput
+                style={{ paddingTop: '7px' }}
+                className="submit-form__file-name-input"
+                onChange={handleFileNameChange}
+                value={fileName}
+              />
+            </TextField>
+          </ControlGroup.Body>
+        </ControlGroup>
+      </div>
+
       <div className="submit-form__submit-controls">
         <Button variant="secondary" onClick={handleCancel}>
           Cancel

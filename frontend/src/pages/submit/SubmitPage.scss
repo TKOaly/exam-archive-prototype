@@ -15,6 +15,10 @@
   box-shadow: $box-shadow-elevation-1;
   border-radius: 5px;
 
+  &__form {
+    padding: 24px;
+  }
+
   &__file-name {
     height: 38px;
     min-width: 50%;
@@ -26,17 +30,6 @@
 
   &__file-name-input {
     font-size: inherit;
-  }
-
-  &__control-title {
-    margin-top: 24px;
-    font-size: 16px;
-    //font-weight: 500;
-    color: rgba(0, 0, 0, 0.7);
-  }
-
-  &__control-group {
-    padding: 0 24px;
   }
 
   &__submit-controls {

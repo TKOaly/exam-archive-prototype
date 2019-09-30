@@ -1,0 +1,36 @@
+.control-group {
+  display: flex;
+
+  &__head-title {
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  &__head {
+    flex: 30%;
+  }
+
+  &__body {
+    flex: 70%;
+  }
+
+  @media screen and (max-width: 650px) {
+    flex-wrap: wrap;
+
+    &__head,
+    &__body {
+      flex: 1 0 100%;
+    }
+  }
+
+  &:not(:last-of-type) {
+    margin-bottom: 32px;
+  }
+}
+
+.control-title {
+  margin-top: 24px;
+  font-size: 16px;
+  //font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+}
