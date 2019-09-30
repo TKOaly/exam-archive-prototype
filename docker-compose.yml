@@ -14,7 +14,6 @@ services:
       - "9001"
     volumes:
       - exam-archive-files:/data/tarpisto/files
-      - ./tarpisto-dev-dump:/data/tarpisto/devseed
     depends_on:
       - db
 
