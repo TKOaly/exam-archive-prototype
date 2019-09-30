@@ -24,6 +24,11 @@
     width: 100%;
   }
 
+  &__file-name.mdc-text-field--disabled {
+    // HACK: override MDC's "pointer-events: none" so we can still hear the onMouseDown in order to enable it
+    pointer-events: auto;
+  }
+
   &__text &__text-input {
     caret-color: initial;
   }

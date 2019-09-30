@@ -87,6 +87,10 @@ const FileNamePicker: FunctionComponent<Props> = ({
     [usingCustomFilename, onChange]
   )
 
+  const handleFileNameMouseDown = useCallback(() => {
+    setUsingCustomFilename(true)
+  }, [setUsingCustomFilename])
+
   const handleExamDateChange = useCallback(
     (date: Date) => {
       setExamDate(date)
@@ -121,7 +125,7 @@ const FileNamePicker: FunctionComponent<Props> = ({
   }, [usingCustomFilename, courseName, examDate, examType, fileExtension])
 
   return (
-    <>
+    <div className="file-name-picker">
       <MySwitch
         checked={usingCustomFilename}
         htmlId="file-name-picker__custom-fname"
@@ -168,6 +172,8 @@ const FileNamePicker: FunctionComponent<Props> = ({
         dense
         outlined
         className="file-name-picker__text file-name-picker__file-name"
+        // use onMouseDown instead of onClick because it's onClick does not fire when it's disabled
+        onMouseDown={handleFileNameMouseDown}
       >
         <TextFieldInput
           disabled={!usingCustomFilename}
@@ -177,7 +183,7 @@ const FileNamePicker: FunctionComponent<Props> = ({
           value={value}
         />
       </TextField>
-    </>
+    </div>
   )
 }
 
