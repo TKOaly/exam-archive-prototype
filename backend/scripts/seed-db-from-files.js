@@ -57,29 +57,6 @@ const readFiles = async dirPath => {
   return entries.filter(({ stats }) => stats.isFile())
 }
 
-const idGen = new (class IdGen {
-  constructor() {
-    this.nextCourseId = 0
-    this.nextExamId = 0
-    this.getNextCourseId = this.getNextCourseId.bind(this)
-    this.getNextExamId = this.getNextExamId.bind(this)
-  }
-  getNextCourseId() {
-    return this.nextCourseId++
-  }
-  getNextExamId() {
-    return this.nextExamId++
-  }
-})()
-
-/**
- * @param {DirEntry} dirEntry
- */
-const addDirId = dirEntry => ({
-  ...dirEntry,
-  id: idGen.getNextCourseId()
-})
-
 const getFileExt = filename => path.extname(filename).replace(/\./g, '')
 const getMimeType = filename => mime.getType(getFileExt(filename))
 
@@ -93,32 +70,35 @@ const printHelp = () => {
   console.log('')
 }
 
-const generateFilename = (courseId, examId, mimeType) => {
-  const guid = uuid()
-  const ext = mime.getExtension(mimeType)
-  return `${courseId}_${examId}_${guid}.${ext}`
-}
-
-const start = async sourceDirectory => {
+const start = async (sourceDirectory, markDirty) => {
   // Deletes ALL existing entries
   //await knex('courses').del()
 
   console.log('Reading courses...')
-  const courses = (await readSubdirs(sourceDirectory)).map(addDirId)
-  const courseObjects = courses.map(({ id, name }) => ({ id, name }))
+  const courses = await readSubdirs(sourceDirectory)
 
-  console.log(`Inserting ${courseObjects} courses to db...`)
-  await knex.batchInsert('courses', courseObjects, 30)
+  console.log(`Inserting ${courses.length} courses to db...`)
+
+  /** @type {{id: number, name: string}[]} */
+  const insertedCourses = await knex
+    .batchInsert('courses', courses.map(({ name }) => ({ name })))
+    .returning(['id', 'name'])
+
+  markDirty(`Table "courses" has ${insertedCourses.length} new rows`)
+
+  const courseNameToId = insertedCourses.reduce((map, course) => {
+    map.set(course.name, course.id)
+    return map
+  }, new Map())
 
   console.log('Reading exam documents...')
   const fileObjectLists = await Promise.all(
-    courses.map(async ({ id: courseId, path: courseDirPath }) => {
+    courses.map(async ({ path: courseDirPath, name: courseName }) => {
       const files = await readFiles(courseDirPath)
 
       return files.map(
         ({ name: fileName, path: filePath, stats: fileStats }) => ({
-          id: idGen.getNextExamId(),
-          course_id: courseId,
+          course_id: courseNameToId.get(courseName),
           file_name: fileName,
           mime_type: getMimeType(fileName) || 'application/octet-stream',
           file_path: filePath,
@@ -129,32 +109,43 @@ const start = async sourceDirectory => {
   )
   const sourceFileObjects = flatten(fileObjectLists)
 
-  console.log('Copying documents')
-  // cp files to new dir
-  const copiedFileObjects = await Promise.all(
-    sourceFileObjects.map(async sourceFile => {
-      const {
-        course_id: courseId,
-        id: examId,
-        mime_type: mimeType
-      } = sourceFile
+  console.log(`Copying exam files to ARCHIVE_FILE_DIR="${ARCHIVE_FILE_DIR}"`)
+  let successfulCopies = 0
+  let copiedFileObjects
 
-      const newFilename = generateFilename(courseId, examId, mimeType)
-      const newFilePath = path.join(ARCHIVE_FILE_DIR, newFilename)
+  try {
+    copiedFileObjects = await Promise.all(
+      sourceFileObjects.map(async sourceFile => {
+        const newFilename = uuid()
+        const newFilePath = path.join(ARCHIVE_FILE_DIR, newFilename)
 
-      await copyFileAsync(sourceFile.file_path, newFilePath)
+        await copyFileAsync(sourceFile.file_path, newFilePath)
+        successfulCopies++
 
-      return {
-        ...sourceFile,
-        // store file_path relative to ARCHIVE_FILE_DIR
-        file_path: newFilename
-      }
-    })
+        return {
+          ...sourceFile,
+          // store file_path relative to ARCHIVE_FILE_DIR
+          file_path: newFilename
+        }
+      })
+    )
+  } catch (e) {
+    console.error('Failed to copy files')
+    markDirty(
+      `Dir "${ARCHIVE_FILE_DIR}" has ${successfulCopies} new copied files`
+    )
+    throw e
+  }
+  markDirty(
+    `Dir "${ARCHIVE_FILE_DIR}" has ${successfulCopies} new copied files`
   )
 
   console.log('Copied!')
   console.log(`Inserting ${copiedFileObjects.length} documents to database`)
-  await knex.batchInsert('exams', copiedFileObjects, 30)
+  const insertedExams = await knex
+    .batchInsert('exams', copiedFileObjects)
+    .returning('id')
+  markDirty(`Table "exams" has ${insertedExams.length} new rows`)
 
   console.log('Done!')
   process.exit(0)
@@ -181,7 +172,15 @@ const main = async () => {
     process.exit(1)
   }
 
-  await start(sourceDirectory)
+  const dirty = []
+  try {
+    await start(sourceDirectory, item => dirty.push(item))
+  } catch (e) {
+    console.error('ERROR!', e)
+    console.error()
+    console.error('NOTE: The following things have been left dirty:')
+    console.error(dirty.map(str => `  - ${str}`).join('\n'))
+  }
 }
 
 main()
