@@ -2,7 +2,7 @@ version: '3'
 
 services:
   backend:
-    image: tkoaly/exam-archive-backend
+    image: tkoalydocker/exam-archive-backend
     restart: unless-stopped
     environment:
       - PG_CONNECTION_STRING=postgresql://tarpisto:Su5hgVvoqUCRw5vrWmrW@db:5432/tarpisto
@@ -19,7 +19,7 @@ services:
       - db
 
   frontend:
-    image: tkoaly/exam-archive-frontend
+    image: tkoalydocker/exam-archive-frontend
     restart: unless-stopped
     ports:
       - "8000:80"
