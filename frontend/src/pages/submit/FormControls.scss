@@ -3,6 +3,9 @@
 
   &__head-title {
     font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 1.35;
     opacity: 0.8;
   }
 
@@ -24,13 +27,12 @@
   }
 
   &:not(:last-of-type) {
-    margin-bottom: 32px;
+    margin-bottom: 36px;
   }
 }
 
 .control-title {
-  margin-top: 24px;
-  font-size: 16px;
+  font-size: 14px;
   //font-weight: 500;
   color: rgba(0, 0, 0, 0.7);
 }

@@ -19,19 +19,6 @@
     padding: 24px;
   }
 
-  &__file-name {
-    height: 38px;
-    min-width: 50%;
-  }
-
-  &__file-name &__file-name-input {
-    caret-color: initial;
-  }
-
-  &__file-name-input {
-    font-size: inherit;
-  }
-
   &__submit-controls {
     margin-top: 24px;
     padding: 24px;

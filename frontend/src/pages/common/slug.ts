@@ -7,3 +7,11 @@ export const generateCourseSlug = (courseName: string) => {
     remove: /[^\w\d \-]/g
   })
 }
+
+export const generateCourseFilename = (courseName: string) => {
+  return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
+    lower: false,
+    replacement: '_',
+    remove: /[^\w\d \-]/g
+  })
+}

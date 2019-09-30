@@ -4,8 +4,6 @@ import React, {
   useEffect,
   useCallback
 } from 'react'
-import TextField, { Input as TextFieldInput } from '@material/react-text-field'
-import '@material/react-text-field/dist/text-field.css'
 import { History } from 'history'
 import cz from 'classnames'
 
@@ -13,7 +11,8 @@ import { CourseListingItem, Document } from '../../domain'
 import ListingNavigation from '../common/ListingNavigation'
 import CourseSelection from './CourseSelection'
 import FileSelection from './FileSelection'
-import { ControlGroup, ControlTitle } from './FormControls'
+import { ControlGroup } from './FormControls'
+import FileNamePicker from './FileNamePicker'
 import './SubmitPage.scss'
 
 type FetchableState<R> = [true, R] | [false, R]
@@ -58,6 +57,16 @@ const Button: FunctionComponent<
   )
 }
 
+/** Extracts the extension from a file name, or undefined if none found. Preserves `.` in front of extension. */
+const extractExtension = (fileName: string) => {
+  // just split by . and remove the first part which is the file name without extension
+  const ext = fileName
+    .split('.')
+    .slice(1)
+    .join('.')
+  return ext ? `.${ext}` : undefined
+}
+
 interface Submission {
   file: File
   course: CourseListingItem
@@ -89,34 +98,42 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
   onCourseSelected,
   onFileNameChange
 }) => {
-  const handleFileSelected = (file: File | undefined) => {
-    onFileSelected(file)
+  const handleFileSelected = useCallback(
+    (file: File | undefined) => {
+      onFileSelected(file)
+    },
+    [onFileSelected]
+  )
 
-    if (file && fileName === '') {
-      onFileNameChange(file.name)
-    }
-  }
+  const handleCourseChange = useCallback(
+    (value: CourseListingItem | undefined) => {
+      onCourseSelected(value)
+    },
+    [onCourseSelected]
+  )
 
-  const handleCourseChange = (value: CourseListingItem | undefined) => {
-    onCourseSelected(value)
-  }
+  const handleFileNameChange = useCallback(
+    (name: string) => {
+      onFileNameChange(name)
+    },
+    [onFileNameChange]
+  )
 
-  const handleFileNameChange = (e: any) => {
-    onFileNameChange(e.currentTarget.value)
-  }
+  const handleSubmit = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault()
+      if (!selectedFile || !selectedCourse || !fileName) {
+        return
+      }
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
-    if (!selectedFile || !selectedCourse || !fileName) {
-      return
-    }
-
-    onSubmit({
-      file: selectedFile,
-      course: selectedCourse,
-      fileName
-    })
-  }
+      onSubmit({
+        file: selectedFile,
+        course: selectedCourse,
+        fileName
+      })
+    },
+    [selectedFile, selectedCourse, fileName, onSubmit]
+  )
 
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -156,14 +173,14 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
         <ControlGroup>
           <ControlGroup.Head title="File name" />
           <ControlGroup.Body>
-            <TextField dense outlined className="submit-form__file-name">
-              <TextFieldInput
-                style={{ paddingTop: '7px' }}
-                className="submit-form__file-name-input"
-                onChange={handleFileNameChange}
-                value={fileName}
-              />
-            </TextField>
+            <FileNamePicker
+              value={fileName}
+              onChange={handleFileNameChange}
+              courseName={selectedCourse && selectedCourse.name}
+              fileExtension={
+                selectedFile && extractExtension(selectedFile.name)
+              }
+            />
           </ControlGroup.Body>
         </ControlGroup>
       </div>
@@ -196,21 +213,24 @@ const SubmitPage: FunctionComponent<SubmitPageProps> = ({ history }) => {
   const [course, setCourse] = useState<CourseListingItem | undefined>()
   const [fileName, setFileName] = useState<string>('')
 
-  const handleSubmit = async ({ course, file, fileName }: Submission) => {
-    const formData = new FormData()
-    formData.append('fileName', fileName)
-    formData.append('exam', file)
+  const handleSubmit = useCallback(
+    async ({ course, file, fileName }: Submission) => {
+      const formData = new FormData()
+      formData.append('fileName', fileName)
+      formData.append('exam', file)
 
-    const res = await fetch(`/api/courses/${course.id}/exams`, {
-      body: formData,
-      method: 'POST'
-    })
+      const res = await fetch(`/api/courses/${course.id}/exams`, {
+        body: formData,
+        method: 'POST'
+      })
 
-    if (res.status === HTTP_CREATED) {
-      const exam: Document = await res.json()
-      history.push(`/courses/${exam.courseId}`)
-    }
-  }
+      if (res.status === HTTP_CREATED) {
+        const exam: Document = await res.json()
+        history.push(`/courses/${exam.courseId}`)
+      }
+    },
+    [history]
+  )
 
   const handleCancel = useCallback(() => {
     history.goBack()

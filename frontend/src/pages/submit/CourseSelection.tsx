@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import ReactSelect from 'react-select'
 import { ChipSet, Chip } from '@material/react-chips'
 import '@material/react-chips/dist/chips.css'
@@ -36,13 +36,26 @@ const themeDecorator = (theme: Theme) => ({
   ...theme,
   colors: {
     ...theme.colors,
-    primary: '#ffcc33',
-    primary25: '#D8D8D8',
-    // same border as mdc-react-textbox, this one is easier to style
-    // than that :)
-    neutral30: 'rgb(18, 18, 18)'
+    primary: '#ffcc33'
   }
 })
+
+const styles = {
+  control: (base: any, state: any) => ({
+    ...base,
+    borderColor: 'rgba(0, 0, 0, 0.38)',
+    '&:hover': {
+      borderColor: state.isFocused ? '#ffcc33' : 'rgb(18, 18, 18)'
+    }
+  }),
+  dropdownIndicator: (base: any) => ({
+    ...base,
+    color: '#737373',
+    ':hover': {
+      color: '#ffcc33'
+    }
+  })
+}
 
 /**
  * Unidirectional wrapper over a ReactSelect. This wrapper forces the Select to
@@ -69,6 +82,7 @@ const CourseSelect = ({
       placeholder="Choose a course..."
       value={undefined /* Force out-only data flow */}
       onChange={handleChange}
+      styles={styles}
       theme={themeDecorator}
       {...{ isLoading, options }}
     />

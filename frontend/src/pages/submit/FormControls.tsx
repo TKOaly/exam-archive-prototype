@@ -26,6 +26,7 @@ export const ControlGroup: ControlGroupType<WithClassName> = ({
 ControlGroup.Head = ControlGroupHead
 ControlGroup.Body = ControlGroupBody
 
-export const ControlTitle: FunctionComponent = ({ children }) => (
-  <p className="control-title">{children}</p>
-)
+export const ControlTitle: FunctionComponent<WithClassName> = ({
+  children,
+  className
+}) => <p className={cls('control-title', className)}>{children}</p>
