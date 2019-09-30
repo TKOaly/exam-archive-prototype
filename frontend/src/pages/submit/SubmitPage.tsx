@@ -171,7 +171,7 @@ const SubmitForm: FunctionComponent<SubmitFormProps> = ({
         </ControlGroup>
 
         <ControlGroup>
-          <ControlGroup.Head title="File name" />
+          <ControlGroup.Head title="Filename" />
           <ControlGroup.Body>
             <FileNamePicker
               value={fileName}
