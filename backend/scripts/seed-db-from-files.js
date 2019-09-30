@@ -19,6 +19,8 @@ const copyFileAsync = util.promisify(fs.copyFile)
 const knex = Knex(knexfile[process.env.NODE_ENV])
 const ARCHIVE_FILE_DIR = process.env.ARCHIVE_FILE_DIR
 
+const DIR_NAME_EXCLUSIONS = new Set(['.git'])
+
 /**
  * @param {string} dirPath
  * @typedef {import("fs").Stats} Stats
@@ -27,17 +29,28 @@ const ARCHIVE_FILE_DIR = process.env.ARCHIVE_FILE_DIR
  */
 const readDir = async dirPath => {
   const dirContent = await readdirAsync(dirPath)
+  const excludedDirs = dirContent.filter(dirName =>
+    DIR_NAME_EXCLUSIONS.has(dirName)
+  )
+  if (excludedDirs.length > 0) {
+    console.log(
+      `${excludedDirs.length} directories match dir name exclusions, ignoring them:`
+    )
+    console.log(excludedDirs)
+  }
 
   const dirs = await Promise.all(
-    dirContent.map(async dirName => {
-      const fullPath = path.join(dirPath, dirName)
-      const stats = await statAsync(fullPath)
-      return {
-        name: dirName,
-        path: fullPath,
-        stats
-      }
-    })
+    dirContent
+      .filter(dirName => !DIR_NAME_EXCLUSIONS.has(dirName))
+      .map(async dirName => {
+        const fullPath = path.join(dirPath, dirName)
+        const stats = await statAsync(fullPath)
+        return {
+          name: dirName,
+          path: fullPath,
+          stats
+        }
+      })
   )
 
   return dirs
@@ -74,15 +87,17 @@ const start = async (sourceDirectory, markDirty) => {
   // Deletes ALL existing entries
   //await knex('courses').del()
 
-  console.log('Reading courses...')
+  console.group('Reading courses...')
   const courses = await readSubdirs(sourceDirectory)
+  console.groupEnd()
 
-  console.log(`Inserting ${courses.length} courses to db...`)
-
+  console.group(`Inserting ${courses.length} courses to db...`)
   /** @type {{id: number, name: string}[]} */
   const insertedCourses = await knex
     .batchInsert('courses', courses.map(({ name }) => ({ name })))
     .returning(['id', 'name'])
+  console.log('Inserted!')
+  console.groupEnd()
 
   markDirty(`Table "courses" has ${insertedCourses.length} new rows`)
 
@@ -91,7 +106,7 @@ const start = async (sourceDirectory, markDirty) => {
     return map
   }, new Map())
 
-  console.log('Reading exam documents...')
+  console.group('Reading exam documents...')
   const fileObjectLists = await Promise.all(
     courses.map(async ({ path: courseDirPath, name: courseName }) => {
       const files = await readFiles(courseDirPath)
@@ -107,9 +122,11 @@ const start = async (sourceDirectory, markDirty) => {
       )
     })
   )
+  console.log('Ready')
+  console.groupEnd()
   const sourceFileObjects = flatten(fileObjectLists)
 
-  console.log(`Copying exam files to ARCHIVE_FILE_DIR="${ARCHIVE_FILE_DIR}"`)
+  console.group(`Copying exam files to ARCHIVE_FILE_DIR="${ARCHIVE_FILE_DIR}"`)
   let successfulCopies = 0
   let copiedFileObjects
 
@@ -139,13 +156,16 @@ const start = async (sourceDirectory, markDirty) => {
   markDirty(
     `Dir "${ARCHIVE_FILE_DIR}" has ${successfulCopies} new copied files`
   )
-
   console.log('Copied!')
-  console.log(`Inserting ${copiedFileObjects.length} documents to database`)
+  console.groupEnd()
+
+  console.group(`Inserting ${copiedFileObjects.length} documents to database`)
   const insertedExams = await knex
     .batchInsert('exams', copiedFileObjects)
     .returning('id')
   markDirty(`Table "exams" has ${insertedExams.length} new rows`)
+  console.log('Inserted!')
+  console.groupEnd()
 
   console.log('Done!')
   process.exit(0)
@@ -176,6 +196,7 @@ const main = async () => {
   try {
     await start(sourceDirectory, item => dirty.push(item))
   } catch (e) {
+    console.groupEnd()
     console.error('ERROR!', e)
     console.error()
     console.error('NOTE: The following things have been left dirty:')
