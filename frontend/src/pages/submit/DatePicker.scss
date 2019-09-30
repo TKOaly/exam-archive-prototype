@@ -34,12 +34,24 @@
     stroke: hsl(0, 0%, 45%);
   }
 
+  &__calendar-icon {
+    fill: hsl(0, 0%, 45%);
+  }
+
   &.react-date-picker--disabled .react-date-picker__button__icon {
     stroke: rgba(0, 0, 0, 0.06);
   }
 
+  &.react-date-picker--disabled &__calendar-icon {
+    fill: rgba(0, 0, 0, 0.06);
+  }
+
   .react-date-picker__button:enabled:hover .react-date-picker__button__icon {
     stroke: #ffcc33;
+  }
+
+  .react-date-picker__button:enabled:hover &__calendar-icon {
+    fill: #ffcc33;
   }
 
   &__calendar {
