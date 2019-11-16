@@ -81,10 +81,16 @@ const printHelp = () => {
   console.log('USAGE:   node seed-db-from-files.js <path> [mod]')
   console.log('')
   console.log('Parameters')
-  console.log(`  <path>    Path to the old archive's files directory. Immediate`)
-  console.log('            subdirectories of this directory should be the course')
+  console.log(
+    `  <path>    Path to the old archive's files directory. Immediate`
+  )
+  console.log(
+    '            subdirectories of this directory should be the course'
+  )
   console.log('            directories.')
-  console.log('  [mod]     Optional. Set the chmod flags specified to the copied')
+  console.log(
+    '  [mod]     Optional. Set the chmod flags specified to the copied'
+  )
   console.log('            files in octal, e.g. 644 or 755 or 600.')
   console.log('')
 }
@@ -100,7 +106,10 @@ const start = async (sourceDirectory, mod, markDirty) => {
   console.group(`Inserting ${courses.length} courses to db...`)
   /** @type {{id: number, name: string}[]} */
   const insertedCourses = await knex
-    .batchInsert('courses', courses.map(({ name }) => ({ name })))
+    .batchInsert(
+      'courses',
+      courses.map(({ name }) => ({ name }))
+    )
     .returning(['id', 'name'])
   console.log('Inserted!')
   console.groupEnd()
@@ -191,12 +200,12 @@ const main = async () => {
   const [_, __, sourceDirectory, modStr] = process.argv
 
   const mod = parseInt(modStr, 8)
-  if (isNaN(mod)) {
-    console.error('Non-octal mod "${modStr}" specified.')
+  if (typeof modStr !== 'undefined' && isNaN(mod)) {
+    console.error(`Non-octal mod "${modStr}" specified.`)
     printHelp()
     process.exit(1)
   }
-  
+
   if (!fs.existsSync(sourceDirectory)) {
     console.error(`Files directory does not exist: '${sourceDirectory}'`)
     process.exit(1)
