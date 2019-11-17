@@ -1,4 +1,4 @@
-FROM node:10.16-alpine as build-deps
+FROM node:10-alpine as build-deps
 
 WORKDIR /usr/src/app
 
