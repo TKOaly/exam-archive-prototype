@@ -39,7 +39,7 @@ const CourseListMenu: FunctionComponent<Props> = ({
         onRename()
       }
     },
-    [menuItems, onRename]
+    [onRename]
   )
 
   return (

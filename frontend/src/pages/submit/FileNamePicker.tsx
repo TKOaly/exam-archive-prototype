@@ -103,7 +103,7 @@ const FileNamePicker: FunctionComponent<Props> = ({
       e.preventDefault()
       setExamType(e.currentTarget.value)
     },
-    [usingCustomFilename, setExamType]
+    [setExamType]
   )
 
   useEffect(() => {
@@ -122,7 +122,14 @@ const FileNamePicker: FunctionComponent<Props> = ({
 
       onChange(`${filename}${ext}`)
     }
-  }, [usingCustomFilename, courseName, examDate, examType, fileExtension])
+  }, [
+    usingCustomFilename,
+    courseName,
+    examDate,
+    examType,
+    fileExtension,
+    onChange
+  ])
 
   return (
     <div className="file-name-picker">

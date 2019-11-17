@@ -4,7 +4,7 @@ import formatDate from 'date-fns/format'
 import './DocumentList.scss'
 import { WithClassName } from '../common/WithClassName'
 import { DocumentIcon, PdfIcon, PhotoIcon } from '../common/FileIcons'
-import { Document, DetailedCourse } from '../../domain'
+import { Document } from '../../domain'
 
 const DocumentListHeader = () => (
   <div className="document-list-header">

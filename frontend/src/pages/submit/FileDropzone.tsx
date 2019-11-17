@@ -29,14 +29,17 @@ export const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
   onFileSelected,
   className
 }) => {
-  const onDropAccepted = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length !== 1) {
-      // disallow multiple files
-      return
-    }
+  const onDropAccepted = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length !== 1) {
+        // disallow multiple files
+        return
+      }
 
-    onFileSelected(acceptedFiles[0])
-  }, [])
+      onFileSelected(acceptedFiles[0])
+    },
+    [onFileSelected]
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDropAccepted,
