@@ -1,0 +1,5 @@
+@import '../../components/common';
+
+.course-list-page {
+  @extend %responsive-container;
+}

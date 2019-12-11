@@ -1,0 +1,100 @@
+@import '../common';
+
+.menu-button {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &__icon {
+    vertical-align: middle;
+    height: 20px;
+    width: 20px;
+    fill: #595959;
+  }
+}
+
+.course-list {
+  &__list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: $box-shadow-elevation-1;
+    background: #fff;
+    border-radius: 5px;
+  }
+}
+
+.course-list-header {
+  height: 48px;
+  padding-top: 12px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9b9b9d;
+
+  &__name {
+    margin: 0 0 0 54px;
+  }
+
+  &__last-modified {
+    /* TODO: is-admin, 78px if show menu button, otherwise 54px */
+    margin: 0 78px 0 auto;
+    box-sizing: border-box;
+  }
+}
+
+.listing-alphabet {
+  margin: 0;
+  position: absolute;
+  left: -30px;
+  color: #9b9b9d;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+.course-list-item {
+  height: 48px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  border-bottom: 1px solid #e6e6e6;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 54px;
+  }
+
+  &__link {
+    flex: 0 1 auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0; /*  */
+    /* add some padding to the top and bottom to expand the click area */
+    padding: 10px 0;
+    text-decoration: none;
+  }
+
+  &__name {
+    color: #595959;
+    font-weight: 500;
+    border-bottom: 1px solid #c7c7c7;
+  }
+
+  &__last-modified {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-width: 110px;
+    color: #9b9b9d;
+    margin: 0 6px 0 auto;
+    padding-left: 10px; /* add some space in case the name is extra long */
+  }
+}

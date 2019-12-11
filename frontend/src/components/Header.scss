@@ -1,0 +1,101 @@
+@import 'common';
+
+$shrink-easing-func: $ease-standard-curve;
+$background-color: #fff;
+
+.header {
+  width: 100%;
+  height: $header-height;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: $background-color;
+  z-index: 100;
+  transition: height 200ms $shrink-easing-func;
+
+  &--shrunk {
+    height: $header-height-shrunk;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: 650px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__logo {
+    flex: 0 0 auto;
+    width: 55px;
+    height: 55px;
+    margin-left: 15px;
+    transition: height 200ms $shrink-easing-func,
+      width 200ms $shrink-easing-func, margin-left 200ms $shrink-easing-func;
+  }
+
+  &--shrunk &__logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  &__text {
+    flex: 1 1 auto;
+    margin: 0 0 0 15px;
+    background: $background-color;
+  }
+
+  &__title {
+    margin: 0;
+    color: #333;
+    font-weight: 400;
+    font-size: 20px;
+    z-index: 102;
+  }
+
+  &__subtitle {
+    z-index: 101;
+    font-weight: normal;
+    font-size: 14px;
+    color: #737373;
+    margin: 3px 0 2px 0;
+    opacity: 1;
+    transition: margin-top 200ms $shrink-easing-func,
+      opacity 200ms $shrink-easing-func;
+  }
+
+  &--shrunk &__subtitle {
+    margin-top: -16px;
+    opacity: 0;
+  }
+
+  &__upload-link {
+    margin-left: auto;
+    display: block;
+  }
+}
+
+.upload-link {
+  font-size: 14px;
+  padding: 3px 5px;
+
+  &,
+  &:visited,
+  &:active {
+    color: #737373;
+    text-decoration: none;
+  }
+
+  &__icon {
+    fill: rgba(115, 115, 115, 0.8);
+    vertical-align: middle;
+    padding: 0 5px 0 10px;
+    height: 24px;
+  }
+
+  &__text {
+    vertical-align: middle;
+    text-transform: uppercase;
+    padding-right: 10px;
+  }
+}
