@@ -19,23 +19,16 @@ const NoDocumentsFound: FunctionComponent<WithClassName> = ({ className }) => (
   </p>
 )
 
-// todo: just return BEM modifier and set the background image with CSS
 const iconForFile = (mimeType: string) => {
   if (mimeType.startsWith('image/')) {
-    return (
-      <PhotoIcon className="document-list-item__icon document-list-item__icon--is-photo" />
-    )
+    return PhotoIcon
   }
 
   if (mimeType === 'application/pdf') {
-    return (
-      <PdfIcon className="document-list-item__icon document-list-item__icon--is-pdf" />
-    )
+    return PdfIcon
   }
 
-  return (
-    <DocumentIcon className="document-list-item__icon document-list-item__icon--is-generic" />
-  )
+  return DocumentIcon
 }
 
 interface DocumentListItemProps {
@@ -51,11 +44,11 @@ const DocumentListItem: FunctionComponent<DocumentListItemProps> = ({
   mimeType,
   uploadDate
 }) => {
-  const icon = iconForFile(mimeType)
+  const Icon = iconForFile(mimeType)
 
   return (
     <li className="document-list-item">
-      {icon}
+      <Icon className="document-list-item__icon" />
       <a href={href} target="_self" className="document-list-item__link">
         <span className="document-list-item__filename">{fileName}</span>
       </a>

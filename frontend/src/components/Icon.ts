@@ -1,4 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import { WithClassName } from './WithClassName'
 
-export type Icon = FunctionComponent<WithClassName>
+interface IconProps extends WithClassName {
+  alt?: string
+}
+
+export type Icon = FunctionComponent<IconProps>

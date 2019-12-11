@@ -50,20 +50,8 @@
 
   &__icon {
     flex: 0 0 auto;
-    fill: #e74c3c;
-    width: 54px;
-  }
-
-  &__icon--is-photo {
-    fill: #27ae60;
-  }
-
-  &__icon--is-generic {
-    fill: #95a5a6;
-  }
-
-  &__icon--is-pdf {
-    fill: #e74c3c;
+    width: 24px;
+    margin: 0 12px;
   }
 
   &__link {
