@@ -2,6 +2,8 @@ import React from 'react'
 import App from 'next/app'
 import { AnimatePresence } from 'framer-motion'
 import Layout from '../components/Layout'
+import 'normalize.css'
+import './index.scss'
 
 class MyApp extends App {
   render() {
