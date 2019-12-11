@@ -90,14 +90,17 @@ const DocumentListPage: NextPage<Props> = ({ course }) => {
         key="document-list-main"
         className="document-list-page"
         variants={{
-          initial: { y: 30, opacity: 0 },
+          initial: {
+            x: '6vw',
+            opacity: 0
+          },
           enter: {
-            y: 0,
+            x: 0,
             opacity: 1,
             transition: transitions.in
           },
           exit: {
-            y: -30,
+            x: '6vw',
             opacity: 0,
             transition: transitions.out
           }
