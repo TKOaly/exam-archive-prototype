@@ -1,0 +1,51 @@
+body {
+  line-height: 1.5;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  background-color: white;
+}
+
+.layout {
+  width: 100%;
+  padding-left: 50px;
+}
+
+.layout-header {
+  margin-bottom: 20px;
+  font-size: 24pt;
+}
+
+.layout-header__logo {
+  vertical-align: middle;
+  margin-right: 30px;
+  border: 0;
+}
+
+.course-table,
+.exam-table {
+  text-align: left;
+  border-spacing: 2px;
+  font-size: 11pt;
+}
+
+.course-table-row td,
+.exam-table-row td {
+  padding-right: 30px;
+}
+
+.course-table__link,
+.course-table__link:visited,
+.exam-table__link,
+.exam-table__link:visited {
+  color: #00568e;
+}
+
+.course-table__icon,
+.exam-table__icon {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.course-page__title {
+  font-weight: bold;
+  font-size: larger;
+}
