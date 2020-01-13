@@ -12,10 +12,13 @@ const Layout = ({ children, title }) => {
   return (
     <html>
       <head>
+        <meta charSet="utf-8" />
+        <meta name="robots" content="noindex" />
+        <link rel="stylesheet" href="/static/vendor/normalize.css" />
+        <link rel="stylesheet" href="/static/main.css" />
         <title>
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>
-        <link rel="stylesheet" href="/static/main.css" />
       </head>
       <body>
         <div className="layout">
@@ -24,6 +27,7 @@ const Layout = ({ children, title }) => {
             Tärpistö
           </div>
           {children}
+          <div className="layout-footer"></div>
         </div>
       </body>
     </html>

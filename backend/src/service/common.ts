@@ -13,9 +13,11 @@ export interface CourseListItem extends Course {
   lastModified: Date | null
 }
 
+export type ExamId = number
+
 export interface ExamListItem {
-  id: number
-  courseId: number
+  id: ExamId
+  courseId: CourseId
   fileName: string
   mimeType: string
   uploadDate: Date

@@ -20,6 +20,33 @@ const slugifyCourseFilename = (courseName: string) => {
 
 const router = express.Router()
 
+type Role = 'jäsen' | 'tenttiarkistovirkailija' | 'virkailija' | 'ylläpitäjä'
+type AccessRight = 'access' | 'upload' | 'remove'
+
+interface AuthData {
+  user: { username: string }
+  role: Role
+  rights: { [right in AccessRight]?: true }
+}
+
+router.use((req, res, next) => {
+  const roleRights: {
+    [role in Role]: { [right in AccessRight]?: true }
+  } = {
+    jäsen: { access: true, upload: true },
+    tenttiarkistovirkailija: { access: true, upload: true, remove: true },
+    virkailija: { access: true, upload: true },
+    ylläpitäjä: { access: true, upload: true, remove: true }
+  }
+  ;(req as any).auth = {
+    user: { username: 'hexjoona' },
+    role: 'ylläpitäjä',
+    rights: roleRights['ylläpitäjä']
+  } as AuthData
+
+  next()
+})
+
 const urlForCourse = (id: number, name: string) =>
   `/archive/${id}-${slugifyCourseName(name)}`
 
@@ -33,7 +60,9 @@ router.get('/archive', async (req, res) => {
         name,
         lastModified,
         url: urlForCourse(id, name)
-      }))
+      })),
+    userRights: ((req as any).auth as AuthData).rights,
+    username: ((req as any).auth as AuthData).user.username
   })
 })
 
@@ -63,7 +92,9 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
       ...exam,
       downloadUrl: examDownloadUrl(exam.id, exam.fileName)
     })),
-    previousPageUrl: '/archive'
+    previousPageUrl: '/archive',
+    userRights: ((req as any).auth as AuthData).rights,
+    username: ((req as any).auth as AuthData).user.username
   })
 })
 

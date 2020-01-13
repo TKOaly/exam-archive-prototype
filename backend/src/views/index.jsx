@@ -1,19 +1,29 @@
 const React = require('react')
+const PropTypes = require('prop-types')
 const formatDate = require('date-fns/format')
 const fiLocale = require('date-fns/locale/fi')
 const Layout = require('./common/Layout')
+const { ControlsBox, Logout } = require('./common/Controls')
 
-const CourseTableHeader = () => {
+const CourseTableHeader = ({ showDelete }) => {
   return (
     <tr className="course-table-header">
       <th>Name</th>
       <th>Last modified</th>
-      <th>Delete</th>
+      {showDelete && <th>Delete</th>}
     </tr>
   )
 }
 
-const CourseTableRow = ({ course }) => {
+CourseTableHeader.propTypes = {
+  showDelete: PropTypes.bool
+}
+
+const DeleteCourseButton = () => {
+  return <img src="/static/img/delete.png" alt="Delete" />
+}
+
+const CourseTableRow = ({ course, showDelete }) => {
   const { id, name, url, lastModified } = course
 
   return (
@@ -21,7 +31,7 @@ const CourseTableRow = ({ course }) => {
       <td>
         <img
           className="course-table__icon"
-          src="https://tarpisto.tko-aly.fi/img/folder_blue.png"
+          src="/static/img/folder_blue.png"
           alt="Course"
         />
         <a className="course-table__link" href={url}>
@@ -35,29 +45,85 @@ const CourseTableRow = ({ course }) => {
           })}
         </time>
       </td>
+      {showDelete && (
+        <td className="course-table-row__delete">
+          <DeleteCourseButton />
+        </td>
+      )}
     </tr>
   )
 }
 
-const CourseTable = ({ courses }) => {
+const courseShape = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  lastModified: PropTypes.instanceOf(Date)
+})
+
+CourseTableRow.propTypes = {
+  course: courseShape.isRequired,
+  showDelete: PropTypes.bool
+}
+
+const CourseTable = ({ courses, showDelete }) => {
   return (
     <table className="course-table">
       <thead>
-        <CourseTableHeader />
+        <CourseTableHeader showDelete={showDelete} />
       </thead>
       <tbody>
         {courses.map(course => (
-          <CourseTableRow key={course.id} course={course} />
+          <CourseTableRow
+            key={course.id}
+            showDelete={showDelete}
+            course={course}
+          />
         ))}
       </tbody>
     </table>
   )
 }
 
-const IndexPage = ({ courses }) => {
+CourseTable.propTypes = {
+  showDelete: PropTypes.bool.isRequired,
+  courses: PropTypes.arrayOf(courseShape.isRequired).isRequired
+}
+
+const CreateCourseForm = () => {
+  return (
+    <form
+      className="create-course-form"
+      method="post"
+      encType="multipart/form-data"
+    >
+      <h3>Add a new course:</h3>
+      <input
+        className="create-course-form__name"
+        required
+        aria-label="Course name"
+        placeholder="Course name"
+        type="text"
+        name="courseName"
+      ></input>
+      <input
+        className="create-course-form__submit"
+        type="submit"
+        name="create"
+        value="Create course"
+      />
+    </form>
+  )
+}
+
+const IndexPage = ({ courses, username, userRights }) => {
   return (
     <Layout>
-      <CourseTable courses={courses} />
+      <CourseTable courses={courses} showDelete={userRights.remove} />
+      <ControlsBox>
+        {userRights.upload && <CreateCourseForm />}
+        <Logout username={username} />
+      </ControlsBox>
     </Layout>
   )
 }

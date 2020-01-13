@@ -16,7 +16,7 @@ app.engine('jsx', require('express-react-views').createEngine())
 
 app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
-app.use('/static', express.static(path.join(__dirname, 'static')))
+app.use('/static', express.static(path.join(__dirname, '../static')))
 
 app.use('/', controller)
 

@@ -2,10 +2,10 @@ body {
   line-height: 1.5;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
   background-color: white;
+  margin: 8px;
 }
 
 .layout {
-  width: 100%;
   padding-left: 50px;
 }
 
@@ -20,6 +20,10 @@ body {
   border: 0;
 }
 
+.layout-footer {
+  padding-bottom: 40px;
+}
+
 .course-table,
 .exam-table {
   text-align: left;
@@ -30,6 +34,12 @@ body {
 .course-table-row td,
 .exam-table-row td {
   padding-right: 30px;
+}
+
+.course-table-row .course-table-row__delete,
+.exam-table-row .exam-table-row__delete {
+  text-align: center;
+  padding-right: 0;
 }
 
 .course-table__link,
@@ -48,4 +58,32 @@ body {
 .course-page__title {
   font-weight: bold;
   font-size: larger;
+}
+
+.controls {
+  font-size: smaller;
+  border: 1px solid black;
+  margin: 30px 0;
+  padding: 10px;
+  display: inline-block;
+}
+
+.create-course-form__control {
+  display: block;
+}
+
+.log-out {
+  margin-top: 10px;
+  font-size: 8pt;
+}
+
+.log-out__link,
+.log-out__link:visited {
+  color: #00568e;
+}
+
+.exam-upload-form__file:not(:valid) + .exam-upload-form__submit,
+.create-course-form__name:not(:valid) + .create-course-form__submit {
+  pointer-events: none;
+  opacity: 0.7;
 }
