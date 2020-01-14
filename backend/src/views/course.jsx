@@ -36,9 +36,25 @@ const mimeTypeImage = mimeType => {
   }
 }
 
-const DeleteExamButton = () => {
-  return <img src="/static/img/delete.png" alt="Delete" />
+const DeleteExamButton = ({ action }) => {
+  return (
+    <form className="delete-exam-button" method="post" action={action}>
+      <button
+        className="delete-exam-button__button"
+        aria-label="Delete exam"
+        type="submit"
+      >
+        <img src="/static/img/delete.png" alt="Delete" />
+      </button>
+    </form>
+  )
 }
+
+DeleteExamButton.propTypes = {
+  action: PropTypes.string.isRequired
+}
+
+const makeDeleteExamAction = examId => `/archive/delete-exam/${examId}`
 
 const ExamTableRow = ({ exam, showDelete }) => {
   const { id, fileName, mimeType, uploadDate, downloadUrl } = exam
@@ -64,7 +80,7 @@ const ExamTableRow = ({ exam, showDelete }) => {
       </td>
       {showDelete && (
         <td className="exam-table-row__delete">
-          <DeleteExamButton />
+          <DeleteExamButton action={makeDeleteExamAction(id)} />
         </td>
       )}
     </tr>

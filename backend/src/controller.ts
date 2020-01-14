@@ -1,6 +1,14 @@
 import express from 'express'
 import slugify from 'slugify'
-import { getCourseListing, getCourseInfo } from './service/archive'
+import {
+  getCourseListing,
+  getCourseInfo,
+  deleteCourse,
+  deleteExam,
+  CourseNotFoundError,
+  CannotDeleteError,
+  findCourseByExamId
+} from './service/archive'
 
 const slugifyCourseName = (courseName: string) => {
   return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
@@ -96,6 +104,40 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
     userRights: ((req as any).auth as AuthData).rights,
     username: ((req as any).auth as AuthData).user.username
   })
+})
+
+router.post('/archive/delete-exam/:examId(\\d+)', async (req, res) => {
+  try {
+    const course = await findCourseByExamId(parseInt(req.params.examId, 10))
+
+    if (!course) {
+      // TODO handle
+      return res.json({ error: 'todo' })
+    }
+
+    await deleteExam(parseInt(req.params.examId, 10))
+    return res.redirect(urlForCourse(course.id, course.name))
+  } catch (e) {
+    console.error(e)
+    // TODO: show flash message
+    res.json({ error: e.message })
+  }
+})
+
+router.post('/archive/delete-course/:courseId(\\d+)', async (req, res) => {
+  try {
+    await deleteCourse(parseInt(req.params.courseId, 10))
+    return res.redirect('/archive')
+  } catch (e) {
+    // TODO: show flash messages
+    if (e instanceof CourseNotFoundError) {
+      return res.json({ error: e.message, type: 'CoirseNotFoundErr' })
+    }
+    if (e instanceof CannotDeleteError) {
+      return res.json({ error: e.message, type: 'CAnnotDeleteDerro' })
+    }
+    return res.json({ error: e.message, wtf: true })
+  }
 })
 
 export default router

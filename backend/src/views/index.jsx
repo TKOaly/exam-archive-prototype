@@ -19,9 +19,25 @@ CourseTableHeader.propTypes = {
   showDelete: PropTypes.bool
 }
 
-const DeleteCourseButton = () => {
-  return <img src="/static/img/delete.png" alt="Delete" />
+const DeleteCourseButton = ({ action }) => {
+  return (
+    <form className="delete-course-button" method="post" action={action}>
+      <button
+        className="delete-course-button__button"
+        aria-label="Delete course"
+        type="submit"
+      >
+        <img src="/static/img/delete.png" alt="Delete" />
+      </button>
+    </form>
+  )
 }
+
+DeleteCourseButton.propTypes = {
+  action: PropTypes.string.isRequired
+}
+
+const makeDeleteCourseAction = courseId => `/archive/delete-course/${courseId}`
 
 const CourseTableRow = ({ course, showDelete }) => {
   const { id, name, url, lastModified } = course
@@ -49,7 +65,7 @@ const CourseTableRow = ({ course, showDelete }) => {
       </td>
       {showDelete && (
         <td className="course-table-row__delete">
-          <DeleteCourseButton />
+          <DeleteCourseButton action={makeDeleteCourseAction(id)} />
         </td>
       )}
     </tr>
