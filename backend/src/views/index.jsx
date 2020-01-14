@@ -39,11 +39,13 @@ const CourseTableRow = ({ course, showDelete }) => {
         </a>
       </td>
       <td>
-        <time dateTime={lastModified.toISOString()}>
-          {formatDate(lastModified, 'yyyy-MM-dd HH:mm', {
-            locale: fiLocale
-          })}
-        </time>
+        {lastModified && (
+          <time dateTime={lastModified.toISOString()}>
+            {formatDate(lastModified, 'yyyy-MM-dd HH:mm', {
+              locale: fiLocale
+            })}
+          </time>
+        )}
       </td>
       {showDelete && (
         <td className="course-table-row__delete">
