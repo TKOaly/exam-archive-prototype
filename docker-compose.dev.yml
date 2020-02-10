@@ -15,11 +15,6 @@ services:
     depends_on:
       - db
 
-  frontend:
-    build: ./frontend
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
-
   db:
     ports:
       - '9876:5432'

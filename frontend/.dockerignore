@@ -1,8 +1,0 @@
-*
-!public/
-!src/
-!package.json
-!README.md
-!yarn.lock
-!tsconfig.json
-!nginx.conf

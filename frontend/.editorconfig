@@ -1,8 +1,0 @@
-root = true
-
-[*]
-insert_final_newline = true
-
-[src/**/*.{js,scss,json}]
-indent_size = 2
-indent_style = space
