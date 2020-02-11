@@ -15,6 +15,7 @@ const knexfile = require('../knexfile')
 const statAsync = util.promisify(fs.stat)
 const readdirAsync = util.promisify(fs.readdir)
 const copyFileAsync = util.promisify(fs.copyFile)
+const chmodAsync = util.promisify(fs.chmod)
 
 const knex = Knex(knexfile[process.env.NODE_ENV])
 const ARCHIVE_FILE_DIR = process.env.ARCHIVE_FILE_DIR
@@ -77,13 +78,24 @@ const printHelp = () => {
   console.log(`Seeds the backend's database from the old exam archive's file`)
   console.log('archive.')
   console.log('')
-  console.log('USAGE:   node seed-db-from-files.js <path>')
+  console.log('USAGE:   node seed-db-from-files.js <path> [mod]')
   console.log('')
-  console.log(`Pass the path to the old archive's files directory with <path>.`)
+  console.log('Parameters')
+  console.log(
+    `  <path>    Path to the old archive's files directory. Immediate`
+  )
+  console.log(
+    '            subdirectories of this directory should be the course'
+  )
+  console.log('            directories.')
+  console.log(
+    '  [mod]     Optional. Set the chmod flags specified to the copied'
+  )
+  console.log('            files in octal, e.g. 644 or 755 or 600.')
   console.log('')
 }
 
-const start = async (sourceDirectory, markDirty) => {
+const start = async (sourceDirectory, mod, markDirty) => {
   // Deletes ALL existing entries
   //await knex('courses').del()
 
@@ -94,7 +106,10 @@ const start = async (sourceDirectory, markDirty) => {
   console.group(`Inserting ${courses.length} courses to db...`)
   /** @type {{id: number, name: string}[]} */
   const insertedCourses = await knex
-    .batchInsert('courses', courses.map(({ name }) => ({ name })))
+    .batchInsert(
+      'courses',
+      courses.map(({ name }) => ({ name }))
+    )
     .returning(['id', 'name'])
   console.log('Inserted!')
   console.groupEnd()
@@ -137,6 +152,11 @@ const start = async (sourceDirectory, markDirty) => {
         const newFilePath = path.join(ARCHIVE_FILE_DIR, newFilename)
 
         await copyFileAsync(sourceFile.file_path, newFilePath)
+
+        if (typeof mod !== 'undefined') {
+          await chmodAsync(newFilePath, mod)
+        }
+
         successfulCopies++
 
         return {
@@ -172,12 +192,19 @@ const start = async (sourceDirectory, markDirty) => {
 }
 
 const main = async () => {
-  if (process.argv.length !== 3) {
+  if (process.argv.length < 3) {
     printHelp()
     process.exit(1)
   }
 
-  const [_, __, sourceDirectory] = process.argv
+  const [_, __, sourceDirectory, modStr] = process.argv
+
+  const mod = parseInt(modStr, 8)
+  if (typeof modStr !== 'undefined' && isNaN(mod)) {
+    console.error(`Non-octal mod "${modStr}" specified.`)
+    printHelp()
+    process.exit(1)
+  }
 
   if (!fs.existsSync(sourceDirectory)) {
     console.error(`Files directory does not exist: '${sourceDirectory}'`)
@@ -194,7 +221,7 @@ const main = async () => {
 
   const dirty = []
   try {
-    await start(sourceDirectory, item => dirty.push(item))
+    await start(sourceDirectory, mod, item => dirty.push(item))
   } catch (e) {
     console.groupEnd()
     console.error('ERROR!', e)
