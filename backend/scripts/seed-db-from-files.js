@@ -132,7 +132,7 @@ const start = async (sourceDirectory, mod, markDirty) => {
           file_name: fileName,
           mime_type: getMimeType(fileName) || 'application/octet-stream',
           file_path: filePath,
-          upload_date: dateMin(fileStats.ctime, fileStats.mtime)
+          upload_date: dateMin([fileStats.ctime, fileStats.mtime])
         })
       )
     })
