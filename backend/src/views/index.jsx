@@ -110,11 +110,7 @@ CourseTable.propTypes = {
 
 const CreateCourseForm = () => {
   return (
-    <form
-      className="create-course-form"
-      method="post"
-      encType="multipart/form-data"
-    >
+    <form className="create-course-form" method="post">
       <h3>Add a new course:</h3>
       <input
         className="create-course-form__name"
@@ -134,9 +130,9 @@ const CreateCourseForm = () => {
   )
 }
 
-const IndexPage = ({ courses, username, userRights }) => {
+const IndexPage = ({ flash, courses, username, userRights }) => {
   return (
-    <Layout>
+    <Layout flash={flash}>
       <CourseTable courses={courses} showDelete={userRights.remove} />
       <ControlsBox>
         {userRights.upload && <CreateCourseForm />}

@@ -1,4 +1,5 @@
 import express from 'express'
+import bodyParser from 'body-parser'
 import slugify from 'slugify'
 import {
   getCourseListing,
@@ -7,8 +8,18 @@ import {
   deleteExam,
   CourseNotFoundError,
   CannotDeleteError,
-  findCourseByExamId
+  findCourseByExamId,
+  findCourseByName
 } from './service/archive'
+
+type Role = 'jäsen' | 'tenttiarkistovirkailija' | 'virkailija' | 'ylläpitäjä'
+type AccessRight = 'access' | 'upload' | 'remove'
+
+interface AuthData {
+  user: { username: string }
+  role: Role
+  rights: { [right in AccessRight]?: true }
+}
 
 const slugifyCourseName = (courseName: string) => {
   return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
@@ -28,15 +39,6 @@ const slugifyCourseFilename = (courseName: string) => {
 
 const router = express.Router()
 
-type Role = 'jäsen' | 'tenttiarkistovirkailija' | 'virkailija' | 'ylläpitäjä'
-type AccessRight = 'access' | 'upload' | 'remove'
-
-interface AuthData {
-  user: { username: string }
-  role: Role
-  rights: { [right in AccessRight]?: true }
-}
-
 router.use((req, res, next) => {
   const roleRights: {
     [role in Role]: { [right in AccessRight]?: true }
@@ -55,12 +57,19 @@ router.use((req, res, next) => {
   next()
 })
 
+router.use(bodyParser.urlencoded({ extended: true }))
+
+router.get('/', (req, res) => {
+  res.redirect('/archive')
+})
+
 const urlForCourse = (id: number, name: string) =>
   `/archive/${id}-${slugifyCourseName(name)}`
 
 router.get('/archive', async (req, res) => {
   const list = await getCourseListing()
   res.render('index', {
+    flash: req.flash(),
     courses: list
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(({ id, name, lastModified }) => ({
@@ -72,6 +81,17 @@ router.get('/archive', async (req, res) => {
     userRights: ((req as any).auth as AuthData).rights,
     username: ((req as any).auth as AuthData).user.username
   })
+})
+
+router.post('/archive', async (req, res) => {
+  const { courseName } = req.body
+
+  const existingCourse = await findCourseByName(courseName.trim())
+  if (existingCourse) {
+    req.flash(`Course ${existingCourse.name} already exists!`, 'error')
+    return res.redirect('/')
+  }
+  res.send('asd')
 })
 
 const examDownloadUrl = (examId: number, fileName: string) =>

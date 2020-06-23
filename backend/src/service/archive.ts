@@ -130,6 +130,20 @@ export const getCourseInfo = async (
   }
 }
 
+export const findCourseByName = async (
+  courseName: string
+): Promise<Course | null> => {
+  const course = await knex('courses')
+    .where({ name: courseName, ...whereNotDeleted() })
+    .first(['courses.*'])
+
+  if (!course) {
+    return null
+  }
+
+  return deserializeCourse(course)
+}
+
 export const findCourseById = async (
   courseId: CourseId
 ): Promise<Course | null> => {

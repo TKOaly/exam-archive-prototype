@@ -3,7 +3,7 @@ version: '3'
 services:
   backend:
     image: tkoalydocker/exam-archive-backend
-    restart: unless-stopped
+#    restart: unless-stopped
     environment:
       - PG_CONNECTION_STRING=postgresql://tarpisto:Su5hgVvoqUCRw5vrWmrW@db:5432/tarpisto
       - NODE_ENV=production
@@ -20,7 +20,7 @@ services:
 
   db:
     image: postgres:11.1
-    restart: unless-stopped
+#    restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=Su5hgVvoqUCRw5vrWmrW
       - POSTGRES_USER=tarpisto

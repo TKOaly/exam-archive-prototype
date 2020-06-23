@@ -8,7 +8,7 @@ const Logo = ({ className }) => (
   />
 )
 
-const Layout = ({ children, title }) => {
+const Layout = ({ children, title, flash }) => {
   return (
     <html>
       <head>
@@ -26,6 +26,7 @@ const Layout = ({ children, title }) => {
             <Logo className="layout-header__logo" />
             Tärpistö
           </div>
+          {flash && flash.message}
           {children}
           <div className="layout-footer"></div>
         </div>
