@@ -199,16 +199,22 @@ router.post(
       const course = await findCourseByExamId(parseInt(req.params.examId, 10))
 
       if (!course) {
-        // TODO handle
-        return res.json({ error: 'todo' })
+        req.flash(`Exam does not exist.`, 'error')
+        return res.redirect('/')
       }
 
       await deleteExam(parseInt(req.params.examId, 10))
+      // don't delete from S3, purge S3 objects with no references separately via admin panel
+      // also, TODO admin panel lol!
+      req.flash(`Exam has been deleted.`, 'info')
       return res.redirect(urlForCourse(course.id, course.name))
     } catch (e) {
       console.error(e)
-      // TODO: show flash message
-      res.json({ error: e.message })
+      req.flash(
+        `An error occurred while deleting the exam. Please try again.`,
+        'error'
+      )
+      return res.redirect('/')
     }
   }
 )
