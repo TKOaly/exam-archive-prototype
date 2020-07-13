@@ -55,7 +55,7 @@ export const deleteCourse = async (courseId: CourseId) => {
       await knex('exams')
         .where({ course_id: courseId, ...whereNotDeleted() })
         .count('id as count')
-    )[0].count,
+    )[0].count + '',
     10
   )
 
@@ -99,7 +99,9 @@ export const getCourseListing = async (): Promise<CourseListItem[]> => {
     })
     .groupBy(['course.id'])
 
-  return results.map(deserializeCourseListItem).filter(isNotNull)
+  return results
+    .map(deserializeCourseListItem)
+    .filter(isNotNull) as CourseListItem[]
 }
 
 export interface CourseInfo extends Course {
@@ -127,7 +129,9 @@ export const getCourseInfo = async (
     return null
   }
 
-  const exams = examsResult.map(deserializeExamListItem).filter(isNotNull)
+  const exams = examsResult
+    .map(deserializeExamListItem)
+    .filter(isNotNull) as ExamListItem[]
   return {
     ...course,
     exams
