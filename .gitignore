@@ -5,6 +5,7 @@ pg-data/
 .vscode/
 *.pem
 tarpisto-dev-dump/
+.env.docker
 
 
 # Created by https://www.gitignore.io/api/node
