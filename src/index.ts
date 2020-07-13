@@ -115,22 +115,11 @@ app.use('*', (req, res) => {
   res.render('404')
 })
 
-const start = async () => {
-  try {
-    await db.testConnection()
-  } catch (err) {
-    console.error('Database connection failed', err)
-    process.exit(1)
+app.listen(config.PORT, (err: any) => {
+  if (err) {
+    console.error('Failed to start server: ', err)
+    return
   }
 
-  app.listen(config.PORT, (err: any) => {
-    if (err) {
-      console.error('Failed to start server: ', err)
-      return
-    }
-
-    console.log(`Server running on port ${config.PORT}`)
-  })
-}
-
-start()
+  console.log(`Server running on port ${config.PORT}`)
+})
