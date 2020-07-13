@@ -5,12 +5,13 @@ const fiLocale = require('date-fns/locale/fi')
 const Layout = require('./common/Layout')
 const { ControlsBox, Logout } = require('./common/Controls')
 
-const CourseTableHeader = ({ showDelete }) => {
+const CourseTableHeader = ({ showDelete, showRename = showDelete }) => {
   return (
     <tr className="course-table-header">
       <th>Name</th>
       <th>Last modified</th>
       {showDelete && <th>Delete</th>}
+      {showRename && <th>Rename</th>}
     </tr>
   )
 }
@@ -39,7 +40,7 @@ DeleteCourseButton.propTypes = {
 
 const makeDeleteCourseAction = courseId => `/archive/delete-course/${courseId}`
 
-const CourseTableRow = ({ course, showDelete }) => {
+const CourseTableRow = ({ course, showDelete, showRename = showDelete }) => {
   const { id, name, url, lastModified } = course
 
   return (
@@ -66,6 +67,18 @@ const CourseTableRow = ({ course, showDelete }) => {
       {showDelete && (
         <td className="course-table-row__delete">
           <DeleteCourseButton action={makeDeleteCourseAction(id)} />
+        </td>
+      )}
+      {showRename && (
+        <td className="course-table-row__rename">
+          <button
+            /* augments.js */
+            data-current-name={name}
+            data-id={id}
+            className="course-table-row__rename-button"
+          >
+            rename
+          </button>
         </td>
       )}
     </tr>

@@ -19,7 +19,8 @@ import {
   findCourseByExamId,
   findCourseByName,
   createExam,
-  createCourse
+  createCourse,
+  renameCourse
 } from './service/archive'
 import { AuthData, requireRights } from './common'
 
@@ -243,6 +244,29 @@ router.post(
       }
       req.flash('An error occurred while deleting the course.', 'error')
       res.redirect('/')
+    }
+  }
+)
+
+router.post(
+  `/archive/rename-course/:courseId(\\d+)`,
+  requireRights('remove'),
+  async (req, res) => {
+    try {
+      const course = await getCourseInfo(parseInt(req.params.courseId, 10))
+      if (!course) {
+        return res.status(404).json({ error: 'course not found' })
+      }
+
+      if (!req.body.name) {
+        return res.status(400).json({ error: 'name missing' })
+      }
+
+      await renameCourse(course.id, req.body.name)
+      return res.status(200).json({ ok: true })
+    } catch (e) {
+      console.error(e)
+      res.status(500).json({ error: 'internal server error' })
     }
   }
 )

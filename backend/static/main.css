@@ -37,9 +37,20 @@ body {
 }
 
 .course-table-row .course-table-row__delete,
-.exam-table-row .exam-table-row__delete {
+.course-table-row .course-table-row__rename,
+.exam-table-row .exam-table-row__delete,
+.exam-table-row .exam-table-row__rename {
   text-align: center;
+}
+
+.course-table-row .course-table-row__rename,
+.exam-table-row .exam-table-row__rename {
+  font-size: 0.6rem;
   padding-right: 0;
+}
+
+.course-table-row__rename-button:hover {
+  cursor: pointer;
 }
 
 .course-table__link,

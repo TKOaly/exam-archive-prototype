@@ -19,6 +19,7 @@ const Layout = ({ children, title, flash }) => {
         <title>
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>
+        <script defer src="/static/augments.js" />
       </head>
       <body>
         <div className="layout">

@@ -80,7 +80,7 @@ export const renameCourse = async (
   id: CourseId,
   newName: string
 ): Promise<any> =>
-  await knex('courses as course')
+  await knex('courses')
     .update({ name: newName })
     .where({ id, ...whereNotDeleted() })
 
