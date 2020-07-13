@@ -172,6 +172,7 @@ UploadExamForm.propTypes = {
 }
 
 const CoursePage = ({
+  flash,
   course,
   exams,
   previousPageUrl,
@@ -179,7 +180,7 @@ const CoursePage = ({
   userRights
 }) => {
   return (
-    <Layout>
+    <Layout flash={flash}>
       <h2 className="course-page__title">{course.name}</h2>
       <ExamTable
         exams={exams}

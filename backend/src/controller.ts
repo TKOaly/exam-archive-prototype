@@ -123,6 +123,7 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
   const auth = (req as any).auth as AuthData
 
   res.render('course', {
+    flash: req.flash(),
     course,
     exams: course.exams.map(exam => ({
       ...exam,
