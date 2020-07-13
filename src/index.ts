@@ -37,6 +37,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 
+app.get('/healthcheck', (req, res) => res.send('pong'))
+
 app.use(cookieParser())
 app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
