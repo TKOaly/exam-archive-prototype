@@ -228,13 +228,12 @@ router.post(
       return res.redirect('/archive')
     } catch (e) {
       // TODO: show flash messages
-      if (e instanceof CourseNotFoundError) {
-        return res.json({ error: e.message, type: 'CorseNotFoundErr' })
+      if (e instanceof CourseNotFoundError || e instanceof CannotDeleteError) {
+        req.flash(e.message, 'error')
+        return res.redirect('/')
       }
-      if (e instanceof CannotDeleteError) {
-        return res.json({ error: e.message, type: 'CAnnotDeleteDerro' })
-      }
-      return res.json({ error: e.message, wtf: true })
+      req.flash('An error occurred while deleting the course.', 'error')
+      res.redirect('/')
     }
   }
 )
