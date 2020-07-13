@@ -80,7 +80,7 @@ export const renameCourse = async (
 
 export const getCourseListing = async (): Promise<CourseListItem[]> => {
   const results = await knex('courses as course')
-    .leftJoin('exams as exam', function() {
+    .leftJoin('exams as exam', function () {
       this.on('exam.course_id', '=', 'course.id').andOnNull('exam.removed_at')
     })
     .select([
@@ -162,7 +162,7 @@ export const findCourseByExamId = async (
   const course = await knex('courses')
     .select('*')
     .where({ ...whereNotDeleted() })
-    .whereIn('id', function() {
+    .whereIn('id', function () {
       this.select('course_id')
         .from('exams')
         .where({ id: examId, ...whereNotDeleted() })
@@ -182,6 +182,11 @@ interface ExamSubmission {
   file_name: string
   mime_type: string
   file_path: string
+}
+
+export const createCourse = async (exam: { name: string }) => {
+  const created = await knex('courses').insert(exam, ['courses.*'])
+  return deserializeCourse(created[0])
 }
 
 export const createExam = async (exam: ExamSubmission) => {

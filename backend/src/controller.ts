@@ -18,7 +18,8 @@ import {
   CannotDeleteError,
   findCourseByExamId,
   findCourseByName,
-  createExam
+  createExam,
+  createCourse
 } from './service/archive'
 import { AuthData, requireRights } from './common'
 
@@ -97,7 +98,12 @@ router.post('/archive', requireRights('upload'), async (req, res) => {
     req.flash(`Course ${existingCourse.name} already exists!`, 'error')
     return res.redirect('/')
   }
-  res.send('asd')
+
+  const createdCourse = await createCourse({ name: courseName })
+  req.flash(`Course "${createdCourse?.name ?? courseName}" created!`, 'info')
+  res.redirect(
+    createdCourse ? urlForCourse(createdCourse.id, createdCourse.name) : '/'
+  )
 })
 
 const examDownloadUrl = (examId: number, fileName: string) =>
