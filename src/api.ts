@@ -1,7 +1,5 @@
 import express, { Request, Response } from 'express'
-import multer from 'multer'
 import bodyParser from 'body-parser'
-import config from './config'
 import {
   renameCourse,
   getCourseListing,
@@ -10,22 +8,12 @@ import {
   createExam
 } from './service/archive'
 
-const FIFTY_MB_TO_B = 50000000
-
 const courseNotFound = (res: Response) => (attemptedCourseId: any) =>
   res.status(404).json({
     error: `Course "${attemptedCourseId}" not found`
   })
 
 const api = express.Router()
-
-const upload = multer({
-  dest: config.ARCHIVE_FILE_DIR,
-  limits: {
-    files: 1,
-    fileSize: FIFTY_MB_TO_B
-  }
-})
 
 api.get('/courses', async (req, res) => {
   const courses = await getCourseListing()
@@ -76,9 +64,9 @@ api.post(
 
 api.post(
   '/courses/:courseId/exams',
-  upload.single('exam'),
   async (req: Request & CourseIdLocals, res, next) => {
-    const course = await findCourseById(req.locals!.courseId)
+    throw new Error('not impl')
+    /*const course = await findCourseById(req.locals!.courseId)
 
     if (!course) {
       return courseNotFound(res)(req.locals!.courseId)
@@ -91,7 +79,7 @@ api.post(
       file_path: req.file.filename
     })
 
-    return res.status(201).json(createdFile)
+    return res.status(201).json(createdFile)*/
   }
 )
 
