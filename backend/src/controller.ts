@@ -11,15 +11,7 @@ import {
   findCourseByExamId,
   findCourseByName
 } from './service/archive'
-
-type Role = 'jäsen' | 'tenttiarkistovirkailija' | 'virkailija' | 'ylläpitäjä'
-type AccessRight = 'access' | 'upload' | 'remove'
-
-interface AuthData {
-  user: { username: string }
-  role: Role
-  rights: { [right in AccessRight]?: true }
-}
+import { AuthData, requireRights } from './common'
 
 const slugifyCourseName = (courseName: string) => {
   return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
@@ -29,33 +21,7 @@ const slugifyCourseName = (courseName: string) => {
   })
 }
 
-const slugifyCourseFilename = (courseName: string) => {
-  return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
-    lower: false,
-    replacement: '_',
-    remove: /[^\w\d \-]/g
-  })
-}
-
 const router = express.Router()
-
-router.use((req, res, next) => {
-  const roleRights: {
-    [role in Role]: { [right in AccessRight]?: true }
-  } = {
-    jäsen: { access: true, upload: true },
-    tenttiarkistovirkailija: { access: true, upload: true, remove: true },
-    virkailija: { access: true, upload: true },
-    ylläpitäjä: { access: true, upload: true, remove: true }
-  }
-  ;(req as any).auth = {
-    user: { username: 'hexjoona' },
-    role: 'ylläpitäjä',
-    rights: roleRights['ylläpitäjä']
-  } as AuthData
-
-  next()
-})
 
 router.use(bodyParser.urlencoded({ extended: true }))
 
@@ -68,6 +34,8 @@ const urlForCourse = (id: number, name: string) =>
 
 router.get('/archive', async (req, res) => {
   const list = await getCourseListing()
+
+  const auth = (req as any).auth as AuthData
   res.render('index', {
     flash: req.flash(),
     courses: list
@@ -78,12 +46,12 @@ router.get('/archive', async (req, res) => {
         lastModified,
         url: urlForCourse(id, name)
       })),
-    userRights: ((req as any).auth as AuthData).rights,
-    username: ((req as any).auth as AuthData).user.username
+    userRights: auth.rights,
+    username: auth.user.username
   })
 })
 
-router.post('/archive', async (req, res) => {
+router.post('/archive', requireRights('upload'), async (req, res) => {
   const { courseName } = req.body
 
   const existingCourse = await findCourseByName(courseName.trim())
@@ -114,6 +82,8 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
     return res.redirect(302, urlForCourse(course.id, course.name))
   }
 
+  const auth = (req as any).auth as AuthData
+
   res.render('course', {
     course,
     exams: course.exams.map(exam => ({
@@ -121,43 +91,51 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
       downloadUrl: examDownloadUrl(exam.id, exam.fileName)
     })),
     previousPageUrl: '/archive',
-    userRights: ((req as any).auth as AuthData).rights,
-    username: ((req as any).auth as AuthData).user.username
+    userRights: auth.rights,
+    username: auth.user.username
   })
 })
 
-router.post('/archive/delete-exam/:examId(\\d+)', async (req, res) => {
-  try {
-    const course = await findCourseByExamId(parseInt(req.params.examId, 10))
+router.post(
+  '/archive/delete-exam/:examId(\\d+)',
+  requireRights('remove'),
+  async (req, res) => {
+    try {
+      const course = await findCourseByExamId(parseInt(req.params.examId, 10))
 
-    if (!course) {
-      // TODO handle
-      return res.json({ error: 'todo' })
+      if (!course) {
+        // TODO handle
+        return res.json({ error: 'todo' })
+      }
+
+      await deleteExam(parseInt(req.params.examId, 10))
+      return res.redirect(urlForCourse(course.id, course.name))
+    } catch (e) {
+      console.error(e)
+      // TODO: show flash message
+      res.json({ error: e.message })
     }
-
-    await deleteExam(parseInt(req.params.examId, 10))
-    return res.redirect(urlForCourse(course.id, course.name))
-  } catch (e) {
-    console.error(e)
-    // TODO: show flash message
-    res.json({ error: e.message })
   }
-})
+)
 
-router.post('/archive/delete-course/:courseId(\\d+)', async (req, res) => {
-  try {
-    await deleteCourse(parseInt(req.params.courseId, 10))
-    return res.redirect('/archive')
-  } catch (e) {
-    // TODO: show flash messages
-    if (e instanceof CourseNotFoundError) {
-      return res.json({ error: e.message, type: 'CoirseNotFoundErr' })
+router.post(
+  '/archive/delete-course/:courseId(\\d+)',
+  requireRights('remove'),
+  async (req, res) => {
+    try {
+      await deleteCourse(parseInt(req.params.courseId, 10))
+      return res.redirect('/archive')
+    } catch (e) {
+      // TODO: show flash messages
+      if (e instanceof CourseNotFoundError) {
+        return res.json({ error: e.message, type: 'CorseNotFoundErr' })
+      }
+      if (e instanceof CannotDeleteError) {
+        return res.json({ error: e.message, type: 'CAnnotDeleteDerro' })
+      }
+      return res.json({ error: e.message, wtf: true })
     }
-    if (e instanceof CannotDeleteError) {
-      return res.json({ error: e.message, type: 'CAnnotDeleteDerro' })
-    }
-    return res.json({ error: e.message, wtf: true })
   }
-})
+)
 
 export default router

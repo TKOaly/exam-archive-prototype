@@ -50,11 +50,9 @@ export const deleteCourse = async (courseId: CourseId) => {
   }
 
   const nonDeletedExams = parseInt(
-    (
-      await knex('exams')
-        .where({ course_id: courseId, ...whereNotDeleted() })
-        .count('id as count')
-    )[0].count,
+    (await knex('exams')
+      .where({ course_id: courseId, ...whereNotDeleted() })
+      .count('id as count'))[0].count,
     10
   )
 

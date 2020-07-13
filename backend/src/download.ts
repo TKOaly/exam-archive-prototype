@@ -1,18 +1,41 @@
 import express from 'express'
-import fs from 'fs'
-import util from 'util'
-import path from 'path'
-import contentDisposition from 'content-disposition'
-import { transliterate } from 'transliteration'
+import AWS from 'aws-sdk'
 
 import config from './config'
 import { findExamById } from './service/archive'
+import { DbExam } from './db'
 
-const statAsync = util.promisify(fs.stat)
+const cfSigner = new AWS.CloudFront.Signer(
+  config.AWS_CF_KEY_ID,
+  config.AWS_CF_KEY
+)
+
+// age in seconds
+const oneHourToSeconds = 60 * 60 * 1
+
+const getCloudFrontUrl = (exam: DbExam) =>
+  `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
+
+const createSignedUrl = (exam: DbExam) =>
+  new Promise<string>((resolve, reject) => {
+    cfSigner.getSignedUrl(
+      {
+        expires: Math.floor(new Date().getTime() / 1000) + oneHourToSeconds,
+        url: getCloudFrontUrl(exam)
+      },
+      (err, url) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(url)
+        }
+      }
+    )
+  })
 
 const router = express()
 
-router.get('/:examId/:fileName', async (req, res) => {
+router.get('/:examId/:fileName', async (req, res, next) => {
   // fileName actually not used, just looks nicer to the user
   const examId = parseInt(req.params.examId, 10)
 
@@ -25,31 +48,8 @@ router.get('/:examId/:fileName', async (req, res) => {
     return res.status(404).send('404')
   }
 
-  const filePath = path.join(config.ARCHIVE_FILE_DIR, exam.file_path)
-  const { mtime } = await statAsync(filePath)
-
-  const stream = fs.createReadStream(filePath)
-
-  stream.once('error', (err: any) => {
-    const errMsg = `Error occurred while opening exam ${
-      exam.id
-    }'s file "${filePath}" for download!`
-    console.error(errMsg, err)
-    res.status(500).send('Internal server error')
-  })
-
-  stream.once('open', () => {
-    res.set({
-      'Content-Disposition': contentDisposition(exam.file_name, {
-        type: 'inline',
-        fallback: transliterate(exam.file_name)
-      }),
-      'Content-Type': exam.mime_type,
-      'Last-Modified': mtime.toUTCString(),
-      'Cache-Control': 'private, max-age=86400'
-    })
-    stream.pipe(res)
-  })
+  const url = await createSignedUrl(exam)
+  return res.redirect(url)
 })
 
 export default router

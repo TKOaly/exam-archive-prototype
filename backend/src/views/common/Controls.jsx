@@ -5,7 +5,7 @@ const Logout = ({ username }) => {
   return (
     <div className="log-out">
       Logged in: {username} (
-      <a className="log-out__link" href="#">
+      <a className="log-out__link" href="/logout">
         Log out
       </a>
       )

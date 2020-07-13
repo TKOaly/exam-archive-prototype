@@ -9,7 +9,7 @@ const mime = require('mime')
 const flatten = require('lodash/flatten')
 const dateMin = require('date-fns/min')
 const Knex = require('knex')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const knexfile = require('../knexfile')
 
 const statAsync = util.promisify(fs.stat)
@@ -106,10 +106,7 @@ const start = async (sourceDirectory, mod, markDirty) => {
   console.group(`Inserting ${courses.length} courses to db...`)
   /** @type {{id: number, name: string}[]} */
   const insertedCourses = await knex
-    .batchInsert(
-      'courses',
-      courses.map(({ name }) => ({ name }))
-    )
+    .batchInsert('courses', courses.map(({ name }) => ({ name })))
     .returning(['id', 'name'])
   console.log('Inserted!')
   console.groupEnd()

@@ -4,19 +4,40 @@ import session from 'express-session'
 import morgan from 'morgan'
 import path from 'path'
 const MemoryStore = require('memorystore')(session)
+import cookieParser from 'cookie-parser'
+import AWS from 'aws-sdk'
 
 import config from './config'
 import * as db from './db'
 import apiRouter from './api'
 import downloadRouter from './download'
 import controller from './controller'
+import {
+  getUserServiceLoginUrl,
+  getUserServiceLogoutUrl,
+  getMe
+} from './service/tkoUserService'
+import { isActiveMember, AuthData, roleRights, requireRights } from './common'
+
+if (process.env.NODE_ENV === 'development') {
+  AWS.config.update({
+    region: config.AWS_REGION,
+    accessKeyId: config.AWS_ACCESS_KEY_ID,
+    secretAccessKey: config.AWS_SECRET_ACCESS_KEY
+  })
+} else {
+  AWS.config.update({
+    region: config.AWS_REGION
+  })
+}
 
 const app = express()
 
-app.set('views', __dirname + '/views')
+app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 
+app.use(cookieParser())
 app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
 app.use(
@@ -26,6 +47,7 @@ app.use(
       httpOnly: true,
       sameSite: 'strict'
     },
+    // TODO: persistent storage
     store: new MemoryStore({
       checkPeriod: 86400000 // prune expired entries every 24h
     }),
@@ -50,12 +72,44 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/static', express.static(path.join(__dirname, '../static')))
+const staticMiddleware = express.static(path.join(__dirname, '../static'))
+app.get('/favicon.ico', (req, res) => res.sendStatus(404))
+app.use('/static', staticMiddleware)
 
-app.use('/', controller)
+app.use(async (req, res, next) => {
+  const token = req.cookies.token as string | undefined
 
-app.use('/api', apiRouter)
-app.use('/download', downloadRouter)
+  if (!token) {
+    const url = getUserServiceLoginUrl()
+    return res.redirect(url)
+  }
+
+  const me = await getMe(token)
+  if (!me.ok) {
+    // TODO: 500 page
+    return res.status(500).send('fail user service')
+  }
+
+  const user = me.payload
+  const noRights = {}
+  ;(req as any).auth = {
+    user,
+    rights: isActiveMember(user) ? roleRights[user.role] || noRights : noRights
+  } as AuthData
+  next()
+})
+
+app.use('/logout', (req, res) => {
+  if (!req.cookies.token) {
+    return res.redirect('/')
+  }
+  return res.redirect(getUserServiceLogoutUrl())
+})
+
+app.use('/', requireRights('access'), controller)
+
+app.use('/api', requireRights('access'), apiRouter)
+app.use('/download', requireRights('access'), downloadRouter)
 
 app.use('*', (req, res) => {
   res.render('404')
