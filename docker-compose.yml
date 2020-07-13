@@ -29,6 +29,11 @@ services:
     volumes:
       - exam-archive-pg-data:/data/pgdata
 
+  adminer:
+    image: adminer
+    ports:
+      - 8082:8080
+
 volumes:
   exam-archive-pg-data:
   exam-archive-files:
