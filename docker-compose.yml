@@ -1,26 +1,24 @@
 version: '3'
 
 services:
-  backend:
-    image: tkoalydocker/exam-archive-backend
-#    restart: unless-stopped
+  exam-archive:
+    image: tkoalydocker/exam-archive-new
+    build: ./
     environment:
-      - PG_CONNECTION_STRING=postgresql://tarpisto:Su5hgVvoqUCRw5vrWmrW@db:5432/tarpisto
-      - NODE_ENV=production
-      - PORT=9001
-      - ARCHIVE_FILE_DIR=/data/tarpisto/files
-    command: ["sh", "-c", "yarn run db:migrate && yarn run serve"]
-    expose:
-      - "9001"
-    volumes:
-      - exam-archive-files:/data/tarpisto/files
-      - ./tarpisto-dev-dump:/data/tarpisto/devseed
+      - NODE_ENV=development
+      # Set the key for yourself, as env_file doesn't do multiline
+      # AWS_CF_KEY: > ---- BEGIN RSA PRIVAE KEY ----
+    env_file:
+      - .env.docker
+    ports:
+      - 9001:9001
     depends_on:
       - db
 
   db:
     image: postgres:11.1
-#    restart: unless-stopped
+    ports:
+      - '9876:5432'
     environment:
       - POSTGRES_PASSWORD=Su5hgVvoqUCRw5vrWmrW
       - POSTGRES_USER=tarpisto
@@ -36,4 +34,3 @@ services:
 
 volumes:
   exam-archive-pg-data:
-  exam-archive-files:

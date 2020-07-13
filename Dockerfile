@@ -1,13 +1,13 @@
-FROM node:10.16-alpine
-
-EXPOSE 9001
+FROM node:12-alpine
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn
+COPY package*.json ./
+RUN npm ci
 
-COPY . /app
-RUN yarn build
+COPY . .
+RUN npm run build
 
-CMD ["yarn", "run", "serve"]
+EXPOSE 9001
+
+CMD ["node", "dist/index.js"]

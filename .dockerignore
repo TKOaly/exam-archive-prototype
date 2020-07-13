@@ -1,10 +1,10 @@
 *
 !migrations/
 !scripts/
-!seeds/
 !src/
+!static/
 !knexfile.js
+!package-lock.json
 !package.json
 !README.md
-!yarn.lock
 !tsconfig.json
