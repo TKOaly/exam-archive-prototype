@@ -230,7 +230,10 @@ router.post(
   requireRights('remove'),
   async (req, res) => {
     try {
-      await deleteCourse(parseInt(req.params.courseId, 10))
+      const deletedCourse = await deleteCourse(
+        parseInt(req.params.courseId, 10)
+      )
+      req.flash(`The course "${deletedCourse?.name}" has been deleted.`, 'info')
       return res.redirect('/archive')
     } catch (e) {
       // TODO: show flash messages

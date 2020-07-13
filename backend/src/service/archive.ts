@@ -37,6 +37,7 @@ export class CannotDeleteError extends Error {
 }
 
 /**
+ * Deletes a course by ID and returns the deleted course.
  * @throws {CourseNotFoundError} if course is not found
  * @throws {CannotDeleteError} if course still has non-deleted exams
  */
@@ -50,9 +51,11 @@ export const deleteCourse = async (courseId: CourseId) => {
   }
 
   const nonDeletedExams = parseInt(
-    (await knex('exams')
-      .where({ course_id: courseId, ...whereNotDeleted() })
-      .count('id as count'))[0].count,
+    (
+      await knex('exams')
+        .where({ course_id: courseId, ...whereNotDeleted() })
+        .count('id as count')
+    )[0].count,
     10
   )
 
@@ -60,9 +63,12 @@ export const deleteCourse = async (courseId: CourseId) => {
     throw new CannotDeleteError('Cannot delete a course with exam documents.')
   }
 
-  await knex('courses')
+  const deletedCourse = await knex('courses')
     .update({ removed_at: knex.fn.now() })
     .where({ id: courseId, ...whereNotDeleted() })
+    .returning(['courses.*'])
+
+  return deserializeCourse(deletedCourse[0])
 }
 
 export const deleteExam = async (examId: ExamId) =>
