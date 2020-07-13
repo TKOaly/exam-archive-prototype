@@ -5,7 +5,7 @@ services:
     image: tkoalydocker/exam-archive-new
     build: ./
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
       # Set the key for yourself, as env_file doesn't do multiline
       # AWS_CF_KEY: > ---- BEGIN RSA PRIVAE KEY ----
     env_file:
