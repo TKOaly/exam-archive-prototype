@@ -140,14 +140,16 @@ ExamTable.propTypes = {
   showDelete: PropTypes.bool
 }
 
-const UploadExamForm = () => {
+const UploadExamForm = ({ courseId }) => {
   return (
     <form
       className="exam-upload-form"
       method="post"
       encType="multipart/form-data"
+      action="/archive/upload"
     >
       <h3>Upload a new file here:</h3>
+      <input type="hidden" name="course_id" value={courseId} />
       <input
         className="exam-upload-form__file"
         required
@@ -163,6 +165,10 @@ const UploadExamForm = () => {
       />
     </form>
   )
+}
+
+UploadExamForm.propTypes = {
+  courseId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
 }
 
 const CoursePage = ({
@@ -182,7 +188,7 @@ const CoursePage = ({
       />
 
       <ControlsBox>
-        {userRights.upload && <UploadExamForm />}
+        {userRights.upload && <UploadExamForm courseId={course.id} />}
         <Logout username={username} />
       </ControlsBox>
     </Layout>

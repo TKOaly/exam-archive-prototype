@@ -1,6 +1,14 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import slugify from 'slugify'
+import multer from 'multer'
+import multerS3 from 'multer-s3'
+import AWS from 'aws-sdk'
+import { transliterate } from 'transliteration'
+import contentDisposition from 'content-disposition'
+import { v4 as uuidv4 } from 'uuid'
+
+import config from './config'
 import {
   getCourseListing,
   getCourseInfo,
@@ -9,7 +17,8 @@ import {
   CourseNotFoundError,
   CannotDeleteError,
   findCourseByExamId,
-  findCourseByName
+  findCourseByName,
+  createExam
 } from './service/archive'
 import { AuthData, requireRights } from './common'
 
@@ -20,6 +29,35 @@ const slugifyCourseName = (courseName: string) => {
     remove: /[^\w\d \-]/g
   })
 }
+
+const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+const upload = multer({
+  storage: multerS3({
+    s3,
+    bucket: config.AWS_S3_BUCKET_ID,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: (
+      req: any,
+      file: Express.MulterS3.File,
+      cb: (err: any, key: string) => void
+    ) => {
+      cb(null, uuidv4())
+    },
+    contentDisposition: (
+      req: any,
+      file: Express.MulterS3.File,
+      cb: (err: any, key: string) => void
+    ) => {
+      cb(
+        null,
+        contentDisposition(file.originalname, {
+          type: 'inline',
+          fallback: transliterate(file.originalname)
+        })
+      )
+    }
+  } as any)
+})
 
 const router = express.Router()
 
@@ -95,6 +133,62 @@ router.get('/archive/:id(\\d+)-?:courseSlug?', async (req, res, next) => {
     username: auth.user.username
   })
 })
+
+router.post(
+  '/archive/upload',
+  requireRights('upload'),
+  upload.single('file'),
+  async (req, res, next) => {
+    const file = req.file as Express.MulterS3.File
+    console.log(file)
+    const deleteFile = async () => {
+      try {
+        await s3.deleteObject({ Bucket: file.bucket, Key: file.key }).promise()
+      } catch (e) {
+        console.error('Failed to delete uploaded object from S3', e)
+      }
+    }
+
+    const id = parseInt(req.body.course_id, 10)
+    if (isNaN(id)) {
+      await deleteFile()
+      req.flash(
+        `Cannot upload a file to a course that does not exist.`,
+        'error'
+      )
+      return res.redirect('/')
+    }
+
+    const course = await getCourseInfo(id)
+    if (course === null) {
+      await deleteFile()
+      req.flash(
+        `Cannot upload a file to a course that does not exist.`,
+        'error'
+      )
+      return res.redirect('/')
+    }
+
+    try {
+      await createExam({
+        course_id: course.id,
+        file_name: file.originalname,
+        file_path: file.key,
+        mime_type: file.contentType
+      })
+    } catch (e) {
+      await deleteFile()
+      req.flash(
+        'An error occurred while saving the file. Please try again.',
+        'error'
+      )
+      return res.redirect(urlForCourse(course.id, course.name))
+    }
+
+    req.flash(`Exam ${file.originalname} created!`, 'info')
+    res.redirect(urlForCourse(course.id, course.name))
+  }
+)
 
 router.post(
   '/archive/delete-exam/:examId(\\d+)',
