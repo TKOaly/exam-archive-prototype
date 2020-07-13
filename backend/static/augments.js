@@ -37,3 +37,16 @@
       })
   })
 })
+;[...document.getElementsByClassName('delete-exam-button')].forEach(
+  deleteForm => {
+    const handler = e => {
+      if (!confirm('Are you sure you want to delete this exam?')) {
+        e.preventDefault()
+        return false
+      }
+
+      return true
+    }
+    deleteForm.addEventListener('submit', handler)
+  }
+)
