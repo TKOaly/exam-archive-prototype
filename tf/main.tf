@@ -382,6 +382,9 @@ resource "aws_ecs_service" "exam_archive_service" {
   network_configuration {
     security_groups = [aws_security_group.exam_archive_task_sg.id]
     subnets = data.aws_subnet_ids.exam_archive_subnets.ids
+    // need to assign public IP so ECS gets access to ECR without needing
+    // a NAT or a VPC Endpoint
+    assign_public_ip = true
   }
 
   load_balancer {
