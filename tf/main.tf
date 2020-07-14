@@ -45,6 +45,10 @@ data "aws_ssm_parameter" "exam_archive_sf_trusted_signers" {
   name = "exam-archive-cf-trusted-signers"
 }
 
+locals {
+  ssm_param_prefix = "${split("/", data.aws_ssm_parameter.exam_archive_cookie_secret.arn)[0]}/exam-archive-*"
+}
+
 data "aws_vpc" "my_vpc" {
   filter {
     name    = "tag:Name"
@@ -167,6 +171,53 @@ resource "aws_cloudfront_distribution" "exam_archive_cf_files_distribution" {
   }
 }
 
+resource "aws_iam_role" "exam_archive_task_role" {
+  name                = "exam-archive-task-role"
+  assume_role_policy  = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "exam_archive_task_role_policy" {
+  name    = "exam-archive-task-role-policy"
+  role    = aws_iam_role.exam_archive_task_role.id
+  policy  = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:GetObjectAcl",
+        "s3:PutObjectAcl",
+        "s3:UploadPart",
+        "s3:UploadPartCopy",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.exam_archive_files_s3_bucket.arn}/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role" "exam_archive_execution_role" {
   name                = "exam-archive-execution-role"
   assume_role_policy  = <<EOF
@@ -198,23 +249,7 @@ resource "aws_iam_role_policy" "exam_archive_execution_role_policy" {
         "ssm:GetParameters"
       ],
       "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject",
-        "s3:GetObjectAcl",
-        "s3:PutObjectAcl",
-        "s3:UploadPart",
-        "s3:UploadPartCopy",
-        "s3:ListBucket"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.exam_archive_files_s3_bucket.arn}/*"
-      ]
+      "Resource": ["${local.ssm_param_prefix}"]
     }
   ]
 }
@@ -287,11 +322,12 @@ resource "aws_cloudwatch_log_group" "exam_archive_cw" {
 }
 
 resource "aws_ecs_task_definition" "exam_archive_task" {
-  family                    = "service"
+  family                    = "exam-archive-service"
   network_mode              = "awsvpc"
   requires_compatibilities  = ["FARGATE"]
   cpu                       = 256
   memory                    = 512
+  task_role_arn             = aws_iam_role.exam_archive_task_role.arn
   execution_role_arn        = aws_iam_role.exam_archive_execution_role.arn
   container_definitions     = <<DEFINITION
 [
