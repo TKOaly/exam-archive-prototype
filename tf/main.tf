@@ -10,11 +10,19 @@ locals {
   aws_region      = "eu-north-1"
   container_port  = 9001
   host_domain     = "tarpisto-test.tko-aly.fi"
+  cdn_domain      = "tarpisto-test.cdn.tko-aly.fi"
 }
 
 provider "aws" {
   profile = "default"
   region  = local.aws_region
+}
+
+provider "aws" {
+  // us-east provider to get CF ACM cert
+  profile = "default"
+  alias = "virginia"
+  region = "us-east-1"
 }
 
 data "aws_ssm_parameter" "exam_archive_cookie_secret" {
@@ -49,6 +57,12 @@ locals {
   ssm_param_prefix = "${split("/", data.aws_ssm_parameter.exam_archive_cookie_secret.arn)[0]}/exam-archive-*"
 }
 
+data "aws_acm_certificate" "cdn_certificate" {
+  domain = "*.cdn.tko-aly.fi"
+  // needs to be us-east so it works with cloudfront
+  provider = aws.virginia
+}
+
 data "aws_vpc" "my_vpc" {
   filter {
     name    = "tag:Name"
@@ -81,7 +95,7 @@ data "aws_lb" "my_lb" {
 
 data "aws_lb_listener" "alb_listener" {
   load_balancer_arn = data.aws_lb.my_lb.arn
-  port              = 80
+  port              = 443
 }
 
 resource "aws_s3_bucket" "exam_archive_files_s3_bucket" {
@@ -134,6 +148,7 @@ resource "aws_cloudfront_distribution" "exam_archive_cf_files_distribution" {
   enabled         = true
   is_ipv6_enabled = true
   price_class     = "PriceClass_100"
+  aliases         = [local.cdn_domain]
 
   default_cache_behavior {
     target_origin_id        = local.s3_origin_id
@@ -170,7 +185,9 @@ resource "aws_cloudfront_distribution" "exam_archive_cf_files_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = data.aws_acm_certificate.cdn_certificate.arn
+    minimum_protocol_version = "TLSv1"
+    ssl_support_method = "sni-only"
   }
 }
 
@@ -360,7 +377,7 @@ resource "aws_ecs_task_definition" "exam_archive_task" {
       { "name": "PORT", "value": "${local.container_port}" },
       { "name": "AWS_REGION", "value": "${local.aws_region}" },
       { "name": "AWS_S3_BUCKET_ID", "value": "${aws_s3_bucket.exam_archive_files_s3_bucket.id}" },
-      { "name": "AWS_CF_DISTRIBUTION_DOMAIN", "value": "${aws_cloudfront_distribution.exam_archive_cf_files_distribution.domain_name}" }
+      { "name": "AWS_CF_DISTRIBUTION_DOMAIN", "value": "${local.cdn_domain}" }
     ],
     "secrets": [
       { "name": "PG_CONNECTION_STRING", "valueFrom": "${data.aws_ssm_parameter.exam_archive_pg_connection_string.arn}" },
