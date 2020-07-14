@@ -78,7 +78,7 @@ router.get('/:examId/:fileName', async (req, res, next) => {
   // the cookies can't be applied to the correct domain
   if (config.AWS_CF_USE_SIGNED_COOKIES) {
     const url = getCloudFrontUrl(exam)
-    applySignedCookie(exam, res)
+    await applySignedCookie(exam, res)
     res.redirect(url)
   } else {
     const url = await createSignedUrl(exam)
