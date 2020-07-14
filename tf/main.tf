@@ -94,6 +94,8 @@ resource "aws_s3_bucket_public_access_block" "exam_archive_files_s3_block" {
   bucket = aws_s3_bucket.exam_archive_files_s3_bucket.id
   block_public_acls = true
   block_public_policy = true
+  restrict_public_buckets = true
+  ignore_public_acls = true
 }
 
 data "aws_iam_policy_document" "exam_archive_files_s3_policy_doc" {
