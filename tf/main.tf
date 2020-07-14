@@ -60,7 +60,10 @@ data "aws_subnet_ids" "exam_archive_subnets" {
   vpc_id = data.aws_vpc.my_vpc.id
   filter {
     name    = "tag:Name"
-    values  = ["my-private-ecs-rds-subnet-1a", "my-private-ecs-rds-subnet-1b", "my-private-ecs-rds-subnet-1c"]
+    values  = [
+      "my-private-subnet-1a",
+      "my-private-subnet-1b"
+    ]
   }
 }
 
@@ -382,9 +385,7 @@ resource "aws_ecs_service" "exam_archive_service" {
   network_configuration {
     security_groups = [aws_security_group.exam_archive_task_sg.id]
     subnets = data.aws_subnet_ids.exam_archive_subnets.ids
-    // need to assign public IP so ECS gets access to ECR without needing
-    // a NAT or a VPC Endpoint
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {
