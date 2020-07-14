@@ -89,6 +89,10 @@ app.use(async (req, res, next) => {
   const me = await getMe(token)
   if (!me.ok) {
     // TODO: 500 page
+    console.error(
+      `user service returned non-ok response`,
+      JSON.stringify({ token, me })
+    )
     return res.status(500).send('fail user service')
   }
 
