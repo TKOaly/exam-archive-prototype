@@ -7,9 +7,9 @@ terraform {
 }
 
 locals {
-  aws_region = "eu-north-1"
-  container_port = 9001
-  host_domain = "tarpisto-test.tko-aly.fi"
+  aws_region      = "eu-north-1"
+  container_port  = 9001
+  host_domain     = "tarpisto-test.tko-aly.fi"
 }
 
 provider "aws" {
@@ -78,8 +78,8 @@ data "aws_lb_listener" "alb_listener" {
 }
 
 resource "aws_s3_bucket" "exam_archive_files_s3_bucket" {
-  bucket = "exam-archive-files"
-  acl = "private"
+  bucket  = "exam-archive-files"
+  acl     = "private"
 
   server_side_encryption_configuration {
     rule {
@@ -91,20 +91,20 @@ resource "aws_s3_bucket" "exam_archive_files_s3_bucket" {
 }
 
 resource "aws_s3_bucket_public_access_block" "exam_archive_files_s3_block" {
-  bucket = aws_s3_bucket.exam_archive_files_s3_bucket.id
-  block_public_acls = true
-  block_public_policy = true
+  bucket                  = aws_s3_bucket.exam_archive_files_s3_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
   restrict_public_buckets = true
-  ignore_public_acls = true
+  ignore_public_acls      = true
 }
 
 data "aws_iam_policy_document" "exam_archive_files_s3_policy_doc" {
   statement {
-    actions = ["s3:GetObject"]
+    actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.exam_archive_files_s3_bucket.arn}/*"]
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = [aws_cloudfront_origin_access_identity.exam_archive_files_cf_oai.iam_arn]
     }
   }
@@ -124,19 +124,19 @@ resource "aws_cloudfront_origin_access_identity" "exam_archive_files_cf_oai" {
 }
 
 resource "aws_cloudfront_distribution" "exam_archive_cf_files_distribution" {
-  enabled = true
+  enabled         = true
   is_ipv6_enabled = true
-  price_class = "PriceClass_100"
+  price_class     = "PriceClass_100"
 
   default_cache_behavior {
-    target_origin_id = local.s3_origin_id
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods = ["GET", "HEAD"]
-    cached_methods = ["GET", "HEAD"]
-    compress = true
-    min_ttl = 0
-    max_ttl = 3600
-    default_ttl = 3600
+    target_origin_id        = local.s3_origin_id
+    viewer_protocol_policy  = "redirect-to-https"
+    allowed_methods         = ["GET", "HEAD"]
+    cached_methods          = ["GET", "HEAD"]
+    compress                = true
+    min_ttl                 = 0
+    max_ttl                 = 3600
+    default_ttl             = 3600
 
     forwarded_values {
       query_string = false
@@ -349,9 +349,9 @@ resource "aws_ecs_service" "exam_archive_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.exam_archive_lb_target_group.arn
-    container_name = "exam_archive_task"
-    container_port = local.container_port
+    target_group_arn  = aws_lb_target_group.exam_archive_lb_target_group.arn
+    container_name    = "exam_archive_task"
+    container_port    = local.container_port
   }
 
   depends_on = [
