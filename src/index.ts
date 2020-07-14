@@ -37,7 +37,59 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 
-app.get('/healthcheck', (req, res) => res.send('pong'))
+app.get('/healthcheck', (req, res) => res.send(
+`
+<!DOCTYPE html>
+<html>
+<head><title>healthcheck</title></head>
+<body>
+<h1>healthcheck</h1>
+<p>db status: <span id="dbstatus"></span><button id="btn">test</button></p>
+<script>
+const outputEl = document.getElementById('dbstatus')
+const loading = () => {
+  outputEl.style = "color: initial"
+  outputEl.innerText = "loading..."
+}
+const succ = () => {
+  outputEl.style = "color: green;"
+  outputEl.innerText = "success"
+}
+const fail = () => {
+  outputEl.style = "color: red;"
+  outputEl.innerText = "fail"
+}
+
+document.getElementById('btn').addEventListener('click', () => {
+  loading()
+  fetch('/healthcheck/db')
+    .then(res => {
+      if (res.status === 200) {
+        succ()
+      } else {
+        fail()
+      }
+    })
+    .catch(e => {
+      console.error(e)
+      fail()
+    })
+})
+
+</script>
+</body>
+</html>
+`
+))
+app.get('/healthcheck/db', async (req, res) => {
+  try {
+    await db.testConnection()
+    return res.sendStatus(200)
+  } catch (e) {
+    console.error(`DB healthcheck failed`, e)
+    return res.sendStatus(500)
+  }
+})
 
 app.use(cookieParser())
 app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
