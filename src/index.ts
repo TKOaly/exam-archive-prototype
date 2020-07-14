@@ -37,8 +37,9 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 
-app.get('/healthcheck', (req, res) => res.send(
-`
+app.get('/healthcheck', (req, res) =>
+  res.send(
+    `
 <!DOCTYPE html>
 <html>
 <head><title>healthcheck</title></head>
@@ -80,7 +81,8 @@ document.getElementById('btn').addEventListener('click', () => {
 </body>
 </html>
 `
-))
+  )
+)
 app.get('/healthcheck/db', async (req, res) => {
   try {
     await db.testConnection()
@@ -141,10 +143,7 @@ app.use(async (req, res, next) => {
   const me = await getMe(token)
   if (!me.ok) {
     // TODO: 500 page
-    console.error(
-      `user service returned non-ok response`,
-      JSON.stringify({ token, me })
-    )
+    console.error(`user service returned non-ok response`, { me })
     return res.status(500).send('fail user service')
   }
 
