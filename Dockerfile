@@ -10,4 +10,4 @@ RUN npm run build
 
 EXPOSE 9001
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]
