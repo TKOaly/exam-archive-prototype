@@ -9,7 +9,7 @@ terraform {
 locals {
   aws_region      = "eu-west-1"
   container_port  = 9001
-  host_domain     = "tarpisto.tko-aly.fi"
+  host_domain     = "tarpisto-beta.tko-aly.fi"
   cdn_domain      = "tarpisto.cdn.tko-aly.fi"
 }
 
