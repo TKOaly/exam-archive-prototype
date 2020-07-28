@@ -105,7 +105,7 @@ const GoBackRow = ({ href }) => {
       <td>
         <img
           className="exam-table__icon"
-          src="https://tarpisto.tko-aly.fi/img/up.png"
+          src="/static/img/up.png"
           alt="Go back"
         />
         <a href={href}>Parent Directory</a>
