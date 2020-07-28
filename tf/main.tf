@@ -1,16 +1,16 @@
 terraform {
   backend "s3" {
-    region = "eu-north-1"
-    bucket = "tarpisto-test-dev-tf"
-    key    = "tarpisto-test-dev-state"
+    region = "eu-west-1"
+    bucket = "exam-archive-state"
+    key    = "exam-archive-state"
   }
 }
 
 locals {
-  aws_region      = "eu-north-1"
+  aws_region      = "eu-west-1"
   container_port  = 9001
-  host_domain     = "tarpisto-test.tko-aly.fi"
-  cdn_domain      = "tarpisto-test.cdn.tko-aly.fi"
+  host_domain     = "tarpisto.tko-aly.fi"
+  cdn_domain      = "tarpisto.cdn.tko-aly.fi"
 }
 
 provider "aws" {
@@ -19,7 +19,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  // us-east provider to get CF ACM cert
+  // need us-east-1 provider to access CloudFront ACM cert
   profile = "default"
   alias = "virginia"
   region = "us-east-1"
@@ -49,10 +49,6 @@ data "aws_ssm_parameter" "exam_archive_cf_signing_key" {
   name = "exam-archive-cf-signing-key"
 }
 
-data "aws_ssm_parameter" "exam_archive_sf_trusted_signers" {
-  name = "exam-archive-cf-trusted-signers"
-}
-
 locals {
   ssm_param_prefix = "${split("/", data.aws_ssm_parameter.exam_archive_cookie_secret.arn)[0]}/exam-archive-*"
 }
@@ -66,7 +62,7 @@ data "aws_acm_certificate" "cdn_certificate" {
 data "aws_vpc" "my_vpc" {
   filter {
     name    = "tag:Name"
-    values  = ["my-vpc"]
+    values  = ["tekis-VPC"]
   }
 }
 
@@ -75,8 +71,8 @@ data "aws_subnet_ids" "exam_archive_subnets" {
   filter {
     name    = "tag:Name"
     values  = [
-      "my-private-subnet-1a",
-      "my-private-subnet-1b"
+      "tekis-private-subnet-1a",
+      "tekis-private-subnet-1b"
     ]
   }
 }
@@ -86,11 +82,11 @@ data "aws_ecr_repository" "exam_archive_repository" {
 }
 
 data "aws_ecs_cluster" "cluster" {
-  cluster_name = "default"
+  cluster_name = "christina-regina"
 }
 
 data "aws_lb" "my_lb" {
-  name = "exam-archive-alb"
+  name = "tekis-loadbalancer-1"
 }
 
 data "aws_lb_listener" "alb_listener" {
@@ -166,7 +162,7 @@ resource "aws_cloudfront_distribution" "exam_archive_cf_files_distribution" {
         forward = "none"
       }
     }
-    trusted_signers = ["self"] // concat(["self"], split(",", data.aws_ssm_parameter.exam_archive_sf_trusted_signers.value))
+    trusted_signers = ["self"]
   }
 
   origin {
