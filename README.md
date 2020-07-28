@@ -2,6 +2,15 @@
 
 Actually new exam archive
 
+## Deployment
+
+### Infra
+
+1. ```cd tf```
+2. ```AWS_PROFILE=default TF_VAR_aws_profile=default terraform plan```
+   - Note: if you've created another `aws` cli profile (e.g. have separate profile for personal and for tkoaly), change `default` to that profile's name
+3. ```AWS_PROFILE=default TF_VAR_aws_profile=default terraform apply```
+
 ## Development
 
 1. Install docker, docker-compose, node

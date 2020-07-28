@@ -6,6 +6,10 @@ terraform {
   }
 }
 
+variable "aws_profile" {
+  type = string
+}
+
 locals {
   aws_region      = "eu-west-1"
   container_port  = 9001
@@ -14,13 +18,13 @@ locals {
 }
 
 provider "aws" {
-  profile = "default"
+  profile = var.aws_profile
   region  = local.aws_region
 }
 
 provider "aws" {
   // need us-east-1 provider to access CloudFront ACM cert
-  profile = "default"
+  profile = var.aws_profile
   alias = "virginia"
   region = "us-east-1"
 }
