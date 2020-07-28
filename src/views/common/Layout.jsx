@@ -1,11 +1,7 @@
 const React = require('react')
 
 const Logo = ({ className }) => (
-  <img
-    className={className}
-    src="https://tarpisto.tko-aly.fi/img/logo-100.png"
-    alt="logo"
-  />
+  <img className={className} src="/static/img/logo-100.png" alt="logo" />
 )
 
 const Layout = ({ children, title, flash }) => {
