@@ -123,7 +123,7 @@ export const getCourseInfo = async (
     .select('exams.*')
     .from('exams')
     .where({ course_id: courseId, ...whereNotDeleted() })
-    .orderBy('file_name')
+    .orderBy('file_name', 'desc')
 
   const course = deserializeCourse(courseResult)
   if (!course) {
