@@ -10,6 +10,10 @@ variable "aws_profile" {
   type = string
 }
 
+variable "image_version_tag" {
+  type = string
+}
+
 locals {
   aws_region      = "eu-west-1"
   container_port  = 9001
@@ -353,7 +357,7 @@ resource "aws_ecs_task_definition" "exam_archive_task" {
 [
   {
     "name": "exam_archive_task",
-    "image": "${data.aws_ecr_repository.exam_archive_repository.repository_url}:latest",
+    "image": "${data.aws_ecr_repository.exam_archive_repository.repository_url}:${var.image_version_tag}",
     "cpu": 256,
     "memory": null,
     "memoryReservation": null,
