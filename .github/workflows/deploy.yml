@@ -31,8 +31,8 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
         run: |
           docker build -t exam-archive:latest .
-          docker tag exam-archive-ui:latest $ECR_REGISTRY/exam-archive:$DOCKER_TAG
-          docker push $ECR_REGISTRY/exam-archive:$DOCKER_TAG
+          docker tag exam-archive-ui:latest $ECR_REGISTRY/tkoaly/exam-archive:$DOCKER_TAG
+          docker push $ECR_REGISTRY/tkoaly/exam-archive:$DOCKER_TAG
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v1
         with:
