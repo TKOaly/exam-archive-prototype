@@ -51,7 +51,7 @@ jobs:
         run: |
           cd ./tf
           terraform plan -out=plan
-      #- name: Terraform Apply
-      #  run: |
-      #    cd ./tf
-      #    terraform apply plan
+      - name: Terraform Apply
+        run: |
+          cd ./tf
+          terraform apply plan
