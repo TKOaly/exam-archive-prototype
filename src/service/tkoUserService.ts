@@ -63,4 +63,3 @@ export const getMe = (
   client
     .get('/users/me', withHeaders(token))
     .then(({ data }: { data: UserServicePayload<UserServiceUser> }) => data)
-    .catch(e => e.response)

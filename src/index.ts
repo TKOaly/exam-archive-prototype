@@ -140,19 +140,44 @@ app.use(async (req, res, next) => {
     return res.redirect(url)
   }
 
-  const me = await getMe(token)
-  if (!me.ok) {
-    // TODO: 500 page
-    console.error(`user service returned non-ok response`, { me })
-    return res.status(500).send('fail user service')
+  try {
+    const me = await getMe(token)
+    if (!me.ok) {
+      // TODO: 500 page
+      console.error(`user service returned non-ok response`, me)
+      return res.status(500).render('error-user-service')
+    }
+
+    const user = me.payload
+    const noRights = {}
+    ;(req as any).auth = {
+      user,
+      rights: isActiveMember(user)
+        ? roleRights[user.role] || noRights
+        : noRights
+    } as AuthData
+  } catch (e) {
+    if (!e.response) {
+      console.error('user-service getMe failed with no response', e)
+      return res.status(500).render('error-user-service')
+    }
+
+    const status = e.response.status
+    if (status >= 400 && status < 500) {
+      // logged in to another service with current token, show login page again
+      // so we get consent to this service as well
+      const url = getUserServiceLoginUrl()
+      return res.redirect(url)
+    }
+
+    // user service down?
+    console.error('user-service /users/me failed', e, {
+      status,
+      data: e.response.data
+    })
+    return res.status(500).render('error-user-service')
   }
 
-  const user = me.payload
-  const noRights = {}
-  ;(req as any).auth = {
-    user,
-    rights: isActiveMember(user) ? roleRights[user.role] || noRights : noRights
-  } as AuthData
   next()
 })
 
