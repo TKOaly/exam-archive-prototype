@@ -1,6 +1,6 @@
 {
-  "name": "exam-archive-backend",
-  "version": "0.2.0",
+  "name": "exam-archive-new",
+  "version": "1.2.10",
   "main": "src/index.ts",
   "author": "cxcorp",
   "license": "MIT",
