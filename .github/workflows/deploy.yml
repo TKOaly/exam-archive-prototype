@@ -21,10 +21,14 @@ jobs:
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Prepare version tag
+        run: |
+          # remove "v" from "v1.2.3", expose as $DOCKER_TAG
+          echo "DOCKER_TAG=${GITHUB_REF//v}" >> $GITHUB_ENV
+
       - name: Build and push to ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          DOCKER_TAG: latest
         run: |
           docker build -t exam-archive:latest .
           docker tag exam-archive-ui:latest $ECR_REGISTRY/exam-archive:$DOCKER_TAG
@@ -34,6 +38,11 @@ jobs:
         with:
           terraform_version: 0.13.4
 
+      - name: Setup Terraform variables
+        run: |
+          echo "TF_VAR_aws_profile=default" >> $GITHUB_ENV
+          echo "TF_VAR_image_version_tag=$DOCKER_TAG" >> $GITHUB_ENV
+
       - name: Terraform Init
         run: |
           cd ./tf
@@ -42,7 +51,7 @@ jobs:
         run: |
           cd ./tf
           terraform plan -out=plan
-      - name: Terraform Apply
-        run: |
-          cd ./tf
-          terraform apply plan
+      #- name: Terraform Apply
+      #  run: |
+      #    cd ./tf
+      #    terraform apply plan
