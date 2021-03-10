@@ -1,19 +1,19 @@
 version: '3'
 
 services:
-  exam-archive:
-    image: tkoalydocker/exam-archive-new
-    build: ./
-    environment:
-      NODE_ENV: development
-      # Set the key for yourself, as env_file doesn't do multiline
-      # AWS_CF_KEY: > ---- BEGIN RSA PRIVAE KEY ----
-    env_file:
-      - .env.docker
-    ports:
-      - 9001:9001
-    depends_on:
-      - db
+  #exam-archive:
+  #  image: tkoalydocker/exam-archive-new
+  #  build: ./
+  #  environment:
+  #    NODE_ENV: development
+  #    # Set the key for yourself, as env_file doesn't do multiline
+  #    # AWS_CF_KEY: > ---- BEGIN RSA PRIVAE KEY ----
+  #  env_file:
+  #    - .env.docker
+  #  ports:
+  #    - 9001:9001
+  #  depends_on:
+  #    - db
 
   db:
     image: postgres:11.1
