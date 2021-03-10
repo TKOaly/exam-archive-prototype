@@ -196,7 +196,7 @@ app.use('/api', requireRights('access'), apiRouter)
 app.use('/download', requireRights('access'), downloadRouter)
 
 app.use('*', (req, res) => {
-  res.render('404')
+  res.status(404).render('404')
 })
 
 app.listen(config.PORT, (err: any) => {
