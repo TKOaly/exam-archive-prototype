@@ -12,6 +12,7 @@ const cfSigner = new AWS.CloudFront.Signer(
 
 // age in seconds
 const oneHourToSeconds = 60 * 60 * 1
+const oneDayToSeconds = oneHourToSeconds * 24
 
 const getCloudFrontUrl = (exam: DbExam) =>
   `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
@@ -19,7 +20,7 @@ const getCloudFrontUrl = (exam: DbExam) =>
 const getCfSigningOptions = (
   exam: DbExam
 ): AWS.CloudFront.Signer.SignerOptionsWithoutPolicy => ({
-  expires: Math.floor(new Date().getTime() / 1000) + oneHourToSeconds,
+  expires: Math.floor(new Date().getTime() / 1000) + oneDayToSeconds,
   url: getCloudFrontUrl(exam)
 })
 
