@@ -33,6 +33,9 @@ To deploy a new release to production, author a new Github Release. Use semver. 
 9. `npm run start-dev`
 10. ready
 
+## Docker warning
+The `.dockerignore` is configured to work as a whitelist so if you add new files or folders which you want to include in the Docker image, update [`.dockerignore`](https://github.com/TKOaly/exam-archive-new/blob/master/.dockerignore).
+
 ## License
 
 MIT
