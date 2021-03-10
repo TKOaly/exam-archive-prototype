@@ -7,12 +7,19 @@ Actually new exam archive
 ### Infra
 
 1. ```cd tf```
-2. ```AWS_PROFILE=default TF_VAR_aws_profile=default terraform plan```
+2. Set correct AWS CLI profile 
+   ```
+   export AWS_PROFILE=default
+   export TF_VAR_aws_profile=default
+   ```
    - Note: if you've created another `aws` cli profile (e.g. have separate profile for personal and for tkoaly), change `default` to that profile's name
-3. ```AWS_PROFILE=default TF_VAR_aws_profile=default terraform apply```
+3. ```terraform plan```
+   - Will ask for `var.image_version_tag`, set to the deployment tag (latest version in Github Releases), specify **without** `v`, e.g. `1.2.30`.
+     - If tired of doing it again, `export TF_VAR_image_version_tag=1.2.30`
+5. ```terraform apply```
 
 ### CI to production
-To deploy a new release to production, author a new Github Release. Use semver. Make sure the version string is prefixed with `v`, e.g. `v1.2.30` instead of `1.2.30`. The deployment script does a string replace for this so update that if you want to release non-v-prefixed versions.
+To deploy a new release to production, author a new Github Release. Use semver. Make sure the version string is prefixed with `v`, e.g. `v1.2.30` instead of `1.2.30`. The deployment script does a string replace for this, so if you want to release non-v-prefixed versions, update the Github action workflow.
 
 ## Development
 
