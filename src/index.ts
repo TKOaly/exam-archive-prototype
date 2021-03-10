@@ -129,7 +129,9 @@ app.use((req, res, next) => {
 })
 
 const staticMiddleware = express.static(path.join(__dirname, '../static'))
-app.get('/favicon.ico', (req, res) => res.sendStatus(404))
+app.use('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../static/favicon.ico'))
+})
 app.use('/static', staticMiddleware)
 
 app.use(async (req, res, next) => {
