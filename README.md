@@ -4,7 +4,7 @@ Actually new exam archive
 
 ## Deployment
 
-### Infra
+### Manual infra setup with Terraform
 
 1. ```cd tf```
 2. Set correct AWS CLI profile 
