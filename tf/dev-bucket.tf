@@ -83,7 +83,7 @@ resource "aws_cloudfront_distribution" "exam_archive_dev_cf_files_distribution" 
 
   origin {
     domain_name = aws_s3_bucket.exam_archive_files_dev_s3_bucket.bucket_regional_domain_name
-    origin_id = local.s3_origin_id
+    origin_id = local.s3_dev_origin_id
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.exam_archive_files_dev_cf_oai.cloudfront_access_identity_path
