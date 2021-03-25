@@ -129,7 +129,9 @@ app.use((req, res, next) => {
 })
 
 const staticMiddleware = express.static(path.join(__dirname, '../static'))
-app.get('/favicon.ico', (req, res) => res.sendStatus(404))
+app.use('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../static/favicon.ico'))
+})
 app.use('/static', staticMiddleware)
 
 app.use(async (req, res, next) => {
@@ -194,7 +196,7 @@ app.use('/api', requireRights('access'), apiRouter)
 app.use('/download', requireRights('access'), downloadRouter)
 
 app.use('*', (req, res) => {
-  res.render('404')
+  res.status(404).render('404')
 })
 
 app.listen(config.PORT, (err: any) => {

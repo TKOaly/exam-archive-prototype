@@ -23,7 +23,8 @@ const {
   AWS_CF_KEY,
   AWS_CF_DISTRIBUTION_DOMAIN,
   AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY
+  AWS_SECRET_ACCESS_KEY,
+  AWS_S3_DEV_PREFIX
 } = process.env
 assertSet({
   COOKIE_SECRET,
@@ -37,6 +38,10 @@ assertSet({
 })
 
 const DEFAULT_PORT = '9001'
+const DEFAULT_S3_DEV_PREFIX = ''
+
+const stripLeadingAndTrailingSlash = (str: string) =>
+  str.replace(/(^\/+)|(\/+$)/, '')
 
 export default {
   PORT: parseInt(PORT || DEFAULT_PORT, 10),
@@ -50,5 +55,8 @@ export default {
   AWS_CF_KEY_ID: AWS_CF_KEY_ID!,
   AWS_CF_DISTRIBUTION_DOMAIN: AWS_CF_DISTRIBUTION_DOMAIN!,
   AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY
+  AWS_SECRET_ACCESS_KEY,
+  AWS_S3_DEV_PREFIX: stripLeadingAndTrailingSlash(
+    AWS_S3_DEV_PREFIX || DEFAULT_S3_DEV_PREFIX
+  )
 }

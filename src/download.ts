@@ -14,8 +14,17 @@ const cfSigner = new AWS.CloudFront.Signer(
 const oneHourToSeconds = 60 * 60 * 1
 const oneDayToSeconds = oneHourToSeconds * 24
 
+const applyDevPrefix = (objectName: string) =>
+  config.AWS_S3_DEV_PREFIX
+    ? `${config.AWS_S3_DEV_PREFIX}/${objectName}`
+    : objectName
+
 const getCloudFrontUrl = (exam: DbExam) =>
-  `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
+  config.NODE_ENV === 'development'
+    ? `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${applyDevPrefix(
+        exam.file_path
+      )}`
+    : `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
 
 const getCfSigningOptions = (
   exam: DbExam
