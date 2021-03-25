@@ -22,7 +22,7 @@ import {
   createCourse,
   renameCourse
 } from './service/archive'
-import { AuthData, requireRights } from './common'
+import { applyDevPrefix, AuthData, requireRights } from './common'
 
 const slugifyCourseName = (courseName: string) => {
   return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
@@ -44,12 +44,7 @@ const upload = multer({
       cb: (err: any, key: string) => void
     ) => {
       const id = uuidv4()
-
-      if (config.AWS_S3_DEV_PREFIX) {
-        return cb(null, `${config.AWS_S3_DEV_PREFIX}/${id}`)
-      }
-
-      cb(null, id)
+      cb(null, applyDevPrefix(id))
     },
     contentDisposition: (
       req: any,

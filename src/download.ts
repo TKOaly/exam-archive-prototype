@@ -4,6 +4,7 @@ import AWS from 'aws-sdk'
 import config from './config'
 import { findExamById } from './service/archive'
 import { DbExam } from './db'
+import { applyDevPrefix } from './common'
 
 const cfSigner = new AWS.CloudFront.Signer(
   config.AWS_CF_KEY_ID,
@@ -13,11 +14,6 @@ const cfSigner = new AWS.CloudFront.Signer(
 // age in seconds
 const oneHourToSeconds = 60 * 60 * 1
 const oneDayToSeconds = oneHourToSeconds * 24
-
-const applyDevPrefix = (objectName: string) =>
-  config.AWS_S3_DEV_PREFIX
-    ? `${config.AWS_S3_DEV_PREFIX}/${objectName}`
-    : objectName
 
 const getCloudFrontUrl = (exam: DbExam) =>
   config.NODE_ENV === 'development'
