@@ -43,7 +43,13 @@ const upload = multer({
       file: Express.MulterS3.File,
       cb: (err: any, key: string) => void
     ) => {
-      cb(null, uuidv4())
+      const id = uuidv4()
+
+      if (config.AWS_S3_DEV_PREFIX) {
+        return cb(null, `${config.AWS_S3_DEV_PREFIX}/${id}`)
+      }
+
+      cb(null, id)
     },
     contentDisposition: (
       req: any,
