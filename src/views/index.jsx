@@ -5,7 +5,7 @@ const fiLocale = require('date-fns/locale/fi')
 const Layout = require('./common/Layout')
 const { ControlsBox, Logout } = require('./common/Controls')
 
-const CourseTableHeader = ({ showDelete, showRename = showDelete }) => {
+const CourseTableHeader = ({ showDelete, showRename }) => {
   return (
     <tr className="course-table-header">
       <th>Name</th>
@@ -17,7 +17,8 @@ const CourseTableHeader = ({ showDelete, showRename = showDelete }) => {
 }
 
 CourseTableHeader.propTypes = {
-  showDelete: PropTypes.bool
+  showDelete: PropTypes.bool,
+  showRename: PropTypes.bool
 }
 
 const DeleteCourseButton = ({ action }) => {
@@ -40,7 +41,7 @@ DeleteCourseButton.propTypes = {
 
 const makeDeleteCourseAction = courseId => `/archive/delete-course/${courseId}`
 
-const CourseTableRow = ({ course, showDelete, showRename = showDelete }) => {
+const CourseTableRow = ({ course, showDelete, showRename }) => {
   const { id, name, url, lastModified } = course
 
   return (
@@ -94,20 +95,22 @@ const courseShape = PropTypes.shape({
 
 CourseTableRow.propTypes = {
   course: courseShape.isRequired,
-  showDelete: PropTypes.bool
+  showDelete: PropTypes.bool,
+  showRename: PropTypes.bool
 }
 
-const CourseTable = ({ courses, showDelete }) => {
+const CourseTable = ({ courses, showDelete, showRename }) => {
   return (
     <table className="course-table">
       <thead>
-        <CourseTableHeader showDelete={showDelete} />
+        <CourseTableHeader showDelete={showDelete} showRename={showRename} />
       </thead>
       <tbody>
         {courses.map(course => (
           <CourseTableRow
             key={course.id}
             showDelete={showDelete}
+            showRename={showRename}
             course={course}
           />
         ))}
@@ -118,6 +121,7 @@ const CourseTable = ({ courses, showDelete }) => {
 
 CourseTable.propTypes = {
   showDelete: PropTypes.bool.isRequired,
+  showRename: PropTypes.bool.isRequired,
   courses: PropTypes.arrayOf(courseShape.isRequired).isRequired
 }
 
@@ -146,7 +150,11 @@ const CreateCourseForm = () => {
 const IndexPage = ({ flash, courses, username, userRights }) => {
   return (
     <Layout flash={flash}>
-      <CourseTable courses={courses} showDelete={userRights.remove} />
+      <CourseTable
+        courses={courses}
+        showDelete={userRights.remove}
+        showRename={userRights.rename}
+      />
       <ControlsBox>
         {userRights.upload && <CreateCourseForm />}
         <Logout username={username} />

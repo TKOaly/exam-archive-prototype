@@ -251,7 +251,7 @@ router.post(
 
 router.post(
   `/archive/rename-course/:courseId(\\d+)`,
-  requireRights('remove'),
+  requireRights('rename'),
   async (req, res) => {
     try {
       const course = await getCourseInfo(parseInt(req.params.courseId, 10))

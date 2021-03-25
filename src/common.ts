@@ -6,7 +6,7 @@ import {
 } from './service/tkoUserService'
 import config from './config'
 
-export type AccessRight = 'access' | 'upload' | 'remove'
+export type AccessRight = 'access' | 'upload' | 'remove' | 'rename'
 
 export const requireRights = (
   ...requiredRights: AccessRight[]
@@ -30,15 +30,36 @@ export const isActiveMember = ({ membership }: UserServiceUser) =>
 export const roleRights: {
   [role in UserRole]: { [right in AccessRight]?: boolean }
 } = {
-  [UserRole.Kayttaja]: { access: true, upload: true, remove: false },
+  [UserRole.Kayttaja]: {
+    access: true,
+    upload: true,
+    remove: false,
+    rename: false
+  },
   [UserRole.Tenttiarkistovirkailija]: {
     access: true,
     upload: true,
-    remove: true
+    remove: true,
+    rename: true
   },
-  [UserRole.Jasenvirkailija]: { access: true, upload: true, remove: false },
-  [UserRole.Virkailija]: { access: true, upload: true, remove: false },
-  [UserRole.Yllapitaja]: { access: true, upload: true, remove: true }
+  [UserRole.Jasenvirkailija]: {
+    access: true,
+    upload: true,
+    remove: false,
+    rename: false
+  },
+  [UserRole.Virkailija]: {
+    access: true,
+    upload: true,
+    remove: false,
+    rename: false
+  },
+  [UserRole.Yllapitaja]: {
+    access: true,
+    upload: true,
+    remove: true,
+    rename: true
+  }
 }
 
 export interface AuthData {
