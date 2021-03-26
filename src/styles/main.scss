@@ -1,0 +1,141 @@
+body {
+  line-height: 1.5;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  background-color: white;
+  margin: 8px;
+}
+
+.layout {
+  padding-left: 50px;
+}
+
+.layout-header {
+  margin-bottom: 20px;
+  font-size: 24pt;
+
+  &__title {
+    font-size: 24pt;
+    font-weight: normal;
+    margin-bottom: 0;
+    display: inline;
+  }
+
+  &__logo {
+    vertical-align: middle;
+    margin-right: 30px;
+    border: 0;
+  }
+}
+
+.layout-footer {
+  padding-bottom: 40px;
+}
+
+.course-table,
+.exam-table {
+  text-align: left;
+  border-spacing: 2px;
+  font-size: 11pt;
+}
+
+.course-table-row,
+.exam-table-row {
+  td {
+    padding-right: 30px;
+  }
+}
+
+.course-table-row,
+.exam-table-row {
+  &__delete,
+  &__rename {
+    text-align: center;
+  }
+
+  &__rename {
+    font-size: 0.6rem;
+    padding-right: 0;
+  }
+}
+
+.course-table-row {
+  &__rename-button:hover {
+    cursor: pointer;
+  }
+}
+
+.course-table,
+.exam-table {
+  &__link,
+  &__link:visited {
+    color: #00568e;
+  }
+
+  &__icon {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+}
+
+.course-page {
+  &__title {
+    font-weight: bold;
+    font-size: larger;
+  }
+}
+
+.controls {
+  font-size: smaller;
+  border: 1px solid black;
+  margin: 30px 0;
+  padding: 10px;
+  display: inline-block;
+}
+
+.create-course-form__control {
+  display: block;
+}
+
+.log-out {
+  margin-top: 10px;
+  font-size: 8pt;
+
+  &__link,
+  &__link:visited {
+    color: #00568e;
+  }
+}
+
+.exam-upload-form__file:not(:valid) + .exam-upload-form__submit,
+.create-course-form__name:not(:valid) + .create-course-form__submit {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.delete-exam-button,
+.delete-course-button {
+  display: inline;
+
+  &__button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline;
+  }
+}
+
+.developer-s3 {
+  &__table-container {
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+
+  &__table {
+    text-align: left;
+  }
+
+  &__table tbody tr:nth-of-type(2n) {
+    background-color: rgba(200, 200, 200, 0.3);
+  }
+}

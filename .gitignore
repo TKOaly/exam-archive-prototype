@@ -7,6 +7,11 @@ pg-data/
 tarpisto-dev-dump/
 .env.docker
 
+# scss build output
+static/main.css
+# scss source map
+*.map
+
 
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node

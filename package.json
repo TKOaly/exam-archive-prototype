@@ -7,8 +7,11 @@
   "private": true,
   "scripts": {
     "start": "npm run db:migrate && node dist/index.js",
-    "build": "tsc && cp -R ./src/views ./dist/views",
-    "start-dev": "cross-env NODE_ENV=development nodemon -e ts,js,jsx,json --exec ts-node src/index.ts",
+    "start-dev": "concurrently npm:watch:scss npm:watch:app",
+    "build": "tsc && cp -R ./src/views ./dist/views && npm run build:scss",
+    "build:scss": "sass --no-source-map -s compressed src/styles/main.scss static/main.css",
+    "watch:scss": "sass --watch src/styles/main.scss static/main.css",
+    "watch:app": "cross-env NODE_ENV=development nodemon -e ts,js,jsx,json --exec ts-node src/index.ts",
     "db:migrate-dev": "cross-env NODE_ENV=development npm run db:migrate",
     "db:migrate": "knex migrate:latest",
     "seed-from-files-dev": "cross-env NODE_ENV=development node scripts/seed-db-from-files.js",
@@ -50,8 +53,10 @@
     "@types/multer-s3": "^2.7.7",
     "@types/node": "^10.17.27",
     "@types/uuid": "^8.0.0",
+    "concurrently": "^6.0.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.4",
+    "sass": "^1.32.8",
     "ts-node": "^8.10.2",
     "typescript": "^3.3.1"
   }
