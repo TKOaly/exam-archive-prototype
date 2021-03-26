@@ -1,0 +1,27 @@
+.controls {
+  font-size: smaller;
+  border: 1px solid black;
+  margin: 30px 0;
+  padding: 10px;
+  display: inline-block;
+}
+
+.create-course-form__control {
+  display: block;
+}
+
+.log-out {
+  margin-top: 10px;
+  font-size: 8pt;
+
+  &__link,
+  &__link:visited {
+    color: #00568e;
+  }
+}
+
+.exam-upload-form__file:not(:valid) + .exam-upload-form__submit,
+.create-course-form__name:not(:valid) + .create-course-form__submit {
+  pointer-events: none;
+  opacity: 0.7;
+}

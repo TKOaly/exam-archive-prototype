@@ -1,0 +1,25 @@
+.layout {
+  padding-left: 50px;
+}
+
+.layout-header {
+  margin-bottom: 20px;
+  font-size: 24pt;
+
+  &__title {
+    font-size: 24pt;
+    font-weight: normal;
+    margin-bottom: 0;
+    display: inline;
+  }
+
+  &__logo {
+    vertical-align: middle;
+    margin-right: 30px;
+    border: 0;
+  }
+}
+
+.layout-footer {
+  padding-bottom: 40px;
+}

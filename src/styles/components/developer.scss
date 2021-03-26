@@ -1,0 +1,14 @@
+.developer-s3 {
+  &__table-container {
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+
+  &__table {
+    text-align: left;
+  }
+
+  &__table tbody tr:nth-of-type(2n) {
+    background-color: rgba(200, 200, 200, 0.3);
+  }
+}
