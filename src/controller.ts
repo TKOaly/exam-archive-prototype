@@ -3,7 +3,6 @@ import bodyParser from 'body-parser'
 import slugify from 'slugify'
 import multer from 'multer'
 import multerS3 from 'multer-s3'
-import AWS from 'aws-sdk'
 import { transliterate } from 'transliteration'
 import contentDisposition from 'content-disposition'
 import { v4 as uuidv4 } from 'uuid'
@@ -22,6 +21,7 @@ import {
   createCourse,
   renameCourse
 } from './service/archive'
+import s3 from './service/s3'
 import { AuthData, requireRights } from './common'
 import devRouter from './dev-controller'
 
@@ -32,8 +32,6 @@ const slugifyCourseName = (courseName: string) => {
     remove: /[^\w\d \-]/g
   })
 }
-
-const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
 const applyDevPrefix = (objectName: string) =>
   config.AWS_S3_DEV_PREFIX
