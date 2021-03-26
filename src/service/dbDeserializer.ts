@@ -1,4 +1,4 @@
-import { Course, CourseListItem, ExamListItem } from './common'
+import { Course, CourseListItem, Exam, ExamListItem } from './common'
 
 // created_at and uploaded_at are missing because we aren't using them
 interface DbCourse {
@@ -16,6 +16,15 @@ interface DbExamListItem {
   file_name: string
   mime_type: string
   // file_path omitted, not public info
+  upload_date: Date
+}
+
+interface DbExam {
+  id: number
+  course_id: number
+  file_name: string
+  mime_type: string
+  file_path: string
   upload_date: Date
 }
 
@@ -38,6 +47,14 @@ const courseChecks = [
   (obj: any) => typeof obj.name === 'string'
 ]
 const courseListItemChecks = [...courseChecks, lastModifiedIsNullOrDate]
+const examListItemChecks = [
+  (obj: any) => !!obj,
+  (obj: any) => typeof obj.id === 'number',
+  (obj: any) => typeof obj.course_id === 'number',
+  (obj: any) => typeof obj.file_name === 'string',
+  (obj: any) => typeof obj.mime_type === 'string',
+  (obj: any) => obj.upload_date instanceof Date
+]
 const examChecks = [
   (obj: any) => !!obj,
   (obj: any) => typeof obj.id === 'number',
@@ -50,7 +67,8 @@ const examChecks = [
 
 const isCourse = createValidator<DbCourse>(courseChecks)
 const isCourseListItem = createValidator<DbCourseListItem>(courseListItemChecks)
-const isExamListItem = createValidator<DbExamListItem>(examChecks)
+const isExamListItem = createValidator<DbExamListItem>(examListItemChecks)
+const isExam = createValidator<DbExam>(examChecks)
 
 export const deserializeCourseListItem = (obj: any): CourseListItem | null => {
   if (!isCourseListItem(obj)) {
@@ -83,6 +101,21 @@ export const deserializeExamListItem = (obj: any): ExamListItem | null => {
     courseId: obj.course_id,
     fileName: obj.file_name,
     mimeType: obj.mime_type,
+    uploadDate: obj.upload_date
+  }
+}
+
+export const deserializeExam = (obj: any): Exam | null => {
+  if (!isExam(obj)) {
+    return null
+  }
+
+  return {
+    id: obj.id,
+    courseId: obj.course_id,
+    fileName: obj.file_name,
+    mimeType: obj.mime_type,
+    filePath: obj.file_path,
     uploadDate: obj.upload_date
   }
 }

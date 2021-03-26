@@ -5,7 +5,6 @@ import morgan from 'morgan'
 import path from 'path'
 const MemoryStore = require('memorystore')(session)
 import cookieParser from 'cookie-parser'
-import AWS from 'aws-sdk'
 
 import config from './config'
 import * as db from './db'
@@ -18,18 +17,6 @@ import {
   getMe
 } from './service/tkoUserService'
 import { isActiveMember, AuthData, roleRights, requireRights } from './common'
-
-if (process.env.NODE_ENV === 'development') {
-  AWS.config.update({
-    region: config.AWS_REGION,
-    accessKeyId: config.AWS_ACCESS_KEY_ID,
-    secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-  })
-} else {
-  AWS.config.update({
-    region: config.AWS_REGION
-  })
-}
 
 const app = express()
 

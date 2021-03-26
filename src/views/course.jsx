@@ -5,18 +5,20 @@ const fiLocale = require('date-fns/locale/fi')
 const Layout = require('./common/Layout')
 const { ControlsBox, Logout } = require('./common/Controls')
 
-const ExamTableHeader = ({ showDelete }) => {
+const ExamTableHeader = ({ showDelete, showRename }) => {
   return (
     <tr className="exam-table-header">
       <th>Name</th>
       <th>Last modified</th>
       {showDelete && <th>Delete</th>}
+      {showRename && <th>Rename</th>}
     </tr>
   )
 }
 
 ExamTableHeader.propTypes = {
-  showDelete: PropTypes.bool
+  showDelete: PropTypes.bool,
+  showRename: PropTypes.bool
 }
 
 const mimeTypeImage = mimeType => {
@@ -56,7 +58,7 @@ DeleteExamButton.propTypes = {
 
 const makeDeleteExamAction = examId => `/archive/delete-exam/${examId}`
 
-const ExamTableRow = ({ exam, showDelete }) => {
+const ExamTableRow = ({ exam, showDelete, showRename }) => {
   const { id, fileName, mimeType, uploadDate, downloadUrl } = exam
 
   return (
@@ -83,6 +85,18 @@ const ExamTableRow = ({ exam, showDelete }) => {
           <DeleteExamButton action={makeDeleteExamAction(id)} />
         </td>
       )}
+      {showRename && (
+        <td className="exam-table-row__rename">
+          <button
+            /* augments.js */
+            data-current-name={fileName}
+            data-id={id}
+            className="exam-table-row__rename-button"
+          >
+            rename
+          </button>
+        </td>
+      )}
     </tr>
   )
 }
@@ -96,7 +110,8 @@ const examShape = PropTypes.shape({
 
 ExamTableRow.propTypes = {
   exam: examShape.isRequired,
-  showDelete: PropTypes.bool
+  showDelete: PropTypes.bool,
+  showRename: PropTypes.bool
 }
 
 const GoBackRow = ({ href }) => {
@@ -118,16 +133,21 @@ GoBackRow.propTypes = {
   href: PropTypes.string.isRequired
 }
 
-const ExamTable = ({ exams, previousPageUrl, showDelete }) => {
+const ExamTable = ({ exams, previousPageUrl, showDelete, showRename }) => {
   return (
     <table className="exam-table">
       <thead>
-        <ExamTableHeader showDelete={showDelete} />
+        <ExamTableHeader showDelete={showDelete} showRename={showRename} />
       </thead>
       <tbody>
         <GoBackRow href={previousPageUrl} />
         {exams.map(exam => (
-          <ExamTableRow key={exam.id} exam={exam} showDelete={showDelete} />
+          <ExamTableRow
+            key={exam.id}
+            exam={exam}
+            showDelete={showDelete}
+            showRename={showRename}
+          />
         ))}
       </tbody>
     </table>
@@ -137,7 +157,8 @@ const ExamTable = ({ exams, previousPageUrl, showDelete }) => {
 ExamTable.propTypes = {
   exams: PropTypes.arrayOf(examShape.isRequired).isRequired,
   previousPageUrl: PropTypes.string.isRequired,
-  showDelete: PropTypes.bool
+  showDelete: PropTypes.bool,
+  showRename: PropTypes.bool
 }
 
 const UploadExamForm = ({ courseId }) => {
@@ -186,6 +207,7 @@ const CoursePage = ({
         exams={exams}
         previousPageUrl={previousPageUrl}
         showDelete={userRights.remove}
+        showRename={userRights.rename}
       />
 
       <ControlsBox>
