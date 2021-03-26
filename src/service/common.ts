@@ -22,3 +22,12 @@ export interface ExamListItem {
   mimeType: string
   uploadDate: Date
 }
+
+export interface Exam {
+  id: ExamId
+  courseId: CourseId
+  fileName: string
+  mimeType: string
+  filePath: string
+  uploadDate: Date
+}

@@ -4,12 +4,14 @@ import {
   CourseListItem,
   ExamListItem,
   CourseId,
-  ExamId
+  ExamId,
+  Exam
 } from './common'
 import {
   deserializeCourseListItem,
   deserializeCourse,
-  deserializeExamListItem
+  deserializeExamListItem,
+  deserializeExam
 } from './dbDeserializer'
 
 const isNull = (obj: any): obj is null => obj === null
@@ -186,6 +188,37 @@ export const findCourseByExamId = async (
   }
 
   return deserializeCourse(course)
+}
+
+export const getExamFileNameById = async (
+  examId: ExamId
+): Promise<string | null> => {
+  const exam = await knex('exams')
+    .select('file_name')
+    .where({ id: examId, ...whereNotDeleted() })
+    .first()
+
+  if (!exam) {
+    return null
+  }
+
+  return exam.file_name
+}
+
+export const renameExamFile = async (
+  examId: ExamId,
+  newFilename: string
+): Promise<Exam | null> => {
+  const updatedRows: any[] = await knex('exams')
+    .update({ file_name: newFilename })
+    .where({
+      id: examId,
+      ...whereNotDeleted()
+    })
+    .returning('*')
+
+  const updatedExam = updatedRows[0]
+  return deserializeExam(updatedExam)
 }
 
 interface ExamSubmission {
