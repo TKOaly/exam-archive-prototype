@@ -43,6 +43,7 @@ const upload = multer({
     s3,
     bucket: config.AWS_S3_BUCKET_ID,
     contentType: multerS3.AUTO_CONTENT_TYPE,
+    acl: 'private',
     key: (
       req: any,
       file: Express.MulterS3.File,
