@@ -79,7 +79,7 @@ Copy `.env-sample` to `.env` and fill in the following environment variables. Th
 Run 
 ```npm run start-dev```
 
-then go to `/dev` (make sure `NODE_ENV=development`) and apply the prefix you chose previously to all exams in the local database.
+then go to `http://localhost:9001/dev` (make sure `NODE_ENV=development`) and apply the prefix you chose previously to all exams in the local database.
 
 ## Docker warning
 The `.dockerignore` is configured to work as a whitelist so if you add new files or folders which you want to include in the Docker image, update [`.dockerignore`](https://github.com/TKOaly/exam-archive-new/blob/master/.dockerignore).
