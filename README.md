@@ -49,6 +49,15 @@ Copy `.env-sample` to `.env` and fill in the following environment variables. Th
 
 ```// todo: make a script that does this```
 
+#### Bootstrapping the S3 bucket
+1. Sign in to the AWS console and navigate to S3 -> `exam-archive-files-dev`
+2. Click on the `template/` directory (directory = prefix since S3 has no real folders)
+3. Sort by name
+4. Select all objects with the checkbox on the left, Actions -> Copy
+5. Set destination to `s3://exam-archive-files-dev/<prefix>/` where `<prefix>` is the value you chose for `AWS_S3_DEV_PREFIX`.
+6. Click on Copy
+7. Repeat this for all of the pages
+
 #### Bootstrapping the database
 
 1. Download the development database dump (`db.sql`) from [here](https://github.com/TKOaly/exam-archive-dev-db-dump)
@@ -65,18 +74,12 @@ Copy `.env-sample` to `.env` and fill in the following environment variables. Th
 4. Click on Import on the left sidebar and upload `db.sql`
 5. Run any further possible migrations with `npm run db:migrate-dev`
 
-#### Bootstrapping the S3 bucket
-1. Sign in to the AWS console and navigate to S3 -> `exam-archive-files-dev`
-2. Click on the `template/` directory (directory = prefix since S3 has no real folders)
-3. Sort by name
-4. Select all objects with the checkbox on the left, Actions -> Copy
-5. Set destination to `s3://exam-archive-files-dev/<prefix>/` where `<prefix>` is the value you chose for `AWS_S3_DEV_PREFIX`.
-6. Click on Copy
-7. Repeat this for all of the pages
-
 #### Start it
 
+Run 
 ```npm run start-dev```
+
+then go to `/dev` (make sure `NODE_ENV=development`) and apply the prefix you chose previously to all exams in the local database.
 
 ## Docker warning
 The `.dockerignore` is configured to work as a whitelist so if you add new files or folders which you want to include in the Docker image, update [`.dockerignore`](https://github.com/TKOaly/exam-archive-new/blob/master/.dockerignore).
