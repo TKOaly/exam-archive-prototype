@@ -21,7 +21,7 @@ const Layout = ({ children, title, flash }) => {
         <div className="layout">
           <div className="layout-header">
             <Logo className="layout-header__logo" />
-            Tärpistö
+            <h1 className="layout-header__title">Tärpistö</h1>
           </div>
           {flash && flash.message}
           {children}
