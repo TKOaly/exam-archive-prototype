@@ -66,8 +66,3 @@ export interface AuthData {
   user: UserServiceUser
   rights: { [right in AccessRight]?: true }
 }
-
-export const applyDevPrefix = (objectName: string) =>
-  config.AWS_S3_DEV_PREFIX
-    ? `${config.AWS_S3_DEV_PREFIX}/${objectName}`
-    : objectName

@@ -22,7 +22,8 @@ import {
   createCourse,
   renameCourse
 } from './service/archive'
-import { applyDevPrefix, AuthData, requireRights } from './common'
+import { AuthData, requireRights } from './common'
+import devRouter from './dev-controller'
 
 const slugifyCourseName = (courseName: string) => {
   return slugify(courseName.replace(/c\+\+/i, 'cpp'), {
@@ -33,6 +34,12 @@ const slugifyCourseName = (courseName: string) => {
 }
 
 const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+
+const applyDevPrefix = (objectName: string) =>
+  config.AWS_S3_DEV_PREFIX
+    ? `${config.AWS_S3_DEV_PREFIX}/${objectName}`
+    : objectName
+
 const upload = multer({
   storage: multerS3({
     s3,
@@ -65,6 +72,10 @@ const upload = multer({
 const router = express.Router()
 
 router.use(bodyParser.urlencoded({ extended: true }))
+
+if (config.NODE_ENV === 'development') {
+  router.use('/dev', devRouter)
+}
 
 router.get('/', (req, res) => {
   res.redirect('/archive')

@@ -4,7 +4,6 @@ import AWS from 'aws-sdk'
 import config from './config'
 import { findExamById } from './service/archive'
 import { DbExam } from './db'
-import { applyDevPrefix } from './common'
 
 const cfSigner = new AWS.CloudFront.Signer(
   config.AWS_CF_KEY_ID,
@@ -16,11 +15,7 @@ const oneHourToSeconds = 60 * 60 * 1
 const oneDayToSeconds = oneHourToSeconds * 24
 
 const getCloudFrontUrl = (exam: DbExam) =>
-  config.NODE_ENV === 'development'
-    ? `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${applyDevPrefix(
-        exam.file_path
-      )}`
-    : `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
+  `https://${config.AWS_CF_DISTRIBUTION_DOMAIN}/${exam.file_path}`
 
 const getCfSigningOptions = (
   exam: DbExam

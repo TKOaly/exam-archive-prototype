@@ -119,3 +119,16 @@ body {
   margin: 0;
   display: inline;
 }
+
+.developer-s3__table-container {
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.developer-s3__table {
+  text-align: left;
+}
+
+.developer-s3__table tbody tr:nth-of-type(2n) {
+  background-color: rgba(200, 200, 200, 0.3);
+}
