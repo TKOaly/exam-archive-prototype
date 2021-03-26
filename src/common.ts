@@ -4,7 +4,6 @@ import {
   UserMembership,
   UserServiceUser
 } from './service/tkoUserService'
-import config from './config'
 
 export type AccessRight = 'access' | 'upload' | 'remove' | 'rename'
 
@@ -15,7 +14,10 @@ export const requireRights = (
 
   if (!requiredRights.every(right => auth.rights[right])) {
     // TODO: 400 page
-    return res.status(401).send('not authorized')
+    return res.status(401).render('401', {
+      flash: req.flash(),
+      username: auth && auth.user && auth.user.username
+    })
   }
 
   next()

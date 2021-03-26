@@ -183,7 +183,12 @@ app.use('/api', requireRights('access'), apiRouter)
 app.use('/download', requireRights('access'), downloadRouter)
 
 app.use('*', (req, res) => {
-  res.status(404).render('404')
+  const auth = (req as any).auth as AuthData | undefined
+
+  res.status(404).render('404', {
+    flash: req.flash(),
+    username: auth && auth.user && auth.user.username
+  })
 })
 
 app.listen(config.PORT, (err: any) => {

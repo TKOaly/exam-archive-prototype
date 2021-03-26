@@ -2,11 +2,14 @@ const React = require('react')
 const Layout = require('./common/Layout')
 const { ControlsBox, Logout } = require('./common/Controls')
 
-const NotFoundPage = ({ flash, username }) => {
+const UnauthorizedPage = ({ flash, username }) => {
   return (
     <Layout flash={flash}>
-      <h1>404 - Not Found</h1>
-      <a href="/">Back to listing</a>
+      <h1>401 - Unauthorized</h1>
+      <p>
+        <a href="/">Back to listing</a>
+      </p>
+      <p><a href="https://tko-aly.fi">Back to tko-aly.fi</a></p>
 
       {username && (
         <div>
@@ -19,4 +22,4 @@ const NotFoundPage = ({ flash, username }) => {
   )
 }
 
-module.exports = NotFoundPage
+module.exports = UnauthorizedPage
