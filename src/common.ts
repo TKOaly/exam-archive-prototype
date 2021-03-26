@@ -48,13 +48,13 @@ export const roleRights: {
     access: true,
     upload: true,
     remove: false,
-    rename: false
+    rename: true
   },
   [UserRole.Virkailija]: {
     access: true,
     upload: true,
     remove: false,
-    rename: false
+    rename: true
   },
   [UserRole.Yllapitaja]: {
     access: true,
