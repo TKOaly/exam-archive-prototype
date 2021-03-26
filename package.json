@@ -15,7 +15,7 @@
     "seed-s3-from-db": "cross-env NODE_ENV=development node scripts/seed-s3-from-db.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.713.0",
+    "aws-sdk": "^2.872.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
