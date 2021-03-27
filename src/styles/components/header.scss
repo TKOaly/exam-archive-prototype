@@ -19,11 +19,14 @@ $background-color: #fff;
     align-items: center;
   }
 
+  &__link {
+    margin-left: 15px;
+  }
+
   &__logo {
     flex: 0 0 auto;
     width: 55px;
     height: 55px;
-    margin-left: 15px;
   }
 
   &__text {

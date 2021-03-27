@@ -2,7 +2,9 @@ const React = require('react')
 const PropTypes = require('prop-types')
 const formatDate = require('date-fns/format')
 const fiLocale = require('date-fns/locale/fi')
+
 const Layout = require('./common/Layout')
+const ListingNavigation = require('./common/ListingNavigation')
 const { ControlsBox, Logout } = require('./common/Controls')
 
 const CourseTableHeader = ({ showDelete, showRename }) => {
@@ -150,15 +152,18 @@ const CreateCourseForm = () => {
 const IndexPage = ({ flash, courses, username, userRights }) => {
   return (
     <Layout flash={flash}>
-      <CourseTable
-        courses={courses}
-        showDelete={userRights.remove}
-        showRename={userRights.rename}
-      />
-      <ControlsBox>
-        {userRights.upload && <CreateCourseForm />}
-        <Logout username={username} />
-      </ControlsBox>
+      <ListingNavigation title="Courses" />
+      <main className="course-list-page">
+        <CourseTable
+          courses={courses}
+          showDelete={userRights.remove}
+          showRename={userRights.rename}
+        />
+        <ControlsBox>
+          {userRights.upload && <CreateCourseForm />}
+          <Logout username={username} />
+        </ControlsBox>
+      </main>
     </Layout>
   )
 }

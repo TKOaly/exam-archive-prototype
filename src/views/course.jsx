@@ -2,7 +2,9 @@ const React = require('react')
 const PropTypes = require('prop-types')
 const formatDate = require('date-fns/format')
 const fiLocale = require('date-fns/locale/fi')
+
 const Layout = require('./common/Layout')
+const ListingNavigation = require('./common/ListingNavigation')
 const { ControlsBox, Logout } = require('./common/Controls')
 
 const ExamTableHeader = ({ showDelete, showRename }) => {
@@ -202,18 +204,21 @@ const CoursePage = ({
 }) => {
   return (
     <Layout flash={flash}>
-      <h2 className="course-page__title">{course.name}</h2>
-      <ExamTable
-        exams={exams}
-        previousPageUrl={previousPageUrl}
-        showDelete={userRights.remove}
-        showRename={userRights.rename}
-      />
+      <ListingNavigation title={course.name} backButtonHref="/archive" />
 
-      <ControlsBox>
-        {userRights.upload && <UploadExamForm courseId={course.id} />}
-        <Logout username={username} />
-      </ControlsBox>
+      <main className="document-list-page">
+        <ExamTable
+          exams={exams}
+          previousPageUrl={previousPageUrl}
+          showDelete={userRights.remove}
+          showRename={userRights.rename}
+        />
+
+        <ControlsBox>
+          {userRights.upload && <UploadExamForm courseId={course.id} />}
+          <Logout username={username} />
+        </ControlsBox>
+      </main>
     </Layout>
   )
 }
