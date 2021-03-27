@@ -9,10 +9,10 @@ const Layout = ({ children, title, flash }) => {
         <meta name="robots" content="noindex" />
         <link rel="stylesheet" href="/static/vendor/normalize.css" />
         <link rel="stylesheet" href="/static/main.css" />
+        <link rel="prefetch" href="/static/augments.js" />
         <title>
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>
-        <script defer src="/static/augments.js" />
       </head>
       <body>
         <div className="layout">
@@ -20,6 +20,8 @@ const Layout = ({ children, title, flash }) => {
           {flash && flash.message}
           {children}
         </div>
+
+        <script defer src="/static/augments.js" />
       </body>
     </html>
   )
