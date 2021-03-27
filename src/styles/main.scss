@@ -1,11 +1,14 @@
 @use './components/layout';
+@use './components/header';
 @use './components/controls';
 @use './components/tables';
 @use './components/developer';
 
 body {
-  line-height: 1.5;
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-  background-color: white;
-  margin: 8px;
+  margin: 0;
+  padding: 0;
+
+  background: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
 }

@@ -1,0 +1,80 @@
+@use '../common' as common;
+
+$background-color: #fff;
+
+.header {
+  width: 100%;
+  height: common.$header-height;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: $background-color;
+  z-index: 100;
+
+  &__container {
+    width: 100%;
+    max-width: 650px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__logo {
+    flex: 0 0 auto;
+    width: 55px;
+    height: 55px;
+    margin-left: 15px;
+  }
+
+  &__text {
+    flex: 1 1 auto;
+    margin: 0 0 0 15px;
+    background: $background-color;
+  }
+
+  &__title {
+    margin: 0;
+    color: #333;
+    font-weight: 400;
+    font-size: 20px;
+    z-index: 102;
+  }
+
+  &__subtitle {
+    z-index: 101;
+    font-weight: normal;
+    font-size: 14px;
+    color: #737373;
+    margin: 3px 0 2px 0;
+    opacity: 1;
+  }
+
+  &__upload-link {
+    margin-left: auto;
+    display: block;
+  }
+}
+
+.upload-link {
+  font-size: 14px;
+  padding: 3px 5px;
+
+  &,
+  &:visited,
+  &:active {
+    color: #737373;
+    text-decoration: none;
+  }
+
+  &__icon {
+    vertical-align: middle;
+    padding: 0 5px 0 10px;
+    height: 24px;
+  }
+
+  &__text {
+    vertical-align: middle;
+    text-transform: uppercase;
+    padding-right: 10px;
+  }
+}

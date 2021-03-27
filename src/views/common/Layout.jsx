@@ -1,8 +1,5 @@
 const React = require('react')
-
-const Logo = ({ className }) => (
-  <img className={className} src="/static/img/logo-100.png" alt="logo" />
-)
+const Header = require('./Header')
 
 const Layout = ({ children, title, flash }) => {
   return (
@@ -19,13 +16,9 @@ const Layout = ({ children, title, flash }) => {
       </head>
       <body>
         <div className="layout">
-          <div className="layout-header">
-            <Logo className="layout-header__logo" />
-            <h1 className="layout-header__title">Tärpistö</h1>
-          </div>
+          <Header className="layout__header" />
           {flash && flash.message}
           {children}
-          <div className="layout-footer"></div>
         </div>
       </body>
     </html>
