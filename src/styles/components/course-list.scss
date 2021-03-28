@@ -30,7 +30,6 @@ $last-modified-colwidth: 110px;
   }
 
   &__last-modified {
-    /* TODO: is-admin, 78px if show menu button, otherwise 54px */
     margin-left: auto;
     width: $last-modified-colwidth;
     margin-right: 6px;
