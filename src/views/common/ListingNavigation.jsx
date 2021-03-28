@@ -1,8 +1,9 @@
 const React = require('react')
 const classnames = require('classnames')
 
-const ArrowBack = ({ className }) => (
+const ArrowBack = ({ className, ...props }) => (
   <svg
+    {...props}
     className={className}
     width="24"
     height="24"
@@ -15,21 +16,31 @@ const ArrowBack = ({ className }) => (
 )
 
 const BackButton = ({ href, className }) => (
-  <a href={href} className={classnames('back-button', className)}>
-    <ArrowBack className="back-button__icon" />
+  <a
+    href={href}
+    aria-label="Back to course listing"
+    className={classnames('back-button', className)}
+  >
+    <ArrowBack className="back-button__icon" alt="Arrow pointing to the left" />
   </a>
 )
 
-const ListingNavigation = ({ title, backButtonHref, className }) => (
+const ListingNavigation = ({
+  title,
+  backButtonLabel,
+  backButtonHref,
+  className
+}) => (
   <div className={classnames('listing-navigation', className)}>
     <div className="listing-navigation__content">
       {backButtonHref && (
-        <div className="listing-navigation__button-container">
+        <nav className="listing-navigation__button-container">
           <BackButton
             className="listing-navigation__back-button"
             href={backButtonHref}
+            label={backButtonLabel}
           />
-        </div>
+        </nav>
       )}
       <div className="listing-navigation__title">
         <h2 className="listing-navigation__text">{title}</h2>

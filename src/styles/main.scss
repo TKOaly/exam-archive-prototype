@@ -1,7 +1,9 @@
 @use './common';
 @use './components/layout';
 @use './components/header';
+@use './components/footer';
 @use './components/listing-navigation';
+@use './components/course-list';
 @use './components/controls';
 @use './components/tables';
 @use './components/developer';
@@ -15,10 +17,6 @@ body {
     helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
 }
 
-.course-list-page {
-  @extend %responsive-container;
-}
-
-.document-list-page {
+.page-container {
   @extend %responsive-container;
 }

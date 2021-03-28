@@ -1,5 +1,4 @@
 $header-height: 82px;
-$header-height-shrunk: 52px;
 
 /* Curves from https://material.io/guidelines/motion/duration-easing.html#duration-easing-natural-easing-curves*/
 $ease-standard-curve: cubic-bezier(0.4, 0, 0.2, 1);
@@ -13,9 +12,11 @@ $box-shadow-elevation-2: 0 3px 6px rgba(0, 0, 0, 0.16),
 $box-shadow-elevation-3: 0 10px 20px rgba(0, 0, 0, 0.19),
   0 6px 6px rgba(0, 0, 0, 0.23);
 
+$content-width: 700px;
+
 %responsive-container {
   width: 100%;
-  max-width: 650px;
+  max-width: $content-width;
   margin: 0 auto;
   margin-bottom: 48px;
 }

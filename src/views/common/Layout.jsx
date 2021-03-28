@@ -10,6 +10,7 @@ const Layout = ({ children, title, flash }) => {
         <link rel="stylesheet" href="/static/vendor/normalize.css" />
         <link rel="stylesheet" href="/static/main.css" />
         <link rel="prefetch" href="/static/augments.js" />
+        <meta name="viewport" content="width=device-width" />
         <title>
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>

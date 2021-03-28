@@ -4,6 +4,8 @@ const formatDate = require('date-fns/format')
 const fiLocale = require('date-fns/locale/fi')
 
 const Layout = require('./common/Layout')
+const Footer = require('./common/Footer')
+const { UserContextProvider } = require('./common/context')
 const ListingNavigation = require('./common/ListingNavigation')
 const { ControlsBox, Logout } = require('./common/Controls')
 
@@ -203,22 +205,30 @@ const CoursePage = ({
   userRights
 }) => {
   return (
-    <Layout flash={flash}>
-      <ListingNavigation title={course.name} backButtonHref="/archive" />
+    <Layout title={course.name} flash={flash}>
+      <UserContextProvider
+        username={username}
+        canDelete={userRights.remove}
+        canRename={userRights.rename}
+      >
+        <ListingNavigation title={course.name} backButtonHref="/archive" />
+        <div className="page-container">
+          <main>
+            <ExamTable
+              exams={exams}
+              previousPageUrl={previousPageUrl}
+              showDelete={userRights.remove}
+              showRename={userRights.rename}
+            />
 
-      <main className="document-list-page">
-        <ExamTable
-          exams={exams}
-          previousPageUrl={previousPageUrl}
-          showDelete={userRights.remove}
-          showRename={userRights.rename}
-        />
-
-        <ControlsBox>
-          {userRights.upload && <UploadExamForm courseId={course.id} />}
-          <Logout username={username} />
-        </ControlsBox>
-      </main>
+            <ControlsBox>
+              {userRights.upload && <UploadExamForm courseId={course.id} />}
+              <Logout username={username} />
+            </ControlsBox>
+          </main>
+          <Footer />
+        </div>
+      </UserContextProvider>
     </Layout>
   )
 }
