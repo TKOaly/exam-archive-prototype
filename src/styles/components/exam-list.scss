@@ -7,16 +7,42 @@ $link-margin: 12px;
 $course-header-name-margin: $icon-margin + $icon-width + $link-margin;
 $mobile-course-header-name-margin: $link-margin;
 
-$last-modified-colwidth: 110px;
+$last-modified-colwidth: 90px;
+$last-modified-mr: 6px;
+$rename-header-colwidth: 52px;
 
-.course-list {
-  margin-top: 12px;
+.menu-button {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &__icon {
+    vertical-align: middle;
+    $icon-size: 20px;
+    height: $icon-size;
+    width: $icon-size;
+  }
+}
+
+.exam-list {
   box-shadow: common.$box-shadow-elevation-1;
   background: #fff;
   border-radius: 5px;
+
+  min-width: 500px;
+
+  &-container {
+    margin-top: 12px;
+
+    @media screen and (max-width: 500px) {
+      overflow-x: scroll;
+    }
+  }
 }
 
-.course-list-header {
+.exam-list-header {
   height: $row-height;
   width: 100%;
   display: flex;
@@ -37,13 +63,18 @@ $last-modified-colwidth: 110px;
   &__last-modified {
     margin-left: auto;
     width: $last-modified-colwidth;
-    margin-right: 6px;
+    margin-right: $last-modified-mr;
     box-sizing: border-box;
     padding-left: 10px;
   }
+
+  &__rename {
+    width: $rename-header-colwidth;
+    margin-right: 6px;
+  }
 }
 
-.course-list-item {
+.exam-list-item {
   height: $row-height;
   width: 100%;
   position: relative;
@@ -78,10 +109,8 @@ $last-modified-colwidth: 110px;
     color: #595959;
     font-weight: 500;
     text-decoration: none;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-x: hidden;
+    display: flex;
+    min-width: 0;
 
     @media (hover: hover) {
       &:hover {
@@ -90,12 +119,46 @@ $last-modified-colwidth: 110px;
     }
   }
 
+  &__basename {
+    flex: 0 1 auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+  }
+
+  &__extname {
+    flex: 0 0 auto;
+  }
+
   &__last-modified {
     flex: 0 0 auto;
     box-sizing: border-box;
     min-width: $last-modified-colwidth;
     color: rgba(0, 0, 0, 0.56);
-    margin: 0 6px 0 auto;
+    margin: 0 $last-modified-mr 0 auto;
     padding-left: 10px; /* add some space in case the name is extra long */
   }
+
+  &__rename {
+    font-size: 12px;
+    width: $rename-header-colwidth;
+    margin-right: 6px;
+  }
+
+  &__rename-button {
+    border: none;
+    background: none;
+    border-radius: 0;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.56);
+
+    &:hover {
+      color: #595959;
+      text-decoration: underline;
+    }
+  }
+}
+
+.delete-exam-button__button {
+  cursor: pointer;
 }

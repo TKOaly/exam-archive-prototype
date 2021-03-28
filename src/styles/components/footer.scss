@@ -2,6 +2,7 @@
   font-size: 13px;
   color: #595959;
   padding: 0 10px;
+  margin-bottom: 24px;
 
   a {
     color: inherit;
@@ -18,6 +19,8 @@
     display: flex;
     margin: 0 auto;
     flex-direction: row;
+    flex-wrap: wrap;
+    line-height: 1.5;
 
     a {
       text-decoration: none;

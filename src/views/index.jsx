@@ -2,6 +2,7 @@ const React = require('react')
 
 const Layout = require('./common/Layout')
 const Footer = require('./common/Footer')
+const FlashMessage = require('./common/FlashMessage')
 const ListingNavigation = require('./common/ListingNavigation')
 const CourseList = require('./common/CourseList')
 const { ControlsBox, Logout } = require('./common/Controls')
@@ -30,9 +31,10 @@ const CreateCourseForm = () => {
 
 const IndexPage = ({ flash, courses, username, userRights }) => {
   return (
-    <Layout flash={flash}>
+    <Layout>
       <ListingNavigation title="Courses" />
       <div className="page-container">
+        <FlashMessage flash={flash} />
         <main>
           <CourseList
             courses={courses}

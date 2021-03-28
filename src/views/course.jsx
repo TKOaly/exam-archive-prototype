@@ -5,8 +5,10 @@ const fiLocale = require('date-fns/locale/fi')
 
 const Layout = require('./common/Layout')
 const Footer = require('./common/Footer')
+const FlashMessage = require('./common/FlashMessage')
 const { UserContextProvider } = require('./common/context')
 const ListingNavigation = require('./common/ListingNavigation')
+const ExamList = require('./common/ExamList')
 const { ControlsBox, Logout } = require('./common/Controls')
 
 const ExamTableHeader = ({ showDelete, showRename }) => {
@@ -42,9 +44,13 @@ const mimeTypeImage = mimeType => {
   }
 }
 
-const DeleteExamButton = ({ action }) => {
+const DeleteExamButton = ({ examId }) => {
   return (
-    <form className="delete-exam-button" method="post" action={action}>
+    <form
+      className="delete-exam-button"
+      method="post"
+      action={`/archive/delete-exam/${examId}`}
+    >
       <button
         className="delete-exam-button__button"
         aria-label="Delete exam"
@@ -55,12 +61,6 @@ const DeleteExamButton = ({ action }) => {
     </form>
   )
 }
-
-DeleteExamButton.propTypes = {
-  action: PropTypes.string.isRequired
-}
-
-const makeDeleteExamAction = examId => `/archive/delete-exam/${examId}`
 
 const ExamTableRow = ({ exam, showDelete, showRename }) => {
   const { id, fileName, mimeType, uploadDate, downloadUrl } = exam
@@ -213,13 +213,15 @@ const CoursePage = ({
       >
         <ListingNavigation title={course.name} backButtonHref="/archive" />
         <div className="page-container">
+          <FlashMessage flash={flash} />
           <main>
-            <ExamTable
+            <ExamList exams={exams} />
+            {/*<ExamTable
               exams={exams}
               previousPageUrl={previousPageUrl}
               showDelete={userRights.remove}
               showRename={userRights.rename}
-            />
+            />*/}
 
             <ControlsBox>
               {userRights.upload && <UploadExamForm courseId={course.id} />}

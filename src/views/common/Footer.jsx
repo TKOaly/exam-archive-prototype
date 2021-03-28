@@ -4,9 +4,9 @@ const Footer = () => {
   return (
     <footer className="layout-footer">
       <div className="layout-footer__text">
+        <p>Tärpistö - The TKO-äly ry exam archive.</p>
         <p>
-          Tärpistö - The TKO-äly ry exam archive. Contact:{' '}
-          <a href="mailto:tarpisto@tko-aly.fi">tarpisto@tko-aly.fi</a>
+          Contact: <a href="mailto:tarpisto@tko-aly.fi">tarpisto@tko-aly.fi</a>
         </p>
       </div>
       <div className="layout-footer__links">

@@ -42,7 +42,7 @@ function attachCourseRenameHandlers() {
 
 function attachExamRenameHandlers() {
   ;[
-    ...document.getElementsByClassName('exam-table-row__rename-button')
+    ...document.getElementsByClassName('exam-list-item__rename-button')
   ].forEach(button => {
     button.addEventListener('click', e => {
       e.preventDefault()

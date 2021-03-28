@@ -18,7 +18,6 @@ const Layout = ({ children, title, flash }) => {
       <body>
         <div className="layout">
           <Header className="layout__header" />
-          {flash && flash.message}
           {children}
         </div>
 
