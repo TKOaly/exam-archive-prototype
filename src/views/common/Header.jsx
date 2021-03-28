@@ -7,7 +7,7 @@ const Header = ({ className }) => {
   return (
     <header className={cls}>
       <div className="header__container">
-        <a href="/" className="header__link">
+        <a data-instant href="/" className="header__link">
           <img
             src="/static/img/tkoaly-logo-outline-black.svg"
             alt="TKO-äly logo"

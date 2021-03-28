@@ -17,6 +17,7 @@ const ArrowBack = ({ className, ...props }) => (
 
 const BackButton = ({ href, className }) => (
   <a
+    data-instant
     href={href}
     aria-label="Back to course listing"
     className={classnames('back-button', className)}

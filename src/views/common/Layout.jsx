@@ -1,7 +1,7 @@
 const React = require('react')
 const Header = require('./Header')
 
-const Layout = ({ children, title, flash }) => {
+const Layout = ({ children, title }) => {
   return (
     <html>
       <head>
@@ -15,13 +15,14 @@ const Layout = ({ children, title, flash }) => {
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>
       </head>
-      <body>
+      <body data-instant-whitelist>
         <div className="layout">
           <Header className="layout__header" />
           {children}
         </div>
 
         <script defer src="/static/augments.js" />
+        <script defer src="/static/vendor/instantpage-5.1.0.js" />
       </body>
     </html>
   )

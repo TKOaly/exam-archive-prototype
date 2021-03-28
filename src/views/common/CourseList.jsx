@@ -9,7 +9,12 @@ const CourseListItem = ({ name, url, lastModified }) => {
     <div role="row" className="course-list-item">
       <FolderIcon aria-hidden="true" className="course-list-item__icon" />
       <div role="cell" className="course-list-item__link-container">
-        <a href={url} title={name} className="course-list-item__link">
+        <a
+          data-instant
+          href={url}
+          title={name}
+          className="course-list-item__link"
+        >
           {name}
         </a>
       </div>
