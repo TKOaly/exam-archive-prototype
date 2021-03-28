@@ -1,0 +1,101 @@
+@use '../common' as common;
+
+$row-height: 36px;
+$icon-margin: 12px;
+$icon-width: 20px;
+$link-margin: 12px;
+$course-header-name-margin: $icon-margin + $icon-width + $link-margin;
+$mobile-course-header-name-margin: $link-margin;
+
+$last-modified-colwidth: 110px;
+
+.course-list {
+  margin-top: 12px;
+  box-shadow: common.$box-shadow-elevation-1;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.course-list-header {
+  height: $row-height;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.56);
+  border-bottom: 1px solid #e6e6e6;
+
+  &__name {
+    margin-left: $course-header-name-margin;
+
+    @media screen and (max-width: 576px) {
+      margin-left: $mobile-course-header-name-margin;
+    }
+  }
+
+  &__last-modified {
+    margin-left: auto;
+    width: $last-modified-colwidth;
+    margin-right: 6px;
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+}
+
+.course-list-item {
+  height: $row-height;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  border-bottom: 1px solid #e6e6e6;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: $icon-width;
+    margin-left: $icon-margin;
+
+    @media screen and (max-width: 576px) {
+      display: none;
+    }
+  }
+
+  &__link-container {
+    flex: 0 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: $link-margin;
+  }
+
+  &__link {
+    height: $row-height * 0.9;
+    line-height: $row-height * 0.9;
+
+    color: #595959;
+    font-weight: 500;
+    text-decoration: none;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__last-modified {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-width: $last-modified-colwidth;
+    color: rgba(0, 0, 0, 0.56);
+    margin: 0 6px 0 auto;
+    padding-left: 10px; /* add some space in case the name is extra long */
+  }
+}

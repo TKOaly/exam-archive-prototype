@@ -1,10 +1,7 @@
 const React = require('react')
+const Header = require('./Header')
 
-const Logo = ({ className }) => (
-  <img className={className} src="/static/img/logo-100.png" alt="logo" />
-)
-
-const Layout = ({ children, title, flash }) => {
+const Layout = ({ children, title }) => {
   return (
     <html>
       <head>
@@ -12,21 +9,20 @@ const Layout = ({ children, title, flash }) => {
         <meta name="robots" content="noindex" />
         <link rel="stylesheet" href="/static/vendor/normalize.css" />
         <link rel="stylesheet" href="/static/main.css" />
+        <link rel="prefetch" href="/static/augments.js" />
+        <meta name="viewport" content="width=device-width" />
         <title>
           {title ? `${title} - Tärpistö - TKO-äly ry` : 'Tärpistö - TKO-äly ry'}
         </title>
-        <script defer src="/static/augments.js" />
       </head>
-      <body>
+      <body data-instant-whitelist>
         <div className="layout">
-          <div className="layout-header">
-            <Logo className="layout-header__logo" />
-            <h1 className="layout-header__title">Tärpistö</h1>
-          </div>
-          {flash && flash.message}
+          <Header className="layout__header" />
           {children}
-          <div className="layout-footer"></div>
         </div>
+
+        <script defer src="/static/augments.js" />
+        <script defer src="/static/vendor/instantpage-5.1.0.js" />
       </body>
     </html>
   )

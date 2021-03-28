@@ -2,7 +2,13 @@ const React = require('react')
 const PropTypes = require('prop-types')
 const formatDate = require('date-fns/format')
 const fiLocale = require('date-fns/locale/fi')
+
 const Layout = require('./common/Layout')
+const Footer = require('./common/Footer')
+const FlashMessage = require('./common/FlashMessage')
+const { UserContextProvider } = require('./common/context')
+const ListingNavigation = require('./common/ListingNavigation')
+const ExamList = require('./common/ExamList')
 const { ControlsBox, Logout } = require('./common/Controls')
 
 const ExamTableHeader = ({ showDelete, showRename }) => {
@@ -38,9 +44,13 @@ const mimeTypeImage = mimeType => {
   }
 }
 
-const DeleteExamButton = ({ action }) => {
+const DeleteExamButton = ({ examId }) => {
   return (
-    <form className="delete-exam-button" method="post" action={action}>
+    <form
+      className="delete-exam-button"
+      method="post"
+      action={`/archive/delete-exam/${examId}`}
+    >
       <button
         className="delete-exam-button__button"
         aria-label="Delete exam"
@@ -51,12 +61,6 @@ const DeleteExamButton = ({ action }) => {
     </form>
   )
 }
-
-DeleteExamButton.propTypes = {
-  action: PropTypes.string.isRequired
-}
-
-const makeDeleteExamAction = examId => `/archive/delete-exam/${examId}`
 
 const ExamTableRow = ({ exam, showDelete, showRename }) => {
   const { id, fileName, mimeType, uploadDate, downloadUrl } = exam
@@ -91,6 +95,7 @@ const ExamTableRow = ({ exam, showDelete, showRename }) => {
             /* augments.js */
             data-current-name={fileName}
             data-id={id}
+            data-rename-exam-button
             className="exam-table-row__rename-button"
           >
             rename
@@ -201,19 +206,59 @@ const CoursePage = ({
   userRights
 }) => {
   return (
-    <Layout flash={flash}>
-      <h2 className="course-page__title">{course.name}</h2>
-      <ExamTable
-        exams={exams}
-        previousPageUrl={previousPageUrl}
-        showDelete={userRights.remove}
-        showRename={userRights.rename}
-      />
+    <Layout title={course.name} flash={flash}>
+      <UserContextProvider
+        username={username}
+        canDelete={userRights.remove}
+        canRename={userRights.rename}
+      >
+        <ListingNavigation title={course.name} backButtonHref="/archive" />
+        <div className="page-container">
+          <FlashMessage flash={flash} />
+          <main>
+            <ExamList exams={exams} />
+            {/*<ExamTable
+              exams={exams}
+              previousPageUrl={previousPageUrl}
+              showDelete={userRights.remove}
+              showRename={userRights.rename}
+            />*/}
 
-      <ControlsBox>
-        {userRights.upload && <UploadExamForm courseId={course.id} />}
-        <Logout username={username} />
-      </ControlsBox>
+            <ControlsBox>
+              {userRights.upload && <UploadExamForm courseId={course.id} />}
+              {userRights.rename && (
+                <>
+                  <h3>Rename course</h3>
+                  <button
+                    data-rename-course-button
+                    data-current-name={course.name}
+                    data-id={course.id}
+                  >
+                    rename
+                  </button>
+                </>
+              )}
+              {userRights.remove && (
+                <>
+                  <h3>Delete course</h3>
+                  <p>
+                    Course can only be deleted after all exams have been
+                    deleted.
+                  </p>
+                  <form
+                    action={`/archive/delete-course/${course.id}`}
+                    method="post"
+                  >
+                    <input type="submit" value="delete" />
+                  </form>
+                </>
+              )}
+              <Logout username={username} />
+            </ControlsBox>
+          </main>
+          <Footer />
+        </div>
+      </UserContextProvider>
     </Layout>
   )
 }

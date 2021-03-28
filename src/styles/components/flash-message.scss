@@ -1,0 +1,30 @@
+.flash-message {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #595959;
+  display: flex;
+  align-items: center;
+
+  border: 1px solid rgba(0, 0, 0, 0.56);
+  border-radius: 5px;
+  padding: 15px 30px;
+  position: relative;
+
+  &::before {
+    content: '!';
+    font-weight: 500;
+    position: absolute;
+    font-size: 20px;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-58%);
+  }
+
+  &--error {
+    border: 1px solid #c0392b;
+
+    &::before {
+      color: #c0392b;
+    }
+  }
+}
