@@ -95,6 +95,7 @@ const ExamTableRow = ({ exam, showDelete, showRename }) => {
             /* augments.js */
             data-current-name={fileName}
             data-id={id}
+            data-rename-exam-button
             className="exam-table-row__rename-button"
           >
             rename
@@ -225,6 +226,33 @@ const CoursePage = ({
 
             <ControlsBox>
               {userRights.upload && <UploadExamForm courseId={course.id} />}
+              {userRights.rename && (
+                <>
+                  <h3>Rename course</h3>
+                  <button
+                    data-rename-course-button
+                    data-current-name={course.name}
+                    data-id={course.id}
+                  >
+                    rename
+                  </button>
+                </>
+              )}
+              {userRights.remove && (
+                <>
+                  <h3>Delete course</h3>
+                  <p>
+                    Course can only be deleted after all exams have been
+                    deleted.
+                  </p>
+                  <form
+                    action={`/archive/delete-course/${course.id}`}
+                    method="post"
+                  >
+                    <input type="submit" value="delete" />
+                  </form>
+                </>
+              )}
               <Logout username={username} />
             </ControlsBox>
           </main>

@@ -304,17 +304,19 @@ router.post(
   '/archive/delete-course/:courseId(\\d+)',
   requireRights('remove'),
   async (req, res) => {
+    const courseId = parseInt(req.params.courseId, 10)
     try {
-      const deletedCourse = await deleteCourse(
-        parseInt(req.params.courseId, 10)
-      )
+      const deletedCourse = await deleteCourse(courseId)
       req.flash(`The course "${deletedCourse?.name}" has been deleted.`, 'info')
       return res.redirect('/archive')
     } catch (e) {
-      // TODO: show flash messages
-      if (e instanceof CourseNotFoundError || e instanceof CannotDeleteError) {
+      if (e instanceof CourseNotFoundError) {
         req.flash(e.message, 'error')
         return res.redirect('/')
+      }
+      if (e instanceof CannotDeleteError) {
+        req.flash(e.message, 'error')
+        return res.redirect(urlForCourse(courseId, 'a'))
       }
       req.flash('An error occurred while deleting the course.', 'error')
       res.redirect('/')

@@ -95,6 +95,7 @@ const ExamListItem = ({ exam, showDelete, showRename }) => {
             /* augments.js */
             data-current-name={fileName}
             data-id={id}
+            data-rename-exam-button
             className="exam-list-item__rename-button"
           >
             rename
@@ -131,7 +132,7 @@ const ExamList = ({ exams, className }) => {
 
   if (exams.length === 0) {
     return (
-      <div className={classes}>
+      <div className="exam-list-container">
         <NoExamsFound className="exam-list__not-found" />
       </div>
     )
