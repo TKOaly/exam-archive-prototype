@@ -8,21 +8,6 @@ $course-header-name-margin: $icon-margin + $icon-width + $link-margin;
 
 $last-modified-colwidth: 110px;
 
-.menu-button {
-  background: none;
-  border: none;
-  padding: 6px;
-  border-radius: 50%;
-  cursor: pointer;
-
-  &__icon {
-    vertical-align: middle;
-    $icon-size: 20px;
-    height: $icon-size;
-    width: $icon-size;
-  }
-}
-
 .course-list {
   margin-top: 12px;
   box-shadow: common.$box-shadow-elevation-1;
