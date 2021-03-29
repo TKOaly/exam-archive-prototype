@@ -161,7 +161,6 @@ router.post(
   upload.single('file'),
   async (req, res, next) => {
     const file = req.file as Express.MulterS3.File
-    console.log(file)
     const deleteFile = async () => {
       try {
         await s3.deleteObject({ Bucket: file.bucket, Key: file.key }).promise()
