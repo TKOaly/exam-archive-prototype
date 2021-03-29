@@ -80,6 +80,11 @@ app.get('/healthcheck/db', async (req, res) => {
   }
 })
 
+const robots = `User-agent: *
+Disallow: /
+`
+app.get('/robots.txt', (req, res) => res.send(robots))
+
 app.use(cookieParser())
 app.use(morgan(config.NODE_ENV === 'development' ? 'dev' : 'combined'))
 
