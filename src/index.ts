@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import path from 'path'
 const MemoryStore = require('memorystore')(session)
 import cookieParser from 'cookie-parser'
+import compression from 'compression'
 
 import config from './config'
 import * as db from './db'
@@ -23,6 +24,12 @@ const app = express()
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
+
+// gzip response since ALB doesn't do compression.
+// Uses the `compressible` package to determine whether to compress, by default
+// checks mime-db and falls back to checking content type - compresses:
+// `text/*`, `*/*+json`, `*/*+text`, `*/*+xml`
+app.use(compression())
 
 app.get('/healthcheck', (req, res) =>
   res.send(
