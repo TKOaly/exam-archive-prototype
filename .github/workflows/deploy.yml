@@ -24,7 +24,13 @@ jobs:
       - name: Prepare version tag
         run: |
           # "refs/tags/v1.2.3" --> "1.2.3" expose as $DOCKER_TAG
-          echo "DOCKER_TAG=${GITHUB_REF//refs\/tags\/v}" >> $GITHUB_ENV
+          RELEASE_TAG=${GITHUB_REF//refs\/tags\/v}
+          if [[ ! "${RELEASE_TAG}" =~ '^v[0-9]+\.[0-9]+\.[0-9]+$' ]]; then
+            echo "Release tag doesn't contain semver! Name the tag e.g. \"v1.2.3\""
+          else
+            echo 'Release tag is semver, great!'
+          fi
+          echo "DOCKER_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
 
       - name: Build and push to ECR
         env:
