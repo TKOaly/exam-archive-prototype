@@ -3,7 +3,7 @@ const Header = require('./Header')
 
 const Layout = ({ children, title }) => {
   return (
-    <html>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="robots" content="noindex" />

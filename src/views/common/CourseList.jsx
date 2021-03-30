@@ -8,7 +8,11 @@ const CourseListItem = ({ name, url, lastModified }) => {
   return (
     <div role="row" className="course-list-item">
       <FolderIcon aria-hidden="true" className="course-list-item__icon" />
-      <div role="cell" className="course-list-item__link-container">
+      <div
+        role="cell"
+        lang="fi-FI"
+        className="course-list-item__link-container"
+      >
         <a
           data-instant
           href={url}
